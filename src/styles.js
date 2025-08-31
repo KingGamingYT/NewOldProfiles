@@ -1,4 +1,4 @@
-import { Webpack, Utils } from 'betterdiscord';
+import { Webpack } from 'betterdiscord';
 
 const styles = Object.assign(
     {
