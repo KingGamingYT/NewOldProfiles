@@ -1,4 +1,4 @@
-import { Webpack } from 'betterdiscord';
+import { Webpack, Utils, DOM } from 'betterdiscord';
 
 const styles = Object.assign(
     {
@@ -7,7 +7,6 @@ const styles = Object.assign(
         disabledButtonWrapper: Webpack.getByKeys('disabledButtonWrapper', 'sizeSmall').disabledButtonWrapper,
         fullscreenOnMobile: Webpack.getByKeys('focusLock', 'fullscreenOnMobile').fullscreenOnMobile
     },
-    Webpack.getByKeys('background', 'content', 'safetyTable'),
     Webpack.getByKeys('container', 'bar', 'progress'),
     Webpack.getModule(x=>x.container && x.badge && !x.settingsTabBar && !x.guildPrefixContainer && !x.tabBar && !x.popout),
     Webpack.getByKeys('colorPrimary', 'grow'),
@@ -19,7 +18,7 @@ const styles = Object.assign(
     Webpack.getModule(x=>x.buttonContainer && Object.keys(x).length === 1),
 );
 
-export const profileCSS = webpackify(
+let CSS = webpackify(
     `
     body {
         --background-brand: var(--bg-brand);
@@ -316,6 +315,7 @@ export const profileCSS = webpackify(
     .customStatusContent {
         user-select: text;
         white-space: pre-wrap;
+        overflow: hidden;
         .emoji {
             margin-right: 8px;
             height: 20px;
@@ -834,6 +834,16 @@ export const profileCSS = webpackify(
     }
     `
 )
+let profileCSS = webpackify(CSS);
+
+export function addProfileCSS() {
+    DOM.addStyle("profileCSS", profileCSS);
+    Utils.forceLoad(Webpack.getBySource(`"USER_PROFILE_MODAL_KEY:".concat`, { raw: true }).id).then((r) => {
+        Object.assign(styles, Webpack.getByKeys("background", "content", "safetyTable"));
+        profileCSS = webpackify(CSS);
+        DOM.addStyle("profileCSS", profileCSS);
+    });
+};
 
 export function webpackify(css) {
     for (const key in styles) {

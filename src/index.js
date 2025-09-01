@@ -4,7 +4,7 @@ import { settings } from "./settings";
 import { createElement, useState, useRef, useMemo } from "react";
 import { tabs } from "./globals";
 import { headerBuilder, bodyBuilder } from "./builders";
-import { profileCSS } from "./styles";
+import { addProfileCSS } from "./styles";
 
 function Starter({props, res}) {
     const options = {
@@ -42,9 +42,7 @@ function Starter({props, res}) {
 export default class NewOldProfiles {
     constructor(meta){}
     start() {
-        Utils.forceLoad(Webpack.getBySource(`"USER_PROFILE_MODAL_KEY:".concat`,{raw:true}).id).then(
-            DOM.addStyle('profileCSS', profileCSS)
-        );
+        addProfileCSS();
         Patcher.after(entireProfileModal.Z, "render", (that, [props], res) => {
             if (!props.themeType?.includes("MODAL")) return;
             if (!Utils.findInTree(props, x => x?.displayProfile, { walkable: ['props', 'children'] })) return;
