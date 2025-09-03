@@ -236,59 +236,6 @@ export function userVoice({voice}) {
 
 function TabBarBuilder({user, currentUser, tab, setTab, ref}) {
     if (user.id === currentUser.id) return;
-    if (user.bot) {
-        return (
-            <div 
-            className="tabBarContainer" 
-            style={{ 
-                borderTop: "1px solid hsla(0, 0%, 100%, .1", 
-                paddingLeft: "20px"
-            }}>
-            <div 
-                className="tabBar" 
-                style={{
-                    display: "flex", 
-                    alignItems: "stretch", 
-                    height: "55px", 
-                    flexDirection: "row"
-                }}>
-                <div 
-                    className="tabBarItem" 
-                    tabIndex={0} 
-                    aria-selected={tab === tabs.ABOUT} 
-                    aria-controls="about-tab" 
-                    onClick={() => {
-                        setTab(tabs.ABOUT); 
-                        ref.current?.scrollTo(0, 0)
-                    }}>
-                        { intl.intl.formatToPlainString(intl.t['AOdOYm']) + " " + intl.intl.formatToPlainString(intl.t['HY+vdH']) }
-                </div>
-                <div 
-                    className="tabBarItem" 
-                    tabIndex={1} 
-                    aria-selected={tab === tabs.SERVERS} 
-                    aria-controls="servers-tab" 
-                    onClick={() => {
-                        setTab(tabs.SERVERS); 
-                        ref.current?.scrollTo(0, 0)
-                    }}>
-                        { intl.intl.formatToPlainString(intl.t['sySsXV']) }
-                </div>
-                <div 
-                    className="tabBarItem" 
-                    tabIndex={2} 
-                    aria-selected={tab === tabs.DATA} 
-                    aria-controls="data-access-tab" 
-                    onClick={() => {
-                        setTab(tabs.DATA); 
-                        ref.current?.scrollTo(0, 0)
-                    }}>
-                        { intl.intl.formatToPlainString(intl.t['QzDgMj']) }
-                </div>
-            </div>       
-        </div>
-        )
-    }
     return (
         <div 
             className="tabBarContainer" 
@@ -313,7 +260,10 @@ function TabBarBuilder({user, currentUser, tab, setTab, ref}) {
                         setTab(tabs.ABOUT); 
                         ref.current?.scrollTo(0, 0)
                     }}>
-                        { intl.intl.formatToPlainString(intl.t['E466pK']).substring(0,1).toUpperCase() + intl.intl.formatToPlainString(intl.t['E466pK']).substring(1) + " " + intl.intl.formatToPlainString(intl.t['HY+vdH']) }
+                        { 
+                            user.bot ? intl.intl.formatToPlainString(intl.t['AOdOYm']) + " " + intl.intl.formatToPlainString(intl.t['HY+vdH'])
+                            : intl.intl.formatToPlainString(intl.t['E466pK']).substring(0,1).toUpperCase() + intl.intl.formatToPlainString(intl.t['E466pK']).substring(1) + " " + intl.intl.formatToPlainString(intl.t['HY+vdH']) 
+                        }
                 </div>
                 <div 
                     className="tabBarItem" 
@@ -326,17 +276,31 @@ function TabBarBuilder({user, currentUser, tab, setTab, ref}) {
                     }}>
                         { intl.intl.formatToPlainString(intl.t['sySsXV']) }
                 </div>
-                <div 
-                    className="tabBarItem" 
-                    tabIndex={2} 
-                    aria-selected={tab === tabs.FRIENDS} 
-                    aria-controls="friends-tab" 
-                    onClick={() => {
-                        setTab(tabs.FRIENDS); 
-                        ref.current?.scrollTo(0, 0)
-                    }}>
-                        { intl.intl.formatToPlainString(intl.t['afBKs7']) }
-                </div>
+                { user.bot ? 
+                    <div 
+                        className="tabBarItem" 
+                        tabIndex={2} 
+                        aria-selected={tab === tabs.DATA} 
+                        aria-controls="data-access-tab" 
+                        onClick={() => {
+                            setTab(tabs.DATA); 
+                            ref.current?.scrollTo(0, 0)
+                        }}>
+                            { intl.intl.formatToPlainString(intl.t['QzDgMj']) }
+                    </div>
+                    :
+                    <div 
+                        className="tabBarItem" 
+                        tabIndex={2} 
+                        aria-selected={tab === tabs.FRIENDS} 
+                        aria-controls="friends-tab" 
+                        onClick={() => {
+                            setTab(tabs.FRIENDS); 
+                            ref.current?.scrollTo(0, 0)
+                        }}>
+                            { intl.intl.formatToPlainString(intl.t['afBKs7']) }
+                    </div>
+                }
             </div>       
         </div>
     )

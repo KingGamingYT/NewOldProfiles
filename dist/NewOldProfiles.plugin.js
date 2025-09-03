@@ -501,72 +501,6 @@ function userVoice({ voice }) {
 }
 function TabBarBuilder({ user, currentUser, tab, setTab, ref }) {
 	if (user.id === currentUser.id) return;
-	if (user.bot) {
-		return BdApi.React.createElement(
-			"div",
-			{
-				className: "tabBarContainer",
-				style: {
-					borderTop: "1px solid hsla(0, 0%, 100%, .1",
-					paddingLeft: "20px"
-				}
-			},
-			BdApi.React.createElement(
-				"div",
-				{
-					className: "tabBar",
-					style: {
-						display: "flex",
-						alignItems: "stretch",
-						height: "55px",
-						flexDirection: "row"
-					}
-				},
-				BdApi.React.createElement(
-					"div",
-					{
-						className: "tabBarItem",
-						tabIndex: 0,
-						"aria-selected": tab === tabs.ABOUT,
-						"aria-controls": "about-tab",
-						onClick: () => {
-							setTab(tabs.ABOUT);
-							ref.current?.scrollTo(0, 0);
-						}
-					},
-					intl.intl.formatToPlainString(intl.t["AOdOYm"]) + " " + intl.intl.formatToPlainString(intl.t["HY+vdH"])
-				),
-				BdApi.React.createElement(
-					"div",
-					{
-						className: "tabBarItem",
-						tabIndex: 1,
-						"aria-selected": tab === tabs.SERVERS,
-						"aria-controls": "servers-tab",
-						onClick: () => {
-							setTab(tabs.SERVERS);
-							ref.current?.scrollTo(0, 0);
-						}
-					},
-					intl.intl.formatToPlainString(intl.t["sySsXV"])
-				),
-				BdApi.React.createElement(
-					"div",
-					{
-						className: "tabBarItem",
-						tabIndex: 2,
-						"aria-selected": tab === tabs.DATA,
-						"aria-controls": "data-access-tab",
-						onClick: () => {
-							setTab(tabs.DATA);
-							ref.current?.scrollTo(0, 0);
-						}
-					},
-					intl.intl.formatToPlainString(intl.t["QzDgMj"])
-				)
-			)
-		);
-	}
 	return BdApi.React.createElement(
 		"div",
 		{
@@ -599,7 +533,7 @@ function TabBarBuilder({ user, currentUser, tab, setTab, ref }) {
 						ref.current?.scrollTo(0, 0);
 					}
 				},
-				intl.intl.formatToPlainString(intl.t["E466pK"]).substring(0, 1).toUpperCase() + intl.intl.formatToPlainString(intl.t["E466pK"]).substring(1) + " " + intl.intl.formatToPlainString(intl.t["HY+vdH"])
+				user.bot ? intl.intl.formatToPlainString(intl.t["AOdOYm"]) + " " + intl.intl.formatToPlainString(intl.t["HY+vdH"]) : intl.intl.formatToPlainString(intl.t["E466pK"]).substring(0, 1).toUpperCase() + intl.intl.formatToPlainString(intl.t["E466pK"]).substring(1) + " " + intl.intl.formatToPlainString(intl.t["HY+vdH"])
 			),
 			BdApi.React.createElement(
 				"div",
@@ -615,7 +549,20 @@ function TabBarBuilder({ user, currentUser, tab, setTab, ref }) {
 				},
 				intl.intl.formatToPlainString(intl.t["sySsXV"])
 			),
-			BdApi.React.createElement(
+			user.bot ? BdApi.React.createElement(
+				"div",
+				{
+					className: "tabBarItem",
+					tabIndex: 2,
+					"aria-selected": tab === tabs.DATA,
+					"aria-controls": "data-access-tab",
+					onClick: () => {
+						setTab(tabs.DATA);
+						ref.current?.scrollTo(0, 0);
+					}
+				},
+				intl.intl.formatToPlainString(intl.t["QzDgMj"])
+			) : BdApi.React.createElement(
 				"div",
 				{
 					className: "tabBarItem",
