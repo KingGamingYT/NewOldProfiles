@@ -69,7 +69,7 @@ const [
 	{ filter: betterdiscord.Webpack.Filters.byStrings("hasAvatarForGuild", "nick") },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("UserProfileActivityBadges"), searchExports: true },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("start", "end", "duration", "percentage") },
-	{ filter: betterdiscord.Webpack.Filters.byStrings("activity", "onAction", "application_id", "INSTANCE") },
+	{ filter: betterdiscord.Webpack.Filters.byStrings("activity", "UserProfileActivityButtons", "USER_PROFILE_ACTIVITY_BUTTONS") },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("activity", "PRESS_PLAY_ON_SPOTIFY_BUTTON") },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("PRESS_JOIN_CALL_BUTTON") },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("users", "channel", "themeType") },

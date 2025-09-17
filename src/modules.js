@@ -34,7 +34,7 @@ export const [
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('hasAvatarForGuild', 'nick') },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings("UserProfileActivityBadges"), searchExports: true },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('start', 'end', 'duration', 'percentage') },
-    { filter: /* @__PURE__ */ Webpack.Filters.byStrings('activity', 'onAction', 'application_id', 'INSTANCE') },
+    { filter: /* @__PURE__ */ Webpack.Filters.byStrings('activity', 'UserProfileActivityButtons', 'USER_PROFILE_ACTIVITY_BUTTONS') },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('activity', 'PRESS_PLAY_ON_SPOTIFY_BUTTON') },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('PRESS_JOIN_CALL_BUTTON') },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('users', 'channel', 'themeType') },
