@@ -14,6 +14,11 @@ export const settings = {
             name: "Disable profile themes",
             note: "Disable a user's custom nitro profile colors.",
             initial: false,
+        },
+        boardTab: {
+            name: "Board Tab",
+            note: `If a user has game widgets, a "Board" tab will appear on the user profile. To edit your own widgets, press the button found under "Profile Widgets" category on your profile.`,
+            initial: false,
         }
     },
     serverCategory: {

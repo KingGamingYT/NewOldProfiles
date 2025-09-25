@@ -1,7 +1,9 @@
 import { Webpack, Data } from 'betterdiscord';
-import { useState, useRef } from 'react';
-import { 
-    ActivityStore, 
+import { useState, useRef, useEffect, useLayoutEffect, useMemo } from 'react';
+import {
+    ApplicationStore, 
+    ActivityStore,
+    DetectableGameSupplementalStore, 
     UserStore, 
     StreamStore, 
     VoiceStateStore, 
@@ -14,14 +16,21 @@ import {
     MutualFriendRenderer, 
     NavigationUtils, 
     ModalAccessUtils, 
-    intl, 
+    ModalRoot,
+    intl,
+    ButtonClasses,
+    FetchGames,
+    FetchApplications, 
     IconUtils, 
     AvatarFetch, 
     RoleRenderer,
     BotTagRenderer, 
     TagGuildRenderer, 
     Tooltip, 
-    Popout 
+    Popout,
+    ModalSystem,
+    Board,
+    TagRenderer,
 } from "./modules";
 import { tabs } from "./globals";
 import { CustomCards, ActivityCards, SpotifyCards, TwitchCards } from "./presence"
@@ -171,6 +180,218 @@ function ClanTagBuilder({user}) {
     )
 }
 
+function FallbackCover(game) {
+    return (
+        <div className="gameCover">
+            <div className="fallback gameCover">
+                <div className="coverFallbackText">{game?.name || "Unknown Game"}</div>
+            </div>
+        </div>
+    )
+}
+
+function FavoriteWidgetBuilder({widget, game}) {
+    const [loading, setLoading] = useState(() => true);
+    
+    const imageURL = useStateFromStores([ DetectableGameSupplementalStore ], () => DetectableGameSupplementalStore.getCoverImageUrl(game?.id), [game?.id]);
+    const image = useMemo(() => new Image(), []);
+
+    const ref = useRef(null);
+
+    useLayoutEffect(() => { FetchGames.getDetectableGamesSupplemental([game?.id]); }, [game?.id]);
+    
+    useLayoutEffect(() => {
+        image.src = imageURL;
+
+        if (!image.src) {
+            setLoading(true);
+
+            if (image.parentElement) image.parentElement.removeChild(image);
+            
+            return;
+        }
+
+        if (image.isConnected) return;
+
+        image.onload = () => {
+            setLoading(false);
+        };
+
+        return () => {delete image.onload;};
+    }, [imageURL]);
+
+    return (
+        <div className="widgetCard" ref={ref}>
+            <TooltipBuilder note={game?.name}> 
+                { loading ? <FallbackCover game={game} /> : <div className="gameCover">
+                    <img 
+                        alt={game?.name} 
+                        className="gameCover" 
+                        style={{ objectFit: "cover" }} 
+                        src={`${image.src}`}
+                    />
+                </div>}
+            </TooltipBuilder>
+            <div className="widgetDetails">
+                <h3 className="widgetTitle">{game?.name || "Unknown Game"}</h3>
+                { widget.games[0].comment && <div role="group">
+                    <svg 
+                        className="commentIcon" 
+                        role="img" 
+                        width="12" 
+                        height="12" 
+                        fill="none" 
+                        viewBox="0 0 24 24"
+                        ><path
+                            fill="var(--icon-tertiary)"
+                            d="M2.35 19.44A4.75 4.75 0 0 0 6.07 21c1.43 0 2.58-.43 3.44-1.3.9-.9 1.35-2.06 1.35-3.5 0-1.43-.43-2.58-1.3-3.45a4.63 4.63 0 0 0-3.5-1.34c.6-1.6 1.99-3.1 4.16-4.49a.8.8 0 0 0 .1-1.3l-2.68-2.2a.76.76 0 0 0-.98 0C2.89 6.78 1 10.64 1 15.02c0 1.9.45 3.38 1.35 4.42ZM14.16 19.44A4.75 4.75 0 0 0 17.88 21c1.43 0 2.58-.43 3.45-1.3.9-.9 1.34-2.06 1.34-3.5 0-1.43-.43-2.58-1.3-3.45a4.63 4.63 0 0 0-3.5-1.34c.6-1.6 1.99-3.1 4.16-4.49a.8.8 0 0 0 .1-1.3l-2.68-2.2a.76.76 0 0 0-.98 0c-3.77 3.36-5.66 7.22-5.66 11.6 0 1.9.45 3.38 1.35 4.42Z"
+                        />    
+                        </svg>
+                        <div className="widgetTitle widgetSubtitle" style={{ color: "var(--text-tertiary)", fontWeight: 400 }}>{widget.games[0].comment}</div>
+                    </div> }
+            </div>   
+        </div>
+    )
+}
+
+function ShelfWidgetBuilder({game}) {
+    const [loading, setLoading] = useState(() => true);
+    
+    const imageURL = useStateFromStores([ DetectableGameSupplementalStore ], () => DetectableGameSupplementalStore.getCoverImageUrl(game?.id), [game?.id]);
+    const image = useMemo(() => new Image(), []);
+
+    const ref = useRef(null);
+
+    useLayoutEffect(() => { FetchGames.getDetectableGamesSupplemental([game?.id]); }, [game?.id]);
+    
+    useLayoutEffect(() => {
+        image.src = imageURL;
+
+        if (!image.src) {
+            setLoading(true);
+
+            if (image.parentElement) image.parentElement.removeChild(image);
+            
+            return;
+        }
+
+        if (image.isConnected) return;
+
+        image.onload = () => {
+            setLoading(false);
+        };
+
+        return () => {delete image.onload;};
+    }, [imageURL]);
+
+    return (
+        <div style={{ position: "relative" }}>
+            <TooltipBuilder note={game?.name}>
+                {loading ? <FallbackCover game={game} /> : <div className="gameCover">
+                    <img 
+                        alt={game?.name} 
+                        className="gameCover" 
+                        style={{ objectFit: "cover" }} 
+                        src={`${image.src}`}
+                    />
+                </div>}
+            </TooltipBuilder>
+        </div>
+    )
+}
+
+function CurrentWidgetBuilder({widget, game, index}) {
+    const [loading, setLoading] = useState(() => true);
+    
+    const imageURL = useStateFromStores([ DetectableGameSupplementalStore ], () => DetectableGameSupplementalStore.getCoverImageUrl(game?.id), [game?.id]);
+    const image = useMemo(() => new Image(), []);
+
+    const ref = useRef(null);
+
+    useLayoutEffect(() => { FetchGames.getDetectableGamesSupplemental([game?.id]); }, [game?.id]);
+    
+    useLayoutEffect(() => {
+        image.src = imageURL;
+
+        if (!image.src) {
+            setLoading(true);
+
+            if (image.parentElement) image.parentElement.removeChild(image);
+            
+            return;
+        }
+
+        if (image.isConnected) return;
+
+        image.onload = () => {
+            setLoading(false);
+        };
+
+        return () => {delete image.onload;};
+    }, [imageURL]);
+
+    return (
+        <div className="widgetCard" ref={ref}>
+            <TooltipBuilder note={game?.name}> 
+                { loading ? <FallbackCover game={game} /> : <div className="gameCover">
+                    <img 
+                        alt={game?.name} 
+                        className="gameCover" 
+                        style={{ objectFit: "cover" }} 
+                        src={`${image.src}`}
+                    />
+                </div>}
+            </TooltipBuilder>
+            <div className="widgetDetails">
+                <h3 className="widgetTitle">{game?.name || "Unknown Game"}</h3>
+                { widget.games[index].tags && <TagRenderer.Z  tags={widget.games[index].tags} widgetType={widget.type} className={"tagListContainer"} />}
+            </div>   
+        </div>
+    )
+}
+
+function WidgetBuilder({widget}) {
+    const gameIds = widget.games.map(game => game.applicationId)
+    let header;
+    if (widget.type.includes("favorite_games")) header = 'sUQar6';
+    else if (widget.type.includes("played_games")) header = 'scOKER';
+    else if (widget.type.includes("want_to_play_games")) header = 'bWSQwc';
+    else if (widget.type.includes("current_games")) header = 'SqNnur';
+
+    useEffect(() => { 
+        (async () => {
+            for (let id of gameIds) {
+                if (!ApplicationStore.getApplication(id)) {
+                    await FetchApplications.fetchApplications([id]);
+                }
+            } 
+        })()
+    }, [gameIds]);
+    const games = useStateFromStores([ ApplicationStore ], () =>  gameIds.map(id => ApplicationStore.getApplication(id)));
+    return (
+        <div className="userInfoSection">
+            <div className="userInfoSectionHeader">{intl.intl.formatToPlainString(intl.t[header])}</div>
+            { widget.type.includes("favorite_games") &&
+                <FavoriteWidgetBuilder widget={widget} game={games[0]} />
+            }
+            { (widget.type.includes("played_games") || widget.type.includes("want_to_play_games")) &&
+                <div className="widgetCoverList">
+                    {
+                        widget.games.map((game, index) => <ShelfWidgetBuilder game={games[index]} />)
+                    }
+                </div> 
+            }
+            { widget.type.includes("current_games") &&
+                <div className="cardList">
+                    {
+                        widget.games.map((game, index) => <CurrentWidgetBuilder widget={widget} game={games[index]} index={index} />)
+                    }
+                </div>
+            }
+        </div>
+    )
+}
+
 function ConnectionCards({user, connections}) {
     if (!connections.length == 0) {
         return (
@@ -234,7 +455,7 @@ export function userVoice({voice}) {
     return participants;
 }
 
-function TabBarBuilder({user, currentUser, tab, setTab, ref}) {
+function TabBarBuilder({user, displayProfile, currentUser, tab, setTab, ref}) {
     if (user.id === currentUser.id) return;
     return (
         <div 
@@ -265,9 +486,22 @@ function TabBarBuilder({user, currentUser, tab, setTab, ref}) {
                             : intl.intl.formatToPlainString(intl.t['E466pK']).substring(0,1).toUpperCase() + intl.intl.formatToPlainString(intl.t['E466pK']).substring(1) + " " + intl.intl.formatToPlainString(intl.t['HY+vdH']) 
                         }
                 </div>
+                { Data.load('boardTab') && displayProfile.widgets?.length > 0 &&
+                    <div 
+                        className="tabBarItem" 
+                        tabIndex={1} 
+                        aria-selected={tab === tabs.BOARD} 
+                        aria-controls="board-tab" 
+                        onClick={() => {
+                            setTab(tabs.BOARD); 
+                            ref.current?.scrollTo(0, 0)
+                        }}>
+                            { intl.intl.formatToPlainString(intl.t['laViw8']) }
+                    </div>
+                }
                 <div 
                     className="tabBarItem" 
-                    tabIndex={1} 
+                    tabIndex={displayProfile.widgets?.length ? 2 : 1} 
                     aria-selected={tab === tabs.SERVERS} 
                     aria-controls="servers-tab" 
                     onClick={() => {
@@ -401,7 +635,8 @@ export function headerBuilder({props, user, currentUser, displayProfile, tab, se
                         />
                     </div>
                     <TabBarBuilder 
-                        user={user} 
+                        user={user}
+                        displayProfile={displayProfile} 
                         currentUser={currentUser} 
                         tab={tab} 
                         setTab={setTab} 
@@ -450,6 +685,7 @@ export function headerBuilder({props, user, currentUser, displayProfile, tab, se
                     </div>
                     <TabBarBuilder 
                         user={user} 
+                        displayProfile={displayProfile}
                         currentUser={currentUser} 
                         tab={tab} 
                         setTab={setTab} 
@@ -497,7 +733,8 @@ export function headerBuilder({props, user, currentUser, displayProfile, tab, se
                         />
                     </div>
                     <TabBarBuilder 
-                        user={user} 
+                        user={user}
+                        displayProfile={displayProfile} 
                         currentUser={currentUser} 
                         tab={tab} 
                         setTab={setTab} 
@@ -541,7 +778,8 @@ export function headerBuilder({props, user, currentUser, displayProfile, tab, se
                         />
                     </div>
                     <TabBarBuilder 
-                        user={user} 
+                        user={user}
+                        displayProfile={displayProfile} 
                         currentUser={currentUser} 
                         tab={tab} 
                         setTab={setTab} 
@@ -576,7 +814,8 @@ export function headerBuilder({props, user, currentUser, displayProfile, tab, se
                 activities={activities}
             />
             <TabBarBuilder 
-                user={user} 
+                user={user}
+                displayProfile={displayProfile} 
                 currentUser={currentUser} 
                 tab={tab} 
                 setTab={setTab} 
@@ -610,10 +849,37 @@ function AboutTab({data, user, displayProfile}) {
                 <div className="userInfoSectionHeader">{intl.intl.formatToPlainString(intl.t['PbMNh4'])}</div>
                 <NoteComponent userId={user.id} />
             </div>
+            { Data.load('boardTab') && user.id === data.currentUser.id && <div className="userInfoSection" style={{ paddingBottom: "20px" }}>
+                <div className="userInfoSectionHeader">{intl.intl.formatToPlainString(intl.t['Jzj9q6'])}</div>
+                <button 
+                    className={`${ButtonClasses.button} ${ButtonClasses.sm} ${ButtonClasses.primary} ${ButtonClasses.hasText}`} 
+                    onClick= { () => ModalSystem.openModal((props) => 
+                        <ModalRoot.Modal {...props} title={intl.intl.formatToPlainString(intl.t['Jzj9q6'])}>
+                            <Board user={user} />
+                        </ModalRoot.Modal>
+                    )}>
+                    <div className={`${ButtonClasses.buttonChildrenWrapper}`}>
+                        <div className={`${ButtonClasses.buttonChildren}`} style={{ fontSize: "14px" }}>{intl.intl.formatToPlainString(intl.t['Geikws'])}</div>
+                    </div>
+                </button>
+            </div> }
             <div className="userInfoSection" style={{ borderTop: "1px solid var(--background-modifier-accent, var(--background-modifider-active))" }}>
                 <ConnectionCards user={user} connections={connections} />
             </div>
             <div aria-hidden={true} style={{ pointerEvents: "none", minHeight: "0px", minWidth: "1px", flex: "0 0 auto", height: "8px" }}></div>
+        </div>
+    )
+}
+
+function BoardTab({data, user, displayProfile}) {
+    const widgets = displayProfile.widgets;
+
+    if (!widgets.length && user.id !== data.currentUser.id) return;
+    return (
+        <div className="infoScroller scrollerBase" style={{ overflow: "hidden scroll" }}>
+            {[
+                widgets.map(widget => <WidgetBuilder widget={widget} />)
+            ]}
         </div>
     )
 }
@@ -693,13 +959,15 @@ export function bodyBuilder({data, user, displayProfile, tab, ref}) {
         <div className="body" style={{ height: "240px", backgroundColor: "var(--background-secondary, var(--background-base-lower))" }} ref={ref}>
             { tab === tabs.ABOUT
                 ? <AboutTab data={data} user={user} displayProfile={displayProfile} />
-                    : tab === tabs.SERVERS
-                        ? <ServersTab data={data} user={user} />
-                            : tab === tabs.FRIENDS
-                                ? <FriendsTab data={data} user={user} />
-                                    : tab === tabs.DATA 
-                                        ? <DataTab user={user} />
-                                            : <FallbackTab/>
+                    : tab === tabs.BOARD
+                        ? <BoardTab data={data} user={user} displayProfile={displayProfile} />
+                            : tab === tabs.SERVERS
+                                ? <ServersTab data={data} user={user} />
+                                    : tab === tabs.FRIENDS
+                                        ? <FriendsTab data={data} user={user} />
+                                            : tab === tabs.DATA 
+                                                ? <DataTab user={user} />
+                                                    : <FallbackTab/>
             }
         </div>
     )

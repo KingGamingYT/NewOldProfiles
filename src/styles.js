@@ -3,7 +3,7 @@ import { Webpack, Utils, DOM } from 'betterdiscord';
 const styles = Object.assign(
     {
         outer: Webpack.getByKeys('outer', 'overlay').outer,
-        hasText: Webpack.getByKeys('primary', 'hasText').hasText,
+        hasText: Webpack.getModule(x=>x.primary && x.hasText && !x.hasTrailing).hasText,
         disabledButtonWrapper: Webpack.getByKeys('disabledButtonWrapper', 'sizeSmall').disabledButtonWrapper,
         fullscreenOnMobile: Webpack.getByKeys('focusLock', 'fullscreenOnMobile').fullscreenOnMobile
     },
@@ -67,14 +67,13 @@ let CSS = webpackify(
         --custom-theme-text-color: unset !important;
         --custom-theme-text-color-amount: 0% !important;
     }
-    .userBanner {
+    .inner .userBanner {
         position: absolute;
         z-index: 0;
         opacity: 25%;
         mask-image: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0));
         pointer-events: none;
     }
-    
     .inner .header {
         display: flex;
         align-items: center;
@@ -86,11 +85,11 @@ let CSS = webpackify(
         margin-right: 20px;
         width: unset !important;
     }
-    .clanTagContainer {
+    .inner .clanTagContainer {
         max-width: 80px;
         overflow: hidden;
     }
-    .clanTag {
+    .inner .clanTag {
         align-items: center;
         background: rgba(0,0,0,0.2);
         border-radius: 4px;
@@ -101,13 +100,13 @@ let CSS = webpackify(
         vertical-align: middle;
         height: 20px;
     }
-    .clanTagInner {
+    .inner .clanTagInner {
         align-items: center;
         display: inline-flex;
         line-height: 16px !important;
         max-width: 60px;
     }
-    .tagBadge {
+    .inner .tagBadge {
         margin-right: 2px;
         margin-top: 0;
         width: 14px;
@@ -410,6 +409,98 @@ let CSS = webpackify(
     :is(.theme-light) .emptyIconGuilds {
         background-image: url(https://discord.com/assets/38af48da1542dfedce582fc5e8042285.svg);
     }
+    .widgetCard {
+        align-items: start;
+        display: grid;
+        gap: 16px;
+        grid-template-columns: auto 1fr;
+        justify-content: flex-start;
+        position: relative;
+        width: 100%;
+        z-index: 0;
+    }
+    .gameCover {
+        border-radius: 8px;
+        box-sizing: border-box;
+        height: var(--custom-game-cover-height, 117px);
+        width: var(--custom-game-cover-width, 88px);
+    }
+    .gameCover:not(.gameCover > .gameCover):before {
+        background: linear-gradient(150deg, hsla(0, 0%, 100%, .2), hsla(0, 0%, 100%, 0) 40%);
+        border-radius: 8px;
+        box-shadow: inset 0 0 13px 0 hsla(0, 0%, 100%, .06), inset 0 0 0 1px var(--border-faint);
+        content: "";
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        transition: background 50ms ease-in;
+        width: 88px;
+        z-index: 1;
+    }
+    .gameCover img[src="null"] {
+        display: none;
+    }
+    .fallback {
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 4px;
+        text-align: center;
+        word-break: break-word;
+    }
+    .coverFallbackText {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        font-size: 10px;
+        font-weight: 500;
+        line-height: 1.2;
+        color: var(--text-default);
+        text-transform: uppercase;
+    }
+    .widgetDetails {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        gap: 4px;
+        justify-content: center;
+        min-height: 117px;
+        overflow-wrap: break-word;
+        word-break: break-word;
+    }
+    .widgetTitle {
+        color: var(--text-default);
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 1.2857142857142858;
+    }
+    .commentIcon {
+        float: left;
+        margin: 3px 4px 0 0;
+    }
+    .widgetCoverList {
+        display: grid;
+        grid-template-columns: repeat(var(--custom-game-cover-grid-row-size, 5), var(--custom-game-cover-width, 88px));
+        justify-content: space-between;
+        row-gap: 16px;
+    }
+    .cardList {
+        align-items: stretch;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+    .tagListContainer {
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 4px;
+        margin-top: 4px;
+    }
+    
     .activityCardsContainer {
         flex: 1 0 fit-content;
         scroll-snap-type: y mandatory;

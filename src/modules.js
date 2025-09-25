@@ -2,8 +2,12 @@ import { Webpack } from "betterdiscord";
 
 export const [
     entireProfileModal,
-    ModalAccessUtils, 
-    intl, 
+    ModalAccessUtils,
+    ModalRoot, 
+    intl,
+    ButtonClasses,
+    FetchGames,
+    FetchApplications, 
     IconUtils, 
     AvatarFetch, 
     EmojiRenderer, 
@@ -22,11 +26,18 @@ export const [
     BotTagRenderer, 
     Tooltip, 
     Popout, 
-    FormSwitch 
+    FormSwitch,
+    Board,
+    ProfileFetch,
+    TagRenderer, 
 ] = /* @__PURE__ */ Webpack.getBulk(
     { filter: /* @__PURE__ */ Webpack.Filters.bySource('forceShowPremium', 'pendingThemeColors') },
     { filter: x => x.openUserProfileModal },
+    { filter: x=>x.Modal },
     { filter: x => x.t && x.t.formatToMarkdownString },
+    { filter: x=> x.button && x.hasText && !x.hasTrailing },
+    { filter: /* @__PURE__ */ Webpack.Filters.byKeys("getDetectableGamesSupplemental") },
+    { filter: /* @__PURE__ */ Webpack.Filters.byKeys("fetchApplication") },
     { filter: /* @__PURE__ */ Webpack.Filters.byKeys("getGuildIconURL") },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('displayProfile', 'onOpenProfile', 'animateOnHover', 'previewStatus') },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('translateSurrogatesToInlineEmoji') },
@@ -45,12 +56,16 @@ export const [
     { filter: /* @__PURE__ */ Webpack.Filters.bySource(".botTag", "invertColor") },
     { filter: /* @__PURE__ */ Webpack.Filters.byPrototypeKeys(("renderTooltip")), searchExports: true  },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings("Unsupported animation config:"), searchExports: true },
-    { filter: /* @__PURE__ */ Webpack.Filters.byStrings('ERROR','tooltipNote'), searchExports: true },
+    { filter: /* @__PURE__ */ Webpack.Filters.byStrings('htmlFor', 'asContainer'), searchExports:true },
+    { filter: /* @__PURE__ */ Webpack.Filters.byStrings('user', 'data-scroller'), searchExports: true },
+    { filter: /* @__PURE__ */ Webpack.Filters.byStrings('connectionsRoleId', 'USER_PROFILE_FETCH_START'), searchExports: true },
+    { filter: /* @__PURE__ */ Webpack.Filters.bySource('tag', 'isCurrentUser', 'widgetType', 'TAG_REMOVED'), searchExports: true }
 )
 export const RelationshipStore = /* @__PURE__ */ Webpack.getStore('RelationshipStore');
 export const ActivityStore = /* @__PURE__ */ Webpack.getStore("PresenceStore");
 export const UserStore = /* @__PURE__ */ Webpack.getStore("UserStore");
 export const ChannelStore = /* @__PURE__ */ Webpack.getStore("ChannelStore");
+export const DetectableGameSupplementalStore = /* @__PURE__ */ Webpack.getStore("DetectableGameSupplementalStore");
 export const GuildStore = /* @__PURE__ */ Webpack.getStore("GuildStore");
 export const StreamStore = /* @__PURE__ */ Webpack.getStore('ApplicationStreamingStore');
 export const UserProfileStore = /* @__PURE__ */ Webpack.getStore('UserProfileStore');
@@ -67,4 +82,10 @@ export const NavigationUtils = /* @__PURE__ */ Webpack.getMangled("transitionTo 
     goBack: /* @__PURE__ */ Webpack.Filters.byStrings(".goBack()"),
     goForward: /* @__PURE__ */ Webpack.Filters.byStrings(".goForward()"),
     transitionToGuild: /* @__PURE__ */ Webpack.Filters.byStrings("\"transitionToGuild - Transitioning to \"")
+});
+export const ModalSystem = Webpack.getMangled(".modalKey?", {
+    openModalLazy: Webpack.Filters.byStrings(".modalKey?"),
+    openModal: Webpack.Filters.byStrings(",instant:"),
+    closeModal: Webpack.Filters.byStrings(".onCloseCallback()"),
+    closeAllModals: Webpack.Filters.byStrings(".getState();for")
 });

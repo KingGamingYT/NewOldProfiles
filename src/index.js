@@ -1,7 +1,7 @@
 import { Webpack, Data, Patcher, DOM, Utils, Components } from "betterdiscord";
-import { entireProfileModal, FormSwitch } from "./modules";
+import { entireProfileModal, FormSwitch, ProfileFetch, UserProfileStore } from "./modules";
 import { settings } from "./settings";
-import { createElement, useState, useRef, useMemo } from "react";
+import { createElement, useState, useRef, useMemo, useEffect } from "react";
 import { tabs } from "./globals";
 import { headerBuilder, bodyBuilder } from "./builders";
 import { addProfileCSS } from "./styles";
@@ -29,6 +29,13 @@ function Starter({props, res}) {
     if (Data.load('disableProfileThemes')) {
         res.props.className = Utils.className(res.props.className, "disable-profile-themes");
     }
+    useEffect(() => {
+        (async () => {
+            if (!UserProfileStore.getMutualFriends(user.id)) { 
+                await ProfileFetch(user.id, { withMutualFriends: true })
+            }
+        })()
+    }, [user.id])
     return [
         createElement('div', {className: "inner"}, 
             [
