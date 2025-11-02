@@ -4,8 +4,10 @@ const styles = Object.assign(
     {
         outer: Webpack.getByKeys('outer', 'overlay').outer,
         hasText: Webpack.getModule(x=>x.primary && x.hasText && !x.hasTrailing).hasText,
+        sm: Webpack.getModule(x=>x.primary && x.hasText && !x.hasTrailing).sm,
         disabledButtonWrapper: Webpack.getByKeys('disabledButtonWrapper', 'sizeSmall').disabledButtonWrapper,
-        fullscreenOnMobile: Webpack.getByKeys('focusLock', 'fullscreenOnMobile').fullscreenOnMobile
+        fullscreenOnMobile: Webpack.getByKeys('focusLock', 'fullscreenOnMobile').fullscreenOnMobile,
+        clickableImage: Webpack.getByKeys('gameState', 'clickableImage').clickableImage
     },
     Webpack.getByKeys('container', 'bar', 'progress'),
     Webpack.getModule(x=>x.container && x.badge && !x.settingsTabBar && !x.guildPrefixContainer && !x.tabBar && !x.popout),
@@ -164,24 +166,26 @@ let CSS = webpackify(
         .lookFilled:is(.colorBrand, .colorPrimary:is(.grow)):hover, .hasText:hover {
             background: var(--green-hover, var(--button-filled-brand-background-hover)) !important;
         }
-        .lookFilled:is(.colorBrand, .colorPrimary:is(.grow)):active, .hasText:hover {
+        .lookFilled:is(.colorBrand, .colorPrimary:is(.grow)):active, .hasText:active {
             background: var(--green-active, var(--button-filled-brand-background-active)) !important;
         }
-        .themeColor.secondary {
+        .themeColor.secondary, .sm:not(.hasText) {
             background: unset !important;
             border: unset !important;
             color: #7c7e81;
+            width: var(--custom-button-button-sm-height);
+            padding: 0;
             svg {
                 stroke: #7c7e81;
             }
         }
-        .themeColor.secondary:hover {
+        .themeColor.secondary:hover, .sm:not(.hasText):hover {
             color: var(--interactive-hover);
             svg {
                 stroke: var(--interactive-hover);
             }
         }
-        .themeColor.secondary:active {
+        .themeColor.secondary:active, .sm:not(.hasText):active {
             color: var(--interactive-active);
             svg {
                 stroke: var(--interactive-active);
@@ -297,14 +301,14 @@ let CSS = webpackify(
     .userBio .lineClamp2Plus {
         -webkit-line-clamp: unset !important;
     }
-    .activity {
+    .inner .activity {
         padding: 20px;
         border-radius: var(--radius-sm);
         position: relative;
     }
-    .activityHeader {
+    .inner .activityHeader {
         font-family: var(--font-display);
-        font-size: 12px;
+        font-size: 12px; 
         line-height: 1.2857142857142858;
         font-weight: 600;
         color: var(--header-secondary);
@@ -368,9 +372,6 @@ let CSS = webpackify(
         border: 1px solid;
         border-color: var(--background-modifier-accent, var(--background-modifier-active));
         flex: 0 1 auto !important
-    }
-    .connectedAccount > div:nth-of-type(2), .connectedAccount > div:nth-of-type(1) > div > [data-text-variant="text-xs/normal"] {
-        display: none;
     }
     .empty {
         display: flex;
@@ -440,6 +441,16 @@ let CSS = webpackify(
     }
     .gameCover img[src="null"] {
         display: none;
+    }
+    .full-motion .hoverActiveEffect {
+        transition: transform .15s ease-in-out;
+        will-change: transform;
+    }
+    .full-motion .hoverActiveEffect:hover {
+        transform: scale(1.0225);
+    }
+    .full-motion .hoverActiveEffect:active {
+        transform: scale(0.9775)
     }
     .fallback {
         align-items: center;
@@ -556,14 +567,25 @@ let CSS = webpackify(
     }
     .activityProfile .contentImagesProfile .mediaProgressBarContainer {
         margin-top: 10px;
-        width: auto;
         margin-right: 8px;
-        .bar {
-            background-color: rgba(79,84,92,.16);
-        }
-        [data-text-variant="text-xs\/normal"] {
-            color: var(--white) !important;
-        } 
+        width: auto;
+            &> div {
+                display: grid;
+                grid-template-areas: "progressbar progressbar" "lefttext righttext";
+            }
+            .bar {
+                background-color: rgba(79,84,92,.16);
+                height: 4px;
+                grid-area: progressbar;
+            }
+            [data-text-variant="text-xs\/normal"] {
+                color: var(--white) !important;
+                grid-area: lefttext;
+            }
+            [data-text-variant="text-xs\/normal"]:last-child {
+                justify-self: end;
+                grid-area: righttext;
+            }   
         
     }
     .activityProfile :is(.nameNormal, .details, .state, .timestamp) {
@@ -599,6 +621,13 @@ let CSS = webpackify(
         gap: 6px;
         flex-direction: row;
     }
+    .activityProfile .actionsProfile .hasText {
+        padding: 2px 16px;
+    }
+    .activityProfile .actionsProfile .sm:not(.hasText) {
+        padding: 0;
+        width: calc(var(--custom-button-button-sm-height) + 4px);
+    }
     .activityProfile .actionsProfile button {
         background: transparent !important;
         border: 1px solid var(--white) !important;
@@ -608,7 +637,6 @@ let CSS = webpackify(
         height: 32px;
         min-height: 32px !important;
         color: #fff;
-        padding: 2px 16px;
         svg {
             display: none;
         }
@@ -631,6 +659,11 @@ let CSS = webpackify(
     }
     .activityProfile .badgeContainer svg path {
         fill: #f6fbf9 !important;
+    }
+    .activityProfile .assets .gameIcon {
+        -webkit-user-drag: none;
+        background-size: 100%;
+        border-radius: 3px;
     }
     .activityProfile .assets .assetsLargeImage {
         width: 90px;
@@ -670,6 +703,13 @@ let CSS = webpackify(
         width: 120px;
         height: 120px;
     }
+    .activityProfile .assets.clickableImage {
+        border-radius: 3px;
+        cursor: pointer;
+        &:after {
+            border-radius: 3px;
+        }
+    }
     :is(.topSectionPlaying, .topSectionSpotify, .topSectionStreaming, .topSectionXbox) {
         .userBanner {
             opacity: 50%;
@@ -698,7 +738,7 @@ let CSS = webpackify(
             .lookFilled:is(.colorBrand, .colorPrimary:is(.grow)):active, .hasText:active {
                 background: #e3e7f8 !important;
             }
-            .themeColor_fb7f94.secondary_fb7f94 {
+            .themeColor.secondary, .sm:not(.hasText) {
                 color: var(--white);
                 svg {
                     stroke: var(--white) !important;

@@ -6,6 +6,7 @@ export const [
     ModalRoot, 
     intl,
     ButtonClasses,
+    ActivityCardClasses,
     FetchGames,
     FetchApplications, 
     IconUtils, 
@@ -29,13 +30,17 @@ export const [
     FormSwitch,
     Board,
     ProfileFetch,
-    TagRenderer, 
+    TagRenderer,
+    OpenSpotifyAlbumFromStatus,
+    GameProfile,
+    DisplayNameStyleConfigurator, 
 ] = /* @__PURE__ */ Webpack.getBulk(
     { filter: /* @__PURE__ */ Webpack.Filters.bySource('forceShowPremium', 'pendingThemeColors') },
     { filter: x => x.openUserProfileModal },
     { filter: x=>x.Modal },
     { filter: x => x.t && x.t.formatToMarkdownString },
     { filter: x=> x.button && x.hasText && !x.hasTrailing },
+    { filter: /* @__PURE__ */ Webpack.Filters.byKeys('gameState', 'clickableImage') },
     { filter: /* @__PURE__ */ Webpack.Filters.byKeys("getDetectableGamesSupplemental") },
     { filter: /* @__PURE__ */ Webpack.Filters.byKeys("fetchApplication") },
     { filter: /* @__PURE__ */ Webpack.Filters.byKeys("getGuildIconURL") },
@@ -56,11 +61,15 @@ export const [
     { filter: /* @__PURE__ */ Webpack.Filters.bySource(".botTag", "invertColor") },
     { filter: /* @__PURE__ */ Webpack.Filters.byPrototypeKeys(("renderTooltip")), searchExports: true  },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings("Unsupported animation config:"), searchExports: true },
-    { filter: /* @__PURE__ */ Webpack.Filters.byStrings('htmlFor', 'asContainer'), searchExports:true },
+    { filter: /* @__PURE__ */ Webpack.Filters.byStrings('"data-toggleable-component":"switch"', 'layout:"horizontal"'), searchExports: true },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('user', 'data-scroller'), searchExports: true },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('connectionsRoleId', 'USER_PROFILE_FETCH_START'), searchExports: true },
-    { filter: /* @__PURE__ */ Webpack.Filters.bySource('tag', 'isCurrentUser', 'widgetType', 'TAG_REMOVED'), searchExports: true }
+    { filter: /* @__PURE__ */ Webpack.Filters.bySource('tag', 'isCurrentUser', 'widgetType', 'TAG_REMOVED'), searchDefault: false },
+    { filter: /* @__PURE__ */ Webpack.Filters.byStrings(".metadata)?void", ".EPISODE?"), searchExports: true },
+    { filter: x => x.openGameProfileModal },
+    { filter: x => Webpack.Filters.byStrings('data-username-with-effects')(x?.type) }
 )
+export const AccessibilityStore = /* @__PURE__ */ Webpack.getStore('AccessibilityStore');
 export const RelationshipStore = /* @__PURE__ */ Webpack.getStore('RelationshipStore');
 export const ActivityStore = /* @__PURE__ */ Webpack.getStore("PresenceStore");
 export const UserStore = /* @__PURE__ */ Webpack.getStore("UserStore");

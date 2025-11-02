@@ -1,13 +1,18 @@
 import { 
     ApplicationStore,
-    ChannelStore, 
+    ChannelStore,
+    DetectableGameSupplementalStore,
+    FetchGames, 
     GuildStore, 
     StreamStore, 
     ApplicationStreamPreviewStore,
     RelationshipStore, 
-    useStateFromStores, 
+    useStateFromStores,
+    ActivityCardClasses, 
     EmojiRenderer, 
-    ActivityTimer, 
+    ActivityTimer,
+    OpenSpotifyAlbumFromStatus,
+    GameProfile, 
     MediaProgressBar, 
     ActivityButtons, 
     SpotifyButtons, 
@@ -18,14 +23,14 @@ import {
     intl 
 } from "./modules";
 import { TooltipBuilder, activityCheck, userVoice } from "./builders";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export const headers = {
-    0: intl.intl.formatToPlainString(intl.t['iKo3yM']), // playing
-    1: intl.intl.formatToPlainString(intl.t['4CQq9f'], { name: '' }), // streaming
-    2: intl.intl.formatToPlainString(intl.t['NF5xoq'], { name: '' }), // listening
-    3: intl.intl.formatToPlainString(intl.t['pW3Ip6'], { name: '' }), // watching
-    5: intl.intl.formatToPlainString(intl.t['QQ2wVF'], { name: '' }) // competing
+    0: intl.intl.formatToPlainString(intl.t['iKo3yJ']), // playing
+    1: intl.intl.formatToPlainString(intl.t['4CQq9Q'], { name: '' }), // streaming
+    2: intl.intl.formatToPlainString(intl.t['NF5xop'], { name: '' }), // listening
+    3: intl.intl.formatToPlainString(intl.t['pW3Ip3'], { name: '' }), // watching
+    5: intl.intl.formatToPlainString(intl.t['QQ2wVE'], { name: '' }) // competing
 };
 
 function FallbackAsset(props) {
@@ -63,18 +68,41 @@ function ActivityCard({user, activity, check}) {
     const [shouldLargeFallback, setShouldLargeFallback] = useState(false);
     const [shouldSmallFallback, setShouldSmallFallback] = useState(false);
     const filterCheck = activityCheck({activities: [activity]});
+    const gameId = activity?.application_id;
+
+    useEffect(() => { 
+        (async () => {
+            if (!DetectableGameSupplementalStore.getGame(gameId)) {
+                await FetchGames.getDetectableGamesSupplemental([gameId]);
+            }
+        })()
+    }, [gameId]);
+
+    const game = DetectableGameSupplementalStore.getGame(gameId);
 
     return (
         <div className="activityProfile activity" id={activity.created_at + "-" + activity.type} key={activity.created_at + "-" + activity.type}>
             <h3 className="headerTextNormal headerText" style={{ color: "var(--white)", marginBottom: "8px" }}>
                 {
                     (check?.listening || check?.watching) && ([2, 3].includes(activity?.type)) ? headers[activity.type] + activity?.name 
-                    : (filterCheck?.xbox || filterCheck?.playstation) ? intl.intl.formatToPlainString(intl.t['A17aMz'], { platform: activity?.platform })
+                    : (filterCheck?.xbox || filterCheck?.playstation) ? intl.intl.formatToPlainString(intl.t['A17aM8'], { platform: activity?.platform })
                     : headers[activity.type] 
                 }
             </h3>
             <div className="bodyNormal" style={{ display: "flex", alignItems: "center", width: "auto" }}>
-                <div className="assets" style={{ position: "relative" }}>
+                <div className="assets" style={{ position: "relative" }}
+                    onMouseOver={(e) => game && e.currentTarget.classList.add(`${ActivityCardClasses.clickableImage}`)}
+                    onMouseLeave={(e) => game && e.currentTarget.classList.remove(`${ActivityCardClasses.clickableImage}`)}
+                    onClick={(e) => game && GameProfile.openGameProfileModal({
+                        applicationId: gameId,
+                        gameProfileModalChecks: {
+                            shouldOpenGameProfile: true,
+                            applicationId: gameId
+                        },
+                        source: "tony",
+                        sourceUserId: user.id,
+                        appContext: {}    
+                    })}>
                     { 
                         activity?.assets && activity?.assets.large_image && <TooltipBuilder note={activity.assets.large_text || activity?.details}>
                                 { shouldLargeFallback ? ( <FallbackAsset className="assetsLargeImage" /> ) :
@@ -144,7 +172,13 @@ function ActivityCard({user, activity, check}) {
                 <div className="contentImagesProfile content" style={{ display: "grid", flex: "1", marginBottom: "3px" }}>
                     <div className="nameNormal textRow ellipsis" style={{ fontWeight: "600" }}>{(check?.listening || check?.watching) && ([2, 3].includes(activity?.type)) ? activity.details : activity.name}</div>
                     { !(filterCheck?.listening || filterCheck?.watching) && <div className="details textRow ellipsis">{activity.details}</div> }
-                    <div className="state textRow ellipsis">{activity.state}</div>
+                    <div className="state textRow ellipsis">{
+                            activity?.party && activity?.party?.size ? 
+                                activity.state + " (" + activity.party.size[0] + " of " + activity.party.size[1] + ")"
+                            :
+                                activity.state
+                        }
+                    </div>
                     { 
                         activity?.timestamps?.end ? <div className="mediaProgressBarContainer">
                             <MediaProgressBar start={activity?.timestamps?.start || activity?.created_at} end={activity?.timestamps?.end} />
@@ -187,6 +221,7 @@ export function SpotifyCards({user, activities}) {
                                     aria-label={activity?.assets?.large_text}
                                     alt={activity?.assets?.large_text}
                                     src={'https://i.scdn.co/image/' + activity.assets.large_image.substring(activity.assets.large_image.indexOf(':')+1)}
+                                    onClick={ () => OpenSpotifyAlbumFromStatus(activity, user.id) }
                                 ></img>
                             </TooltipBuilder> 
                             :
@@ -201,7 +236,8 @@ export function SpotifyCards({user, activities}) {
                     </div>
                     <div className="contentImagesProfile content">
                         <div className="nameNormal textRow ellipsis" style={{ fontWeight: "600" }}>{activity.details}</div>
-                        <div className="state textRow ellipsis">{activity.state}</div>
+                        <div className="details textRow ellipsis">{"by " + activity.state}</div>
+                        {activity.assets?.large_text && <div className="state textRow ellipsis">{"on " + activity.assets?.large_text}</div>}
                         { 
                             activity?.timestamps?.end ? <div className="mediaProgressBarContainer">
                                 <MediaProgressBar start={activity?.timestamps?.start} end={activity?.timestamps?.end} />
@@ -225,7 +261,7 @@ export function TwitchCards({user, activities}) {
     return (
         <div className="activityProfileContainer activityProfileContainerTwitch">
             {__activities.map(activity => <div className="activityProfile activity">
-                <h3 className="headerTextNormal headerText" style={{ color: "var(--white)", marginBottom: "8px" }}>{intl.intl.formatToPlainString(intl.t['Dzgz4u'], { platform: (activity?.name || intl.intl.formatToPlainString(intl.t['5AyH/v'])) })}</h3>
+                <h3 className="headerTextNormal headerText" style={{ color: "var(--white)", marginBottom: "8px" }}>{intl.intl.formatToPlainString(intl.t['Dzgz4u'], { platform: (activity?.name || intl.intl.formatToPlainString(intl.t['5AyH/p'])) })}</h3>
                 <div className="bodyNormal" style={{ display: "flex", alignItems: "center", width: "auto" }}>
                     <div className="assets" style={{ position: "relative" }}>
                             { 
@@ -254,7 +290,7 @@ export function TwitchCards({user, activities}) {
                     </div>
                     <div className="contentImagesProfile content">
                         <div className="nameNormal textRow ellipsis" style={{ fontWeight: "600" }}>{activity.details}</div>
-                        { activity.state && <div className="state textRow ellipsis">{intl.intl.formatToPlainString(intl.t['BMTj29']) + " " + activity.state}</div> }
+                        { activity.state && <div className="state textRow ellipsis">{intl.intl.formatToPlainString(intl.t['BMTj28']) + " " + activity.state}</div> }
                     </div>
                     <div className="buttonsWrapper actionsProfile">
                         <ActivityButtons user={user} activity={activity} />
@@ -272,7 +308,7 @@ function VoiceCards({voice, stream}) {
     return (
         <div className="activityProfile activity">
             <div className="activityProfileContainerVoice">
-                <h3 className="headerTextNormal headerText" style={{ color: "var(--white)", marginBottom: "8px" }}>{intl.intl.formatToPlainString(intl.t['grGyaW'])}</h3>
+                <h3 className="headerTextNormal headerText" style={{ color: "var(--white)", marginBottom: "8px" }}>{intl.intl.formatToPlainString(intl.t['grGyaf'])}</h3>
                 <div className="bodyNormal" style={{ display: "flex", alignItems: "center", width: "auto" }}>
                     <VoiceBox users={userVoice({voice})} channel={channel} themeType="MODAL" />
                     <div className="contentImagesProfile content">
@@ -283,7 +319,7 @@ function VoiceCards({voice, stream}) {
                         { 
                             GuildStore.getGuild(channel.guild_id)?.name && 
                             <div className="state textRow ellipsis">
-                                {intl.intl.formatToPlainString(intl.t['Xe4de3'], { channelName: GuildStore.getGuild(channel.guild_id)?.name})}
+                                {intl.intl.formatToPlainString(intl.t['Xe4de2'], { channelName: GuildStore.getGuild(channel.guild_id)?.name})}
                             </div> 
                         }
                     </div>
@@ -306,7 +342,7 @@ function StreamCards({user, voice}) {
             <div className="activityProfileContainerStream">
                 <h3 className="headerTextNormal headerText" style={{ color: "var(--white)", marginBottom: "8px" }}>
                     {
-                        intl.intl.formatToPlainString(intl.t['sddlGB'], { server: GuildStore.getGuild(channel.guild_id)?.name || channel.name })
+                        intl.intl.formatToPlainString(intl.t['sddlGK'], { server: GuildStore.getGuild(channel.guild_id)?.name || channel.name || intl.intl.formatToPlainString(intl.t['jN2DfZ']) })
                     }
                 </h3>
                 <div className="bodyNormal" style={{ display: "flex", alignItems: "center", width: "auto" }}>
@@ -324,7 +360,7 @@ function StreamCards({user, voice}) {
                     <div className="contentImagesProfile content">
                         <h3 className="textRow" style={{ display: "flex", alignItems: "center" }}>
                             {VoiceIcon({channel: channel})}
-                            <h3 className="nameWrap nameNormal textRow" style={{ fontWeight: "600" }}>{channel.name}</h3>
+                            <h3 className="nameWrap nameNormal textRow" style={{ fontWeight: "600" }}>{channel.name || RelationshipStore.getNickname(channel.getRecipientId())}</h3>
                         </h3>
                         <VoiceList 
                             className="userList" 

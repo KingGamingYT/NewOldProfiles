@@ -71,10 +71,9 @@ export default class NewOldProfiles {
                     const [state, setState] = useState(Data.load(key));
 
                     return createElement(FormSwitch, {
-                        children: name,
-                        note: note,
-                        value: state ?? initial,
-                        hideBorder: 1,
+                        label: name,
+                        description: note,
+                        checked: state ?? initial,
                         onChange: (v) => {
                             Data.save(key, v);
                             setState(v);
@@ -94,9 +93,9 @@ export default class NewOldProfiles {
                     const [state, setState] = useState(Data.load(key));
 
                     return createElement(FormSwitch, {
-                        children: name,
-                        note: note,
-                        value: state ?? initial,
+                        label: name,
+                        description: note,
+                        checked: state ?? initial,
                         onChange: (v) => {
                             Data.save(key, v);
                             setState(v);

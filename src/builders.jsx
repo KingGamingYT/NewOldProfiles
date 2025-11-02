@@ -1,6 +1,7 @@
 import { Webpack, Data } from 'betterdiscord';
 import { useState, useRef, useEffect, useLayoutEffect, useMemo } from 'react';
 import {
+    AccessibilityStore,
     ApplicationStore, 
     ActivityStore,
     DetectableGameSupplementalStore, 
@@ -31,6 +32,8 @@ import {
     ModalSystem,
     Board,
     TagRenderer,
+    DisplayNameStyleConfigurator,
+    GameProfile,
 } from "./modules";
 import { tabs } from "./globals";
 import { CustomCards, ActivityCards, SpotifyCards, TwitchCards } from "./presence"
@@ -84,7 +87,7 @@ function NoteComponent({userId}) {
 function ConnectionComponent({connectedAccount, userId}) {
     ConnectionRenderer ??= Webpack.getByStrings('connectedAccount', 'connectedAccountOpenIcon', 'CONNECTED_ACCOUNT_VIEWED', {searchExports: true});
 
-    return <ConnectionRenderer className="connectedAccount" connectedAccount={connectedAccount} userId={userId} />
+    return <ConnectionRenderer className="connectedAccount" connectedAccount={connectedAccount} userId={userId} showMetadata={false} />
 }
 function BotDataComponent({user}) {
     BotDataRenderer ??= Webpack.getByStrings('user', 'hasMessageContent', 'hasGuildPresences');
@@ -95,13 +98,13 @@ function BotDataComponent({user}) {
 function BioBuilder({displayProfile}) {
     if (displayProfile?._guildMemberProfile?.bio && Data.load('serverBio')) {
         return [
-            <div className="userInfoSectionHeader">{intl.intl.formatToPlainString(intl.t['NepzEx'])}</div>,
+            <div className="userInfoSectionHeader">{intl.intl.formatToPlainString(intl.t['61W33d'])}</div>,
             <MarkdownComponent userBio={displayProfile.bio} />
         ]
     }
     else if (displayProfile._userProfile.bio) {
         return [
-            <div className="userInfoSectionHeader">{intl.intl.formatToPlainString(intl.t['NepzEx'])}</div>,
+            <div className="userInfoSectionHeader">{intl.intl.formatToPlainString(intl.t['61W33d'])}</div>,
             <MarkdownComponent userBio={displayProfile._userProfile.bio} />
         ]
     }
@@ -117,8 +120,8 @@ function RoleBuilder({user, data}) {
         return;
     }
     return [
-        serverMember?.roles?.length !== 1 ? <div className="userInfoSectionHeader">{intl.intl.formatToPlainString(intl.t['LPJmLy'])}</div> 
-        : <div className="userInfoSectionHeader">{intl.intl.formatToPlainString(intl.t['IqVT2N'])}</div>,
+        serverMember?.roles?.length !== 1 ? <div className="userInfoSectionHeader">{intl.intl.formatToPlainString(intl.t['2SZsWX'])}</div> 
+        : <div className="userInfoSectionHeader">{intl.intl.formatToPlainString(intl.t['XPGZXP'])}</div>,
         <RoleRenderer user={user} currentUser={data.currentUser} guild={GuildStore.getGuild(data?.guildId)} />
     ]
 }
@@ -223,7 +226,17 @@ function FavoriteWidgetBuilder({widget, game}) {
     return (
         <div className="widgetCard" ref={ref}>
             <TooltipBuilder note={game?.name}> 
-                { loading ? <FallbackCover game={game} /> : <div className="gameCover">
+                { loading ? <FallbackCover game={game} /> : <div className="gameCover hoverActiveEffect"
+                onClick={() => GameProfile.openGameProfileModal({
+                    applicationId: game?.id,
+                    gameProfileModalChecks: {
+                        shouldOpenGameProfile: true,
+                        applicationId: game?.id
+                    },
+                    source: "tony",
+                    sourceUserId: UserStore.getCurrentUser().id,
+                    appContext: {}    
+                })}>
                     <img 
                         alt={game?.name} 
                         className="gameCover" 
@@ -287,10 +300,20 @@ function ShelfWidgetBuilder({game}) {
     return (
         <div style={{ position: "relative" }}>
             <TooltipBuilder note={game?.name}>
-                {loading ? <FallbackCover game={game} /> : <div className="gameCover">
+                {loading ? <FallbackCover game={game} /> : <div className="gameCover hoverActiveEffect"
+                onClick={() => GameProfile.openGameProfileModal({
+                    applicationId: game?.id,
+                    gameProfileModalChecks: {
+                        shouldOpenGameProfile: true,
+                        applicationId: game?.id
+                    },
+                    source: "tony",
+                    sourceUserId: UserStore.getCurrentUser().id,
+                    appContext: {}    
+                })}>
                     <img 
                         alt={game?.name} 
-                        className="gameCover" 
+                        className="gameCover hoverActiveEffect" 
                         style={{ objectFit: "cover" }} 
                         src={`${image.src}`}
                     />
@@ -333,7 +356,17 @@ function CurrentWidgetBuilder({widget, game, index}) {
     return (
         <div className="widgetCard" ref={ref}>
             <TooltipBuilder note={game?.name}> 
-                { loading ? <FallbackCover game={game} /> : <div className="gameCover">
+                { loading ? <FallbackCover game={game} /> : <div className="gameCover hoverActiveEffect"
+                onClick={() => GameProfile.openGameProfileModal({
+                    applicationId: game?.id,
+                    gameProfileModalChecks: {
+                        shouldOpenGameProfile: true,
+                        applicationId: game?.id
+                    },
+                    source: "tony",
+                    sourceUserId: UserStore.getCurrentUser().id,
+                    appContext: {}    
+                })}>
                     <img 
                         alt={game?.name} 
                         className="gameCover" 
@@ -353,10 +386,10 @@ function CurrentWidgetBuilder({widget, game, index}) {
 function WidgetBuilder({widget}) {
     const gameIds = widget.games.map(game => game.applicationId)
     let header;
-    if (widget.type.includes("favorite_games")) header = 'sUQar6';
-    else if (widget.type.includes("played_games")) header = 'scOKER';
-    else if (widget.type.includes("want_to_play_games")) header = 'bWSQwc';
-    else if (widget.type.includes("current_games")) header = 'SqNnur';
+    if (widget.type.includes("favorite_games")) header = 'sUQar8';
+    else if (widget.type.includes("played_games")) header = 'scOKET';
+    else if (widget.type.includes("want_to_play_games")) header = 'DwAcMz';
+    else if (widget.type.includes("current_games")) header = 'SqNnus';
 
     useEffect(() => { 
         (async () => {
@@ -482,8 +515,8 @@ function TabBarBuilder({user, displayProfile, currentUser, tab, setTab, ref}) {
                         ref.current?.scrollTo(0, 0)
                     }}>
                         { 
-                            user.bot ? intl.intl.formatToPlainString(intl.t['AOdOYm']) + " " + intl.intl.formatToPlainString(intl.t['HY+vdH'])
-                            : intl.intl.formatToPlainString(intl.t['E466pK']).substring(0,1).toUpperCase() + intl.intl.formatToPlainString(intl.t['E466pK']).substring(1) + " " + intl.intl.formatToPlainString(intl.t['HY+vdH']) 
+                            user.bot ? intl.intl.formatToPlainString(intl.t['AOdOYr']) + " " + intl.intl.formatToPlainString(intl.t['HY+vdA'])
+                            : intl.intl.formatToPlainString(intl.t['E466pL']).substring(0,1).toUpperCase() + intl.intl.formatToPlainString(intl.t['E466pL']).substring(1) + " " + intl.intl.formatToPlainString(intl.t['HY+vdA']) 
                         }
                 </div>
                 { Data.load('boardTab') && displayProfile.widgets?.length > 0 &&
@@ -496,7 +529,7 @@ function TabBarBuilder({user, displayProfile, currentUser, tab, setTab, ref}) {
                             setTab(tabs.BOARD); 
                             ref.current?.scrollTo(0, 0)
                         }}>
-                            { intl.intl.formatToPlainString(intl.t['laViw8']) }
+                            { intl.intl.formatToPlainString(intl.t['laViwx']) }
                     </div>
                 }
                 <div 
@@ -508,7 +541,7 @@ function TabBarBuilder({user, displayProfile, currentUser, tab, setTab, ref}) {
                         setTab(tabs.SERVERS); 
                         ref.current?.scrollTo(0, 0)
                     }}>
-                        { intl.intl.formatToPlainString(intl.t['sySsXV']) }
+                        { intl.intl.formatToPlainString(intl.t['sySsXR']) }
                 </div>
                 { user.bot ? 
                     <div 
@@ -520,7 +553,7 @@ function TabBarBuilder({user, displayProfile, currentUser, tab, setTab, ref}) {
                             setTab(tabs.DATA); 
                             ref.current?.scrollTo(0, 0)
                         }}>
-                            { intl.intl.formatToPlainString(intl.t['QzDgMj']) }
+                            { intl.intl.formatToPlainString(intl.t['QzDgMq']) }
                     </div>
                     :
                     <div 
@@ -532,7 +565,7 @@ function TabBarBuilder({user, displayProfile, currentUser, tab, setTab, ref}) {
                             setTab(tabs.FRIENDS); 
                             ref.current?.scrollTo(0, 0)
                         }}>
-                            { intl.intl.formatToPlainString(intl.t['afBKs7']) }
+                            { intl.intl.formatToPlainString(intl.t['afBKs5']) }
                     </div>
                 }
             </div>       
@@ -545,7 +578,16 @@ function HeaderInnerBuilder({user, currentUser, displayProfile, tagName, display
             <AvatarFetch className="avatar" user={user} />
             <div className="headerInfo">
                 <div className="nameSection">
-                    <div className="displayName">{ displayName || tagName }</div>
+                    { 
+                        AccessibilityStore.displayNameStylesEnabled && user?.displayNameStyles ? 
+                        <DisplayNameStyleConfigurator.type 
+                            userName={ displayName || tagName } 
+                            displayNameStyles={ user.displayNameStyles } 
+                            inProfile={1}
+                            textClassName="displayName" 
+                        />
+                        : <div className="displayName">{ displayName || tagName }</div>
+                    }
                     {
                         !Data.load('disableDiscrim') && displayProfile._userProfile?.legacyUsername 
                         ? <div 
@@ -830,7 +872,7 @@ function AboutTab({data, user, displayProfile}) {
     return (
         <div className="infoScroller scrollerBase" style={{ overflow: "hidden scroll", paddingRight: "12px"}}>
             { displayProfile?.pronouns && <div className="userInfoSection">
-                <div className="userInfoSectionHeader">{intl.intl.formatToPlainString(intl.t['+T3RIy'])}</div>
+                <div className="userInfoSectionHeader">{intl.intl.formatToPlainString(intl.t['1w6drw'])}</div>
                 <div className="userPronouns" style={{ color: "var(--text-default)", fontSize: "14px" }}>{displayProfile.pronouns}</div>
             </div> }
             <div className="userInfoSection">
@@ -840,26 +882,26 @@ function AboutTab({data, user, displayProfile}) {
                 <RoleBuilder user={user} data={data} displayProfile={displayProfile} />
             </div>
             <div className="userInfoSection">
-                <div className="userInfoSectionHeader">{intl.intl.formatToPlainString(intl.t['a6XYDw'])}</div>
+                <div className="userInfoSectionHeader">{user.bot ? intl.intl.formatToPlainString(intl.t['A//N4k']) : intl.intl.formatToPlainString(intl.t['xcKP1P'])}</div>
                 <div className="memberSinceWrapper" style={{ display: "flex", gap: "8px", alignItems: "center" }}>
                     {MemberDateBuilder({data, user})}
                 </div>
             </div>
             <div className="userInfoSection">
-                <div className="userInfoSectionHeader">{intl.intl.formatToPlainString(intl.t['PbMNh4'])}</div>
+                <div className="userInfoSectionHeader">{intl.intl.formatToPlainString(intl.t['PbMNh2'])}</div>
                 <NoteComponent userId={user.id} />
             </div>
             { Data.load('boardTab') && user.id === data.currentUser.id && <div className="userInfoSection" style={{ paddingBottom: "20px" }}>
-                <div className="userInfoSectionHeader">{intl.intl.formatToPlainString(intl.t['Jzj9q6'])}</div>
+                <div className="userInfoSectionHeader">{intl.intl.formatToPlainString(intl.t['Jzj9q4'])}</div>
                 <button 
                     className={`${ButtonClasses.button} ${ButtonClasses.sm} ${ButtonClasses.primary} ${ButtonClasses.hasText}`} 
                     onClick= { () => ModalSystem.openModal((props) => 
-                        <ModalRoot.Modal {...props} title={intl.intl.formatToPlainString(intl.t['Jzj9q6'])}>
+                        <ModalRoot.Modal {...props} title={intl.intl.formatToPlainString(intl.t['Jzj9q4'])}>
                             <Board user={user} />
                         </ModalRoot.Modal>
                     )}>
                     <div className={`${ButtonClasses.buttonChildrenWrapper}`}>
-                        <div className={`${ButtonClasses.buttonChildren}`} style={{ fontSize: "14px" }}>{intl.intl.formatToPlainString(intl.t['Geikws'])}</div>
+                        <div className={`${ButtonClasses.buttonChildren}`} style={{ fontSize: "14px" }}>{intl.intl.formatToPlainString(intl.t['Geikwq'])}</div>
                     </div>
                 </button>
             </div> }
@@ -905,7 +947,7 @@ function ServersTab({data, user}) {
         <div className="listScroller scrollerBase" style={{ overflow: "hidden scroll" }}>
             <div className="empty">
                 <div className="emptyIconGuilds emptyIcon" />
-                <div className="emptyText">{intl.intl.formatToPlainString(intl.t['zjVh8v'])}</div>
+                <div className="emptyText">{intl.intl.formatToPlainString(intl.t['zjVh8h'])}</div>
             </div>
         </div>
     )
@@ -931,7 +973,7 @@ function FriendsTab({data, user}) {
         <div className="listScroller scrollerBase" style={{ overflow: "hidden scroll" }}>
             <div className="empty">
                 <div className="emptyIconFriends emptyIcon" />
-                <div className="emptyText">{intl.intl.formatToPlainString(intl.t['/5p4g4'])}</div>
+                <div className="emptyText">{intl.intl.formatToPlainString(intl.t['/5p4gx'])}</div>
             </div>
         </div>
     )
