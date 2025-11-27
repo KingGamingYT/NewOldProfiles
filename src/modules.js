@@ -1,4 +1,5 @@
 import { Webpack } from "betterdiscord";
+import { lazy } from "react";
 
 export const [
     entireProfileModal,
@@ -30,7 +31,6 @@ export const [
     FormSwitch,
     Board,
     ProfileFetch,
-    TagRenderer,
     OpenSpotifyAlbumFromStatus,
     GameProfile,
     DisplayNameStyleConfigurator, 
@@ -48,9 +48,9 @@ export const [
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('translateSurrogatesToInlineEmoji') },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('UserProfileMutualFriendRow') },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('hasAvatarForGuild', 'nick') },
-    { filter: /* @__PURE__ */ Webpack.Filters.byStrings("UserProfileActivityBadges"), searchExports: true },
+    { filter: /* @__PURE__ */ Webpack.Filters.byStrings('timestamps', '.TEXT_FEEDBACK_POSITIVE'), searchExports: true },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('start', 'end', 'duration', 'percentage') },
-    { filter: /* @__PURE__ */ Webpack.Filters.byStrings('activity', 'UserProfileActivityButtons', 'USER_PROFILE_ACTIVITY_BUTTONS') },
+    { filter: /* @__PURE__ */ Webpack.Filters.byStrings('activity', 'USER_PROFILE_ACTIVITY_BUTTONS') },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('activity', 'PRESS_PLAY_ON_SPOTIFY_BUTTON') },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('PRESS_JOIN_CALL_BUTTON') },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('users', 'channel', 'themeType') },
@@ -64,7 +64,6 @@ export const [
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('"data-toggleable-component":"switch"', 'layout:"horizontal"'), searchExports: true },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('user', 'data-scroller'), searchExports: true },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('connectionsRoleId', 'USER_PROFILE_FETCH_START'), searchExports: true },
-    { filter: /* @__PURE__ */ Webpack.Filters.bySource('tag', 'isCurrentUser', 'widgetType', 'TAG_REMOVED'), searchDefault: false },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings(".metadata)?void", ".EPISODE?"), searchExports: true },
     { filter: x => x.openGameProfileModal },
     { filter: x => Webpack.Filters.byStrings('data-username-with-effects')(x?.type) }
@@ -82,6 +81,7 @@ export const ApplicationStore = /* @__PURE__ */ Webpack.getStore('ApplicationSto
 export const ApplicationStreamPreviewStore = /* @__PURE__ */ Webpack.getStore('ApplicationStreamPreviewStore');
 export const VoiceStateStore = /* @__PURE__ */ Webpack.getStore('VoiceStateStore');
 export const GuildMemberStore = /* @__PURE__ */ Webpack.getStore('GuildMemberStore');
+export const StreamerModeStore = /* @__PURE__ */ Webpack.getStore('StreamerModeStore');
 export const { useStateFromStores } = /* @__PURE__ */ Webpack.getMangled(m => m.Store, {
         useStateFromStores: /* @__PURE__ */ Webpack.Filters.byStrings("useStateFromStores")
         }, { raw: true });
@@ -98,3 +98,4 @@ export const ModalSystem = Webpack.getMangled(".modalKey?", {
     closeModal: Webpack.Filters.byStrings(".onCloseCallback()"),
     closeAllModals: Webpack.Filters.byStrings(".getState();for")
 });
+export const TagRenderer = lazy(async () => ({ default: (await Webpack.waitForModule(Webpack.Filters.bySource('tag', 'isCurrentUser', 'widgetType', 'TAG_REMOVED'))).Z}))

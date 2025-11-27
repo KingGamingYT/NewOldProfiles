@@ -1,5 +1,5 @@
 import { Webpack, Data } from 'betterdiscord';
-import { useState, useRef, useEffect, useLayoutEffect, useMemo } from 'react';
+import { useState, useRef, useEffect, useLayoutEffect, useMemo, Suspense } from 'react';
 import {
     AccessibilityStore,
     ApplicationStore, 
@@ -11,7 +11,8 @@ import {
     RelationshipStore, 
     GuildStore, 
     GuildMemberStore, 
-    UserProfileStore, 
+    UserProfileStore,
+    StreamerModeStore, 
     useStateFromStores, 
     MutualServerRenderer, 
     MutualFriendRenderer, 
@@ -377,7 +378,7 @@ function CurrentWidgetBuilder({widget, game, index}) {
             </TooltipBuilder>
             <div className="widgetDetails">
                 <h3 className="widgetTitle">{game?.name || "Unknown Game"}</h3>
-                { widget.games[index].tags && <TagRenderer.Z  tags={widget.games[index].tags} widgetType={widget.type} className={"tagListContainer"} />}
+                { widget.games[index].tags && <Suspense><TagRenderer tags={widget.games[index].tags} widgetType={widget.type} className={"tagListContainer"} /></Suspense> }
             </div>   
         </div>
     )
@@ -388,7 +389,7 @@ function WidgetBuilder({widget}) {
     let header;
     if (widget.type.includes("favorite_games")) header = 'sUQar8';
     else if (widget.type.includes("played_games")) header = 'scOKET';
-    else if (widget.type.includes("want_to_play_games")) header = 'DwAcMz';
+    else if (widget.type.includes("want_to_play_games")) header = 'bWSQwW';
     else if (widget.type.includes("current_games")) header = 'SqNnus';
 
     useEffect(() => { 
@@ -589,23 +590,25 @@ function HeaderInnerBuilder({user, currentUser, displayProfile, tagName, display
                         : <div className="displayName">{ displayName || tagName }</div>
                     }
                     {
-                        !Data.load('disableDiscrim') && displayProfile._userProfile?.legacyUsername 
-                        ? <div 
-                            className="nameTag" 
-                            style={{ marginLeft: "-5px" }}>
-                            {displayProfile._userProfile?.legacyUsername?.substring(displayProfile._userProfile?.legacyUsername?.indexOf("#"))}
-                        </div> 
-                        : user.bot 
-                        ? <div 
-                            className="nameTag"
-                            style={{ marginLeft: "-5px" }}>
-                            {"#" + user.discriminator}
-                        </div>    
-                        :
-                        <div 
-                            className="nameTag">
-                            { "@" + tagName }
-                        </div>
+                        !StreamerModeStore.hidePersonalInformation && (
+                            !Data.load('disableDiscrim') && displayProfile._userProfile?.legacyUsername 
+                            ? <div 
+                                className="nameTag" 
+                                style={{ marginLeft: "-5px" }}>
+                                {displayProfile._userProfile?.legacyUsername?.substring(displayProfile._userProfile?.legacyUsername?.indexOf("#"))}
+                            </div> 
+                            : user.bot 
+                            ? <div 
+                                className="nameTag"
+                                style={{ marginLeft: "-5px" }}>
+                                {"#" + user.discriminator}
+                            </div>    
+                            :
+                            <div 
+                                className="nameTag">
+                                { "@" + tagName }
+                            </div>
+                        )
                     }
                     { 
                         user.bot && <BotTagRenderer.Z 
@@ -869,6 +872,16 @@ export function headerBuilder({props, user, currentUser, displayProfile, tab, se
 
 function AboutTab({data, user, displayProfile}) {
     const connections = displayProfile._userProfile.connectedAccounts;
+    if (StreamerModeStore.hidePersonalInformation) {
+        return (
+            <div className="infoScroller scrollerBase" style={{ overflow: "hidden scroll", paddingRight: "12px"}}>
+                <div className="empty">
+                    <div className="emptyIconStreamerMode emptyIcon" />
+                    <div className="emptyText">{intl.intl.formatToPlainString(intl.t['Br1ls3'])}</div>
+                </div>
+            </div>
+        )
+    }
     return (
         <div className="infoScroller scrollerBase" style={{ overflow: "hidden scroll", paddingRight: "12px"}}>
             { displayProfile?.pronouns && <div className="userInfoSection">

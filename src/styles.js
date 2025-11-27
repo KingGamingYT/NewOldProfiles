@@ -5,12 +5,13 @@ const styles = Object.assign(
         outer: Webpack.getByKeys('outer', 'overlay').outer,
         hasText: Webpack.getModule(x=>x.primary && x.hasText && !x.hasTrailing).hasText,
         sm: Webpack.getModule(x=>x.primary && x.hasText && !x.hasTrailing).sm,
+        buttonChildWrapper: Webpack.getModule(x=>x.primary && x.hasText && !x.hasTrailing).buttonChildWrapper,
         disabledButtonWrapper: Webpack.getByKeys('disabledButtonWrapper', 'sizeSmall').disabledButtonWrapper,
         fullscreenOnMobile: Webpack.getByKeys('focusLock', 'fullscreenOnMobile').fullscreenOnMobile,
         clickableImage: Webpack.getByKeys('gameState', 'clickableImage').clickableImage
     },
     Webpack.getByKeys('container', 'bar', 'progress'),
-    Webpack.getModule(x=>x.container && x.badge && !x.settingsTabBar && !x.guildPrefixContainer && !x.tabBar && !x.popout),
+    Webpack.getModule(x=>x.container && x.badge && Object.keys(x).length === 2),
     Webpack.getByKeys('colorPrimary', 'grow'),
     Webpack.getByKeys('themeColor', 'secondary'),
     Webpack.getByKeys('lineClamp2Plus'),
@@ -161,6 +162,9 @@ let CSS = webpackify(
             padding: 2px 16px;
             svg {
                 display: none;
+            }
+            .buttonChildWrapper {
+                padding: unset;
             } 
         }
         .lookFilled:is(.colorBrand, .colorPrimary:is(.grow)):hover, .hasText:hover {
@@ -390,6 +394,12 @@ let CSS = webpackify(
         background-repeat: no-repeat;
         background-size: cover;
     }
+    .theme-dark .emptyIconStreamerMode {
+        background-image: url('https://discord.com/assets/e18336bc1141d8a5e88379e41e91cacb.svg');
+    }
+    .theme-light .emptyIconStreamerMode {
+        background-image: url('https://discord.com/assets/40311479d87be9ab59aef9571750cd5f.svg');
+    }
     .emptyText {
         font-weight: 500;
         font-size: 14px;
@@ -538,6 +548,7 @@ let CSS = webpackify(
         height: 60px;
         width: 60px;
         background: rgb(255 255 255 / 0.15) !important;
+        margin-right: 20px;
     }
     .activityProfileContainerVoice .bodyNormal > div:nth-child(1):before {
         background: rgb(255 255 255 / 0.15) !important;
@@ -560,7 +571,6 @@ let CSS = webpackify(
         text-transform: uppercase;
     }
     .activityProfile .contentImagesProfile {
-        margin-left: 20px;
         display: grid;
         flex: 1;
         margin-bottom: 3px;
@@ -623,6 +633,17 @@ let CSS = webpackify(
     }
     .activityProfile .actionsProfile .hasText {
         padding: 2px 16px;
+        &:has(svg path[d^="M20.97 4.06c0 .18.08.35.24.43.55.28.9.82 1.04 1.42.3 1.24.75 3.7.75 7.09v4.91a3.09 3.09 0 0 1-5.85 1.38l-1.76-3.51a1.09 1.09 0 0 0-1.23-.55c-.57.13-1.36.27-2.16.27s-1.6-.14-2.16-.27c-.49-.11-1 .1-1.23.55l-1.76 3.51A3.09 3.09 0 0 1 1"]) {
+            background: var(--white) !important;
+            border: unset !important;
+            color: var(--background-brand);
+            &:hover {
+                background: #e6e6e6 !important;
+            }
+            &:active {
+                background: #ccc !important;
+            }
+        }
     }
     .activityProfile .actionsProfile .sm:not(.hasText) {
         padding: 0;
@@ -660,6 +681,9 @@ let CSS = webpackify(
     .activityProfile .badgeContainer svg path {
         fill: #f6fbf9 !important;
     }
+    .activityProfile .assets:not(:empty) {
+        margin-right: 20px;
+    }
     .activityProfile .assets .gameIcon {
         -webkit-user-drag: none;
         background-size: 100%;
@@ -696,12 +720,14 @@ let CSS = webpackify(
         transform: scale(1.3) !important;
     }
     .activityProfile .activityProfileContainerStream .streamPreviewImage {
-        max-height: 60px;
+        max-height: 90px;
         border-radius: 8px;
+        margin-right: 20px;
     }
     .activityProfile .activityProfileContainerStream .streamPreviewPlaceholder {
         width: 120px;
         height: 120px;
+        margin-right: 20px;
     }
     .activityProfile .assets.clickableImage {
         border-radius: 3px;
@@ -785,6 +811,8 @@ let CSS = webpackify(
     }
     .background:before {
         left: 0;
+        top: 0;
+        right: 0;
     }
     .background:after {
         display: none;

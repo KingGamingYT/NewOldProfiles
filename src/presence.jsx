@@ -47,7 +47,7 @@ function FallbackAsset(props) {
 
 export function CustomCards({activities}) {
     const _activities = activities.filter(activity => activity && activity.type === 4);
-    const _emoji = activities.filter(activity => activity.emoji);
+    const _emoji = _activities.filter(activity => activity.emoji);
 
     return (
         _activities.map(activity => <div className="activity">
@@ -173,8 +173,11 @@ function ActivityCard({user, activity, check}) {
                     <div className="nameNormal textRow ellipsis" style={{ fontWeight: "600" }}>{(check?.listening || check?.watching) && ([2, 3].includes(activity?.type)) ? activity.details : activity.name}</div>
                     { !(filterCheck?.listening || filterCheck?.watching) && <div className="details textRow ellipsis">{activity.details}</div> }
                     <div className="state textRow ellipsis">{
-                            activity?.party && activity?.party?.size ? 
+                            activity?.state && activity?.party && activity?.party?.size ?
                                 activity.state + " (" + activity.party.size[0] + " of " + activity.party.size[1] + ")"
+                            :
+                            activity?.party && activity?.party?.size ? 
+                                "Party: " + " (" + activity.party.size[0] + " of " + activity.party.size[1] + ")"
                             :
                                 activity.state
                         }
