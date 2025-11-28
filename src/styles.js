@@ -5,7 +5,7 @@ const styles = Object.assign(
         outer: Webpack.getByKeys('outer', 'overlay').outer,
         hasText: Webpack.getModule(x=>x.primary && x.hasText && !x.hasTrailing).hasText,
         sm: Webpack.getModule(x=>x.primary && x.hasText && !x.hasTrailing).sm,
-        buttonChildWrapper: Webpack.getModule(x=>x.primary && x.hasText && !x.hasTrailing).buttonChildWrapper,
+        buttonChildrenWrapper: Webpack.getModule(x=>x.primary && x.hasText && !x.hasTrailing).buttonChildrenWrapper,
         disabledButtonWrapper: Webpack.getByKeys('disabledButtonWrapper', 'sizeSmall').disabledButtonWrapper,
         fullscreenOnMobile: Webpack.getByKeys('focusLock', 'fullscreenOnMobile').fullscreenOnMobile,
         clickableImage: Webpack.getByKeys('gameState', 'clickableImage').clickableImage
@@ -163,7 +163,7 @@ let CSS = webpackify(
             svg {
                 display: none;
             }
-            .buttonChildWrapper {
+            .buttonChildrenWrapper {
                 padding: unset;
             } 
         }
