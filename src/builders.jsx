@@ -535,7 +535,7 @@ function TabBarBuilder({user, displayProfile, currentUser, tab, setTab, ref}) {
                 }
                 <div 
                     className="tabBarItem" 
-                    tabIndex={displayProfile.widgets?.length ? 2 : 1} 
+                    tabIndex={Data.load('boardTab') && displayProfile.widgets?.length ? 2 : 1} 
                     aria-selected={tab === tabs.SERVERS} 
                     aria-controls="servers-tab" 
                     onClick={() => {
@@ -559,7 +559,7 @@ function TabBarBuilder({user, displayProfile, currentUser, tab, setTab, ref}) {
                     :
                     <div 
                         className="tabBarItem" 
-                        tabIndex={2} 
+                        tabIndex={Data.load('boardTab') && displayProfile.widgets?.length ? 3 : 2} 
                         aria-selected={tab === tabs.FRIENDS} 
                         aria-controls="friends-tab" 
                         onClick={() => {
@@ -1011,7 +1011,7 @@ function FallbackTab() {
 
 export function bodyBuilder({data, user, displayProfile, tab, ref}) {
     return (
-        <div className="body" style={{ height: "240px", backgroundColor: "var(--background-secondary, var(--background-base-lower))" }} ref={ref}>
+        <div className="body" style={{ height: "240px", backgroundColor: "var(--background-secondary, var(--background-base-lower))" }} ref={ref} id={`${Object.keys(tabs).find(t => tabs[t] === tab).toLowerCase()}-tab`}>
             { tab === tabs.ABOUT
                 ? <AboutTab data={data} user={user} displayProfile={displayProfile} />
                     : tab === tabs.BOARD

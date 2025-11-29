@@ -809,7 +809,7 @@ function TabBarBuilder({ user, displayProfile, currentUser, tab, setTab, ref }) 
 				"div",
 				{
 					className: "tabBarItem",
-					tabIndex: displayProfile.widgets?.length ? 2 : 1,
+					tabIndex: betterdiscord.Data.load("boardTab") && displayProfile.widgets?.length ? 2 : 1,
 					"aria-selected": tab === tabs.SERVERS,
 					"aria-controls": "servers-tab",
 					onClick: () => {
@@ -836,7 +836,7 @@ function TabBarBuilder({ user, displayProfile, currentUser, tab, setTab, ref }) 
 				"div",
 				{
 					className: "tabBarItem",
-					tabIndex: 2,
+					tabIndex: betterdiscord.Data.load("boardTab") && displayProfile.widgets?.length ? 3 : 2,
 					"aria-selected": tab === tabs.FRIENDS,
 					"aria-controls": "friends-tab",
 					onClick: () => {
@@ -1204,7 +1204,7 @@ function FallbackTab() {
 	), BdApi.React.createElement("div", { className: "emptyText", style: { textAlign: "center" } }, "You've found yourself in the fallback tab! Close and re-open the profile to try again!"));
 }
 function bodyBuilder({ data, user, displayProfile, tab, ref }) {
-	return BdApi.React.createElement("div", { className: "body", style: { height: "240px", backgroundColor: "var(--background-secondary, var(--background-base-lower))" }, ref }, tab === tabs.ABOUT ? BdApi.React.createElement(AboutTab, { data, user, displayProfile }) : tab === tabs.BOARD ? BdApi.React.createElement(BoardTab, { data, user, displayProfile }) : tab === tabs.SERVERS ? BdApi.React.createElement(ServersTab, { data, user }) : tab === tabs.FRIENDS ? BdApi.React.createElement(FriendsTab, { data, user }) : tab === tabs.DATA ? BdApi.React.createElement(DataTab, { user }) : BdApi.React.createElement(FallbackTab, null));
+	return BdApi.React.createElement("div", { className: "body", style: { height: "240px", backgroundColor: "var(--background-secondary, var(--background-base-lower))" }, ref, id: `${Object.keys(tabs).find((t) => tabs[t] === tab).toLowerCase()}-tab` }, tab === tabs.ABOUT ? BdApi.React.createElement(AboutTab, { data, user, displayProfile }) : tab === tabs.BOARD ? BdApi.React.createElement(BoardTab, { data, user, displayProfile }) : tab === tabs.SERVERS ? BdApi.React.createElement(ServersTab, { data, user }) : tab === tabs.FRIENDS ? BdApi.React.createElement(FriendsTab, { data, user }) : tab === tabs.DATA ? BdApi.React.createElement(DataTab, { user }) : BdApi.React.createElement(FallbackTab, null));
 }
 
 // styles.js
