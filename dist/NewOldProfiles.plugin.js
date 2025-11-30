@@ -96,8 +96,8 @@ const [
 	{ filter: betterdiscord.Webpack.Filters.byPrototypeKeys("renderTooltip"), searchExports: true },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("Unsupported animation config:"), searchExports: true },
 	{ filter: betterdiscord.Webpack.Filters.byStrings('"data-toggleable-component":"switch"', 'layout:"horizontal"'), searchExports: true },
-	{ filter: betterdiscord.Webpack.Filters.byStrings("user", "data-scroller"), searchExports: true },
 	{ filter: betterdiscord.Webpack.Filters.byStrings('["user"]'), searchExports: true },
+	{ filter: betterdiscord.Webpack.Filters.byStrings("connectionsRoleId", "USER_PROFILE_FETCH_START"), searchExports: true },
 	{ filter: betterdiscord.Webpack.Filters.byStrings(".metadata)?void", ".EPISODE?"), searchExports: true },
 	{ filter: (x) => x.openGameProfileModal },
 	{ filter: (x) => betterdiscord.Webpack.Filters.byStrings("data-username-with-effects")(x?.type) }

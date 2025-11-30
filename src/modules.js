@@ -62,8 +62,8 @@ export const [
     { filter: /* @__PURE__ */ Webpack.Filters.byPrototypeKeys(("renderTooltip")), searchExports: true  },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings("Unsupported animation config:"), searchExports: true },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('"data-toggleable-component":"switch"', 'layout:"horizontal"'), searchExports: true },
-    { filter: /* @__PURE__ */ Webpack.Filters.byStrings('user', 'data-scroller'), searchExports: true },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('["user"]'), searchExports: true },
+    { filter: /* @__PURE__ */ Webpack.Filters.byStrings("connectionsRoleId", "USER_PROFILE_FETCH_START"), searchExports: true },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings(".metadata)?void", ".EPISODE?"), searchExports: true },
     { filter: x => x.openGameProfileModal },
     { filter: x => Webpack.Filters.byStrings('data-username-with-effects')(x?.type) }
