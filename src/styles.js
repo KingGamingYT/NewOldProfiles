@@ -56,10 +56,10 @@ let CSS = webpackify(
     :where(.theme-light) .outer:not(.disable-profile-themes) .inner {
         background: var(--custom-theme-base-color, var(--background-secondary, var(--background-base-lower))) !important;
     }
-    .custom-theme-background .theme-dark, .theme-dark.custom-theme-background {
+    .custom-theme-background:is(.user-profile-modal-v2) .theme-dark, .theme-dark.custom-theme-background:is(.user-profile-modal-v2) {
         --custom-theme-base-color: var(--custom-user-profile-theme-color-blend, var(--theme-base-color-dark)) !important;
     }
-    .custom-theme-background .theme-light, .theme-light.custom-theme-background {
+    .custom-theme-background:is(.user-profile-modal-v2) .theme-light, .theme-light.custom-theme-background:is(.user-profile-modal-v2) {
         --custom-theme-base-color: var(--custom-user-profile-theme-color-blend, var(--theme-base-color-light)) !important;
     }
     .custom-theme-background:is(.disable-profile-themes) {
