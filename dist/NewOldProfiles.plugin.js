@@ -230,6 +230,7 @@ function ActivityCard({ user, activity, check }) {
 		})();
 	}, [gameId]);
 	const game = DetectableGameSupplementalStore.getGame(gameId);
+	const application = ApplicationStore.getApplication(activity?.application_id);
 	return BdApi.React.createElement("div", { className: "activityProfile activity", id: activity.created_at + "-" + activity.type, key: activity.created_at + "-" + activity.type }, BdApi.React.createElement("h3", { className: "headerTextNormal headerText", style: { color: "var(--white)", marginBottom: "8px" } }, (check?.listening || check?.watching) && [2, 3].includes(activity?.type) ? headers[activity.type] + activity?.name : filterCheck?.xbox || filterCheck?.playstation ? intl.intl.formatToPlainString(intl.t["A17aM8"], { platform: activity?.platform }) : headers[activity.type]), BdApi.React.createElement("div", { className: "bodyNormal", style: { display: "flex", alignItems: "center", width: "auto" } }, BdApi.React.createElement(
 		"div",
 		{
@@ -237,7 +238,7 @@ function ActivityCard({ user, activity, check }) {
 			style: { position: "relative" },
 			onMouseOver: (e) => game && e.currentTarget.classList.add(`${ActivityCardClasses.clickableImage}`),
 			onMouseLeave: (e) => game && e.currentTarget.classList.remove(`${ActivityCardClasses.clickableImage}`),
-			onClick: (e) => game && GameProfile.openGameProfileModal({
+			onClick: () => game && GameProfile.openGameProfileModal({
 				applicationId: gameId,
 				gameProfileModalChecks: {
 					shouldOpenGameProfile: true,
@@ -279,11 +280,11 @@ function ActivityCard({ user, activity, check }) {
 			{
 				className: "gameIcon",
 				style: { width: "40px", height: "40px" },
-				src: "https://cdn.discordapp.com/app-icons/" + activity.application_id + "/" + ApplicationStore.getApplication(activity?.application_id)?.icon + ".png",
+				src: "https://cdn.discordapp.com/app-icons/" + activity.application_id + "/" + application?.icon + ".png",
 				onError: () => setShouldLargeFallback(true)
 			}
 		),
-		!(user.bot || activity?.assets || activity?.application_id || ApplicationStore.getApplication(activity?.application_id)?.icon) && BdApi.React.createElement(FallbackAsset, { style: { width: "40px", height: "40px" } }),
+		!(user.bot || activity?.assets || activity?.application_id || application?.icon) && BdApi.React.createElement(FallbackAsset, { style: { width: "40px", height: "40px" } }),
 		activity?.assets && activity?.assets?.large_image && activity?.assets?.small_image && BdApi.React.createElement(TooltipBuilder, { note: activity.assets.small_text || activity?.details }, shouldSmallFallback ? BdApi.React.createElement(FallbackAsset, { className: "assetsSmallImage" }) : BdApi.React.createElement(
 			"img",
 			{

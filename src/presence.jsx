@@ -79,6 +79,7 @@ function ActivityCard({user, activity, check}) {
     }, [gameId]);
 
     const game = DetectableGameSupplementalStore.getGame(gameId);
+    const application = ApplicationStore.getApplication(activity?.application_id);
 
     return (
         <div className="activityProfile activity" id={activity.created_at + "-" + activity.type} key={activity.created_at + "-" + activity.type}>
@@ -93,7 +94,7 @@ function ActivityCard({user, activity, check}) {
                 <div className="assets" style={{ position: "relative" }}
                     onMouseOver={(e) => game && e.currentTarget.classList.add(`${ActivityCardClasses.clickableImage}`)}
                     onMouseLeave={(e) => game && e.currentTarget.classList.remove(`${ActivityCardClasses.clickableImage}`)}
-                    onClick={(e) => game && GameProfile.openGameProfileModal({
+                    onClick={() => game && GameProfile.openGameProfileModal({
                         applicationId: gameId,
                         gameProfileModalChecks: {
                             shouldOpenGameProfile: true,
@@ -142,13 +143,13 @@ function ActivityCard({user, activity, check}) {
                             style={{ width: "40px", height: "40px" }}
                             src=
                             {
-                                'https://cdn.discordapp.com/app-icons/' + activity.application_id + '/' + ApplicationStore.getApplication(activity?.application_id)?.icon + ".png"
+                                'https://cdn.discordapp.com/app-icons/' + activity.application_id + '/' + application?.icon + ".png"
                             }
                             onError={ () => (setShouldLargeFallback(true))}
                         />   
                     }
                     {
-                        !(user.bot || activity?.assets || activity?.application_id || ApplicationStore.getApplication(activity?.application_id)?.icon) && 
+                        !(user.bot || activity?.assets || activity?.application_id || application?.icon) && 
                         <FallbackAsset style={{ width: "40px", height: "40px" }} />
                     }
                     {

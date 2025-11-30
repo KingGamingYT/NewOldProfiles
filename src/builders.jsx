@@ -573,6 +573,7 @@ function TabBarBuilder({user, displayProfile, currentUser, tab, setTab, ref}) {
         </div>
     )
 }
+
 function HeaderInnerBuilder({user, currentUser, displayProfile, tagName, displayName}) {
     return (
         <header className="header">
