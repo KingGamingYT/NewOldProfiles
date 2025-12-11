@@ -105,7 +105,7 @@ function ActivityCard({user, activity, check}) {
                         appContext: {}    
                     })}>
                     { 
-                        activity?.assets && activity?.assets.large_image && <TooltipBuilder note={activity.assets.large_text || activity?.details}>
+                        activity?.assets && activity?.assets.large_image && !activity?.platform?.includes('xbox') && <TooltipBuilder note={activity.assets.large_text || activity?.details}>
                                 { shouldLargeFallback ? ( <FallbackAsset className="assetsLargeImage" /> ) :
                             <img 
                                 className="assetsLargeImage"
@@ -136,9 +136,9 @@ function ActivityCard({user, activity, check}) {
                         />
                     }
                     {
-                        activity?.application_id && (!activity?.assets || !activity?.assets.large_image) && !activity?.platform?.includes('xbox') && 
+                        activity?.application_id && (!activity?.assets || !activity?.assets.large_image) && !activity?.platform?.includes('xbox') && (
                         shouldLargeFallback ? ( <FallbackAsset className="gameIcon" style={{ width: "40px", height: "40px" }} /> ) :
-                        activity?.application_id && (!activity?.assets || !activity?.assets.large_image) && !activity?.platform?.includes('xbox') && <img 
+                        <img 
                             className="gameIcon" 
                             style={{ width: "40px", height: "40px" }}
                             src=
@@ -146,7 +146,7 @@ function ActivityCard({user, activity, check}) {
                                 'https://cdn.discordapp.com/app-icons/' + activity.application_id + '/' + application?.icon + ".png"
                             }
                             onError={ () => (setShouldLargeFallback(true))}
-                        />   
+                        />)   
                     }
                     {
                         !(user.bot || activity?.assets || activity?.application_id || application?.icon) && 
@@ -240,7 +240,7 @@ export function SpotifyCards({user, activities}) {
                     </div>
                     <div className="contentImagesProfile content">
                         <div className="nameNormal textRow ellipsis" style={{ fontWeight: "600" }}>{activity.details}</div>
-                        <div className="details textRow ellipsis">{"by " + activity.state}</div>
+                        { activity.state && <div className="details textRow ellipsis">{"by " + activity.state}</div> }
                         {activity.assets?.large_text && <div className="state textRow ellipsis">{"on " + activity.assets?.large_text}</div>}
                         { 
                             activity?.timestamps?.end ? <div className="mediaProgressBarContainer">

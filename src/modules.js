@@ -8,6 +8,7 @@ export const [
     intl,
     ButtonClasses,
     ActivityCardClasses,
+    AnchorClasses,
     FetchGames,
     FetchApplications, 
     IconUtils, 
@@ -26,14 +27,16 @@ export const [
     TagGuildRenderer, 
     RoleRenderer, 
     BotTagRenderer, 
-    Tooltip, 
+    Tooltip,
+    OrbTooltip,
     Popout, 
     FormSwitch,
     Board,
     ProfileFetch,
     OpenSpotifyAlbumFromStatus,
     GameProfile,
-    DisplayNameStyleConfigurator, 
+    DisplayNameStyleConfigurator,
+    OpenUserSettings 
 ] = /* @__PURE__ */ Webpack.getBulk(
     { filter: /* @__PURE__ */ Webpack.Filters.bySource('forceShowPremium', 'pendingThemeColors') },
     { filter: x => x.openUserProfileModal },
@@ -41,6 +44,7 @@ export const [
     { filter: x => x.t && x.t.formatToMarkdownString },
     { filter: x=> x.button && x.hasText && !x.hasTrailing },
     { filter: /* @__PURE__ */ Webpack.Filters.byKeys('gameState', 'clickableImage') },
+    { filter: /* @__PURE__ */ Webpack.Filters.byKeys('anchor', 'anchorUnderlineOnHover') },
     { filter: /* @__PURE__ */ Webpack.Filters.byKeys("getDetectableGamesSupplemental") },
     { filter: /* @__PURE__ */ Webpack.Filters.byKeys("fetchApplication") },
     { filter: /* @__PURE__ */ Webpack.Filters.byKeys("getGuildIconURL") },
@@ -60,13 +64,15 @@ export const [
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('guildMember', 'roles', 'canManageRoles') },
     { filter: /* @__PURE__ */ Webpack.Filters.bySource(".botTag", "invertColor") },
     { filter: /* @__PURE__ */ Webpack.Filters.byPrototypeKeys(("renderTooltip")), searchExports: true  },
+    { filter: /* @__PURE__ */ Webpack.Filters.byStrings('showSubtext', 'orbBadgeAsset') },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings("Unsupported animation config:"), searchExports: true },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('"data-toggleable-component":"switch"', 'layout:"horizontal"'), searchExports: true },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('["user"]'), searchExports: true },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings("connectionsRoleId", "USER_PROFILE_FETCH_START"), searchExports: true },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings(".metadata)?void", ".EPISODE?"), searchExports: true },
     { filter: x => x.openGameProfileModal },
-    { filter: x => Webpack.Filters.byStrings('data-username-with-effects')(x?.type) }
+    { filter: x => Webpack.Filters.byStrings('data-username-with-effects')(x?.type) },
+    { filter: /* @__PURE__ */ Webpack.Filters.byKeys('openUserSettings') }
 )
 export const AccessibilityStore = /* @__PURE__ */ Webpack.getStore('AccessibilityStore');
 export const RelationshipStore = /* @__PURE__ */ Webpack.getStore('RelationshipStore');

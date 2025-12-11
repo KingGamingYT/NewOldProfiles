@@ -1,4 +1,4 @@
-import { Webpack, Data } from 'betterdiscord';
+import { Webpack, Data, Utils } from 'betterdiscord';
 import { useState, useRef, useEffect, useLayoutEffect, useMemo, Suspense } from 'react';
 import {
     AccessibilityStore,
@@ -20,6 +20,7 @@ import {
     ModalAccessUtils, 
     ModalRoot,
     intl,
+    AnchorClasses,
     ButtonClasses,
     FetchGames,
     FetchApplications, 
@@ -28,13 +29,15 @@ import {
     RoleRenderer,
     BotTagRenderer, 
     TagGuildRenderer, 
-    Tooltip, 
+    Tooltip,
+    OrbTooltip,
     Popout,
     ModalSystem,
     Board,
     TagRenderer,
     DisplayNameStyleConfigurator,
     GameProfile,
+    OpenUserSettings
 } from "./modules";
 import { tabs } from "./globals";
 import { CustomCards, ActivityCards, SpotifyCards, TwitchCards } from "./presence"
@@ -71,15 +74,6 @@ function MarkdownComponent({userBio}) {
 
     return <MarkdownFormat className="userBio" userBio={userBio}/>
 }
-function BadgeComponent({badges, style}) {
-    BadgeFetch ??= Webpack.getByStrings('pendingBadges', 'pendingLegacyUsernameDisabled');
-
-    return (
-        <div className="profileBadges" style={style}>
-            <BadgeFetch pendingBadges={badges}/>
-        </div>
-    );
-}
 function NoteComponent({userId}) {
     NoteRenderer ??= Webpack.getByStrings('hidePersonalInformation', 'onUpdate', 'placeholder');
 
@@ -94,6 +88,54 @@ function BotDataComponent({user}) {
     BotDataRenderer ??= Webpack.getByStrings('user', 'hasMessageContent', 'hasGuildPresences');
 
     return <BotDataRenderer user={user} />
+}
+
+function BadgeBuilder({badge, index, id}) {
+    const activities = useStateFromStores([ ActivityStore ], () => ActivityStore.getActivities(id)).filter(activity => activity && !([4, 6].includes(activity?.type)));
+    const voice = useStateFromStores([ VoiceStateStore ], () => VoiceStateStore.getVoiceStateForUser(id)?.channelId);
+    const stream = useStateFromStores([ StreamStore ], () => StreamStore.getAnyStreamForUser(id));
+    const links = ['staff', 'partner', 'certified_moderator', 'hypesquad', 'bug_hunter_level_1', 'bug_hunter_level_2', 'bot_commands'];
+    const routes = ['quest_completed', 'orb_profile_badge'];
+    const settings = ['early_supporter', 'premium', 'guild_booster'];
+    const settingsMatch = settings.filter(x => badge.id.includes(x));
+    return (
+        <div className="profileBadgeWrapper">
+            <TooltipBuilder note={badge.id.includes('orb_profile_badge') ? <OrbTooltip showSubtext={true} /> : badge.description}>
+                <a 
+                    tabIndex={index+1} 
+                    className={`${AnchorClasses.anchor} ${AnchorClasses.anchorUnderlineOnHover}`} 
+                    role={"button"} 
+                    href={links.includes(badge.id) && badge?.link}
+                    rel="noreferrer noopener"
+                    target="_blank"
+                    onClick={() => 
+                        routes.includes(badge.id) ? (() => { NavigationUtils.transitionTo(badge.id.includes('orb_profile_badge') ? '/shop?tab=orbs' : badge?.link?.substring(badge?.link?.indexOf('m')+1)); ModalSystem.closeAllModals()})()
+                        : settingsMatch.length && OpenUserSettings.openUserSettings((() => {
+                            if (settings.some(setting => settingsMatch.includes(setting))) return "nitro_panel";
+                        })())
+                    }>
+                    <div 
+                        className={Utils.className((activities.length !== 0 || voice || stream) && "richBadge", "profileBadge", `profileBadge${badge.id.charAt(0).toUpperCase() + badge.id.toLowerCase().replace(/_(.)/g, (group) => group[1].toUpperCase()).slice(1)}`)} 
+                    />
+                </a>
+            </TooltipBuilder>
+        </div>
+    )
+}
+
+
+function BadgesBuilder({badges, style, id}) {
+    if (!badges) {
+        return;
+    }
+
+    return (
+        <div className="profileBadges" style={style}>
+            {
+                badges.map((badge, index) => <BadgeBuilder badge={badge} index={index} id={id} />)
+            }
+        </div>
+    )
 }
 
 function BioBuilder({displayProfile}) {
@@ -117,7 +159,7 @@ function RoleBuilder({user, data}) {
         return;
     }
     const serverMember = GuildMemberStore.getMember(data?.guildId, user.id);
-    if (serverMember?.roles?.length === 0) {
+    if (!serverMember || serverMember?.roles?.length === 0) {
         return;
     }
     return [
@@ -129,19 +171,24 @@ function RoleBuilder({user, data}) {
 
 function MemberDateBuilder({data, user}) {
     const server = GuildStore.getGuild(data?.guildId);
-    const serverDate = new Date(GuildMemberStore.getMember(data?.guildId, user.id)?.joinedAt);
-    return [
-        <div className="memberSince" style={{ color: "var(--text-default)" }}>{user.createdAt.toString().substring(3, 7) + " " + user.createdAt.getDate() + ", " + user.createdAt.toString().substring(11, 15)}</div>,
-        data?.guildId && [
-            <div className="divider" />,
-            <TooltipBuilder note={server.name}>
-                <div className="guildIcon">
-                    <img src={ IconUtils.getGuildIconURL(server) + 'size=16' } />
-                </div>
-            </TooltipBuilder>,
-            <div className="memberSinceServer" style={{ color: "var(--text-default)" }}>{serverDate.toString().substring(3, 7) + " " + serverDate.getDate() + ", " + serverDate.toString().substring(11, 15)}</div>
-        ]
-    ]
+    const serverMember = GuildMemberStore.getMember(data?.guildId, user.id);
+    const serverDate = new Date(serverMember?.joinedAt);
+    return (
+        <>
+            <div className="memberSince" style={{ color: "var(--text-default)" }}>{user.createdAt.toString().substring(3, 7) + " " + user.createdAt.getDate() + ", " + user.createdAt.toString().substring(11, 15)}</div>,
+            { data?.guildId && serverMember &&
+                <>
+                    <div className="divider" />
+                    <TooltipBuilder note={server.name}>
+                        <div className="guildIcon">
+                            <img src={ IconUtils.getGuildIconURL(server) + 'size=16' } />
+                        </div>
+                    </TooltipBuilder>
+                    <div className="memberSinceServer" style={{ color: "var(--text-default)" }}>{serverDate.toString().substring(3, 7) + " " + serverDate.getDate() + ", " + serverDate.toString().substring(11, 15)}</div>
+                </>
+            }
+        </>
+    )
 }
 
 function ClanTagBuilder({user}) {
@@ -385,7 +432,7 @@ function CurrentWidgetBuilder({widget, game, index}) {
 }
 
 function WidgetBuilder({widget}) {
-    const gameIds = widget.games.map(game => game.applicationId)
+    const gameIds = widget.games.map(game => game.applicationId);
     let header;
     if (widget.type.includes("favorite_games")) header = 'sUQar8';
     else if (widget.type.includes("played_games")) header = 'scOKET';
@@ -394,11 +441,7 @@ function WidgetBuilder({widget}) {
 
     useEffect(() => { 
         (async () => {
-            for (let id of gameIds) {
-                if (!ApplicationStore.getApplication(id)) {
-                    await FetchApplications.fetchApplications([id]);
-                }
-            } 
+            await FetchApplications.fetchApplications(gameIds);
         })()
     }, [gameIds]);
     const games = useStateFromStores([ ApplicationStore ], () =>  gameIds.map(id => ApplicationStore.getApplication(id)));
@@ -624,10 +667,10 @@ function HeaderInnerBuilder({user, currentUser, displayProfile, tagName, display
                         <ClanTagBuilder user={user} />
                         {[
                             displayProfile._userProfile.badges && displayProfile._userProfile.badges.length !== 0 && <div className="divider" style={{ margin: "0 5px 0 5px" }} />,
-                            <BadgeComponent badges={displayProfile._userProfile.badges} style={{ display: "contents" }} />
+                            <BadgesBuilder badges={displayProfile._userProfile.badges} style={{ display: "contents" }} id={user.id} />
                         ]}
                     </div>
-                    : <BadgeComponent badges={displayProfile._userProfile.badges} style={{ display: "flex", flexWrap: "wrap" }}/>
+                    : <BadgesBuilder badges={displayProfile._userProfile.badges} style={{ display: "flex", flexWrap: "wrap" }} id={user.id}/>
                 }
             </div>
             <div className="profileButtons">
@@ -642,7 +685,7 @@ export function headerBuilder({props, user, currentUser, displayProfile, tab, se
     const displayName = user.globalName;
     const activities = useStateFromStores([ ActivityStore ], () => ActivityStore.getActivities(user.id));
     const check = activityCheck({activities});
-    const voice = useStateFromStores([ Webpack.getStore('VoiceStateStore') ], () => Webpack.getStore('VoiceStateStore').getVoiceStateForUser(user.id)?.channelId);
+    const voice = useStateFromStores([ VoiceStateStore ], () => VoiceStateStore.getVoiceStateForUser(user.id)?.channelId);
     const stream = useStateFromStores([ StreamStore ], () => StreamStore.getAnyStreamForUser(user.id));
 
     if (activities.length !== 0 && (check.playing || check.listening || check.watching || check.competing) && (!check.spotify && !check.streaming && !check.xbox) || voice !== undefined) {
