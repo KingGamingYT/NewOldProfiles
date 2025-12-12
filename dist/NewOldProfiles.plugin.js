@@ -73,12 +73,6 @@ const [
 	DisplayNameStyleConfigurator,
 	OpenUserSettings,
 	PopUtils,
-	MessageButtonLarge,
-	MessageButtonSmall,
-	FriendsButton,
-	MoreOverflowButton,
-	FriendAddButton,
-	EditProfileButton,
 	RelationshipUtils,
 	BlockToasts
 ] = betterdiscord.Webpack.getBulk(
@@ -119,12 +113,6 @@ const [
 	{ filter: (x) => betterdiscord.Webpack.Filters.byStrings("data-username-with-effects")(x?.type) },
 	{ filter: betterdiscord.Webpack.Filters.byKeys("openUserSettings") },
 	{ filter: betterdiscord.Webpack.Filters.byKeys("popAll") },
-	{ filter: betterdiscord.Webpack.Filters.byStrings('["userId",'), searchExports: true },
-	{ filter: betterdiscord.Webpack.Filters.byStrings('["userId",', '["text"]'), searchExports: true },
-	{ filter: betterdiscord.Webpack.Filters.byStrings('["user",', "relationshipType", ".pt"), searchExports: true },
-	{ filter: betterdiscord.Webpack.Filters.bySource("user-profile-overflow-menu"), searchExports: true },
-	{ filter: betterdiscord.Webpack.Filters.byStrings('["userId",', "analyticsLocation"), searchExports: true },
-	{ filter: betterdiscord.Webpack.Filters.byStrings("trackUserProfileAction", "EDIT_PROFILE"), searchExports: true },
 	{ filter: (x) => x.unblockUser },
 	{ filter: (x) => x.showUnblockSuccessToast }
 );
@@ -412,10 +400,40 @@ const TooltipBuilder = ({ note, position, children }) => {
 		return children;
 	});
 };
+let MessageButtonLarge;
+let MessageButtonSmall;
+let FriendsButton;
+let MoreOverflowButton;
+let FriendAddButton;
+let EditProfileButton;
 let MarkdownFormat;
 let NoteRenderer;
 let ConnectionRenderer;
 let BotDataRenderer;
+function MessageButtonLargeComponent({ autoFocus, onClose, userId }) {
+	MessageButtonLarge ??= betterdiscord.Webpack.getByStrings('["userId",', { searchExports: true });
+	return BdApi.React.createElement(MessageButtonLarge, { autoFocus, onClose: () => PopUtils.popAll(), userId });
+}
+function MessageButtonSmallComponent({ onClose, userId, variant }) {
+	MessageButtonSmall ??= betterdiscord.Webpack.getByStrings('["userId",', '["text"]', { searchExports: true });
+	return BdApi.React.createElement(MessageButtonSmall, { onCLose: () => PopUtils.popAll(), userId, variant });
+}
+function FriendsButtonComponent({ relationshipType, shouldShowTooltip, type, themeColor, user }) {
+	FriendsButton ??= betterdiscord.Webpack.getByStrings('["user",', "relationshipType", ".pt", { searchExports: true });
+	return BdApi.React.createElement(FriendsButton, { relationshipType, shouldShowTooltip, type, themeColor, user });
+}
+function MoreOverflowButtonComponent({ user }) {
+	MoreOverflowButton ??= betterdiscord.Webpack.getBySource("user-profile-overflow-menu", { searchExports: true });
+	return BdApi.React.createElement(MoreOverflowButton.wV, { user });
+}
+function FriendAddButtonComponent({ autoFocus, userId, variant }) {
+	FriendAddButton ??= betterdiscord.Webpack.getByStrings('["userId",', "analyticsLocation", { searchExports: true });
+	return BdApi.React.createElement(FriendAddButton, { autoFocus, userId, variant });
+}
+function EditProfileButtonComponent({ user }) {
+	EditProfileButton ??= betterdiscord.Webpack.getByStrings("trackUserProfileAction", "EDIT_PROFILE", { searchExports: true });
+	return BdApi.React.createElement(EditProfileButton, { user });
+}
 function MarkdownComponent({ userBio }) {
 	MarkdownFormat ??= betterdiscord.Webpack.getByStrings("userBio", "markup");
 	return BdApi.React.createElement(MarkdownFormat, { className: "userBio", userBio });
@@ -441,17 +459,17 @@ function HeaderButtonBuilder({ currentUser, relationshipType, user }) {
 	const [showPopout, setShowPopout] = react.useState(false);
 	const refDOM = react.useRef(null);
 	if (user.id === currentUser.id) {
-		return BdApi.React.createElement(BdApi.React.Fragment, null, BdApi.React.createElement(EditProfileButton, { user }), BdApi.React.createElement(MoreOverflowButton.wV, { user }));
+		return BdApi.React.createElement(BdApi.React.Fragment, null, BdApi.React.createElement(EditProfileButtonComponent, { user }), BdApi.React.createElement(MoreOverflowButtonComponent, { user }));
 	}
 	if (user.bot) {
-		return BdApi.React.createElement(BdApi.React.Fragment, null, BdApi.React.createElement(MessageButtonLarge, { autoFocus: true, onClose: () => PopUtils.popAll(), userId: user.id }), BdApi.React.createElement(MoreOverflowButton.wV, { user }));
+		return BdApi.React.createElement(BdApi.React.Fragment, null, BdApi.React.createElement(MessageButtonLargeComponent, { autoFocus: true, onClose: () => PopUtils.popAll(), userId: user.id }), BdApi.React.createElement(MoreOverflowButtonComponent, { user }));
 	}
 	switch (relationshipType) {
 		case 0:
-			return BdApi.React.createElement(BdApi.React.Fragment, null, BdApi.React.createElement(FriendAddButton, { autoFocus: true, userId: user.id, variant: "primary" }), BdApi.React.createElement(MessageButtonSmall, { onCLose: () => PopUtils.popAll(), userId: user.id, variant: "secondary" }), BdApi.React.createElement(MoreOverflowButton.wV, { user }));
+			return BdApi.React.createElement(BdApi.React.Fragment, null, BdApi.React.createElement(FriendAddButtonComponent, { autoFocus: true, userId: user.id, variant: "primary" }), BdApi.React.createElement(MessageButtonSmallComponent, { onCLose: () => PopUtils.popAll(), userId: user.id, variant: "secondary" }), BdApi.React.createElement(MoreOverflowButtonComponent, { user }));
 		case 1:
 		case 4:
-			return BdApi.React.createElement(BdApi.React.Fragment, null, BdApi.React.createElement(MessageButtonLarge, { autoFocus: true, onClose: () => PopUtils.popAll(), userId: user.id }), BdApi.React.createElement(FriendsButton, { relationshipType, shouldShowTooltip: true, type: "icon", themeColor: "secondary", user }), BdApi.React.createElement(MoreOverflowButton.wV, { user }));
+			return BdApi.React.createElement(BdApi.React.Fragment, null, BdApi.React.createElement(MessageButtonLargeComponent, { autoFocus: true, onClose: () => PopUtils.popAll(), userId: user.id }), BdApi.React.createElement(FriendsButtonComponent, { relationshipType, shouldShowTooltip: true, type: "icon", themeColor: "secondary", user }), BdApi.React.createElement(MoreOverflowButtonComponent, { user }));
 		case 2:
 			return BdApi.React.createElement(BdApi.React.Fragment, null, BdApi.React.createElement(
 				Popout,
@@ -492,7 +510,7 @@ function HeaderButtonBuilder({ currentUser, relationshipType, user }) {
 					onClick: () => RelationshipUtils.cancelFriendRequest(user.id)
 				},
 				BdApi.React.createElement("div", { className: `${ButtonClasses.buttonChildrenWrapper}` }, BdApi.React.createElement("div", { className: `${ButtonClasses.buttonChildren}` }, BdApi.React.createElement("div", { style: { fontSize: "14px", fontWeight: "500" } }, intl.intl.formatToPlainString(intl.t["xuio0C"]))))
-			), BdApi.React.createElement(MessageButtonSmall, { onCLose: () => PopUtils.popAll(), userId: user.id, variant: "secondary" }), BdApi.React.createElement(MoreOverflowButton.wV, { user }));
+			), BdApi.React.createElement(MessageButtonSmallComponent, { onCLose: () => PopUtils.popAll(), userId: user.id, variant: "secondary" }), BdApi.React.createElement(MoreOverflowButtonComponent, { user }));
 	}
 }
 function BadgeBuilder({ badge, index, id }) {

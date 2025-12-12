@@ -40,12 +40,6 @@ import {
     GameProfile,
     OpenUserSettings,
     PopUtils,
-    MessageButtonLarge,
-    MessageButtonSmall,
-    FriendsButton,
-    MoreOverflowButton,
-    FriendAddButton,
-    EditProfileButton,
     RelationshipUtils,
     BlockToasts
 } from "./modules";
@@ -67,11 +61,47 @@ export const TooltipBuilder = ({ note, position, children }) => {
 }
 
 /* Lazy-Loaded Components */
+let MessageButtonLarge;
+let MessageButtonSmall;
+let FriendsButton;
+let MoreOverflowButton;
+let FriendAddButton;
+let EditProfileButton;
 let MarkdownFormat;
 let NoteRenderer;
 let ConnectionRenderer;
 let BotDataRenderer;
 
+function MessageButtonLargeComponent({autoFocus, onClose, userId}) {
+    MessageButtonLarge ??= Webpack.getByStrings('["userId",', { searchExports: true });
+
+    return <MessageButtonLarge autoFocus={autoFocus} onClose={() => PopUtils.popAll()} userId={userId} />
+}
+function MessageButtonSmallComponent({onClose, userId, variant}) {
+    MessageButtonSmall ??= Webpack.getByStrings('["userId",', '["text"]', { searchExports: true });
+
+    return <MessageButtonSmall onCLose={() => PopUtils.popAll()} userId={userId} variant={variant} />
+}
+function FriendsButtonComponent({relationshipType, shouldShowTooltip, type, themeColor, user}) {
+    FriendsButton ??= Webpack.getByStrings('["user",', 'relationshipType', '.pt', { searchExports: true });
+
+    return <FriendsButton relationshipType={relationshipType} shouldShowTooltip={shouldShowTooltip} type={type} themeColor={themeColor} user={user} />
+}
+function MoreOverflowButtonComponent({user}) {
+    MoreOverflowButton ??= Webpack.getBySource('user-profile-overflow-menu', { searchExports: true });
+
+    return <MoreOverflowButton.wV user={user} />
+}
+function FriendAddButtonComponent({autoFocus, userId, variant}) {
+    FriendAddButton ??= Webpack.getByStrings('["userId",', 'analyticsLocation', { searchExports: true });
+
+    return <FriendAddButton autoFocus={autoFocus} userId={userId} variant={variant} />
+}
+function EditProfileButtonComponent({user}) {
+    EditProfileButton ??= Webpack.getByStrings('trackUserProfileAction', 'EDIT_PROFILE', { searchExports: true });
+
+    return <EditProfileButton user={user} />
+}
 function MarkdownComponent({userBio}) {
     MarkdownFormat ??= Webpack.getByStrings('userBio', 'markup');
 
@@ -108,32 +138,32 @@ function HeaderButtonBuilder({currentUser, relationshipType, user}) {
     if (user.id === currentUser.id) {
         return (
             <>
-                <EditProfileButton user={user} />
-                <MoreOverflowButton.wV user={user} />
+                <EditProfileButtonComponent user={user} />
+                <MoreOverflowButtonComponent user={user} />
             </>
         )
     }
     if (user.bot) {
         return (
             <>
-                <MessageButtonLarge autoFocus={true} onClose={() => PopUtils.popAll()} userId={user.id} />
-                <MoreOverflowButton.wV user={user} />
+                <MessageButtonLargeComponent autoFocus={true} onClose={() => PopUtils.popAll()} userId={user.id} />
+                <MoreOverflowButtonComponent user={user} />
             </>
         )
     }
     switch (relationshipType) {
         case 0: return (
             <>
-                <FriendAddButton autoFocus={true} userId={user.id} variant={"primary"} />
-                <MessageButtonSmall onCLose={() => PopUtils.popAll()} userId={user.id} variant={"secondary"} />
-                <MoreOverflowButton.wV user={user} />
+                <FriendAddButtonComponent autoFocus={true} userId={user.id} variant={"primary"} />
+                <MessageButtonSmallComponent onCLose={() => PopUtils.popAll()} userId={user.id} variant={"secondary"} />
+                <MoreOverflowButtonComponent user={user} />
             </>
         );
         case 1: case 4: return (
             <>
-                <MessageButtonLarge autoFocus={true} onClose={() => PopUtils.popAll()} userId={user.id} />
-                <FriendsButton relationshipType={relationshipType} shouldShowTooltip={true} type={"icon"} themeColor={"secondary"} user={user} />
-                <MoreOverflowButton.wV user={user} />
+                <MessageButtonLargeComponent autoFocus={true} onClose={() => PopUtils.popAll()} userId={user.id} />
+                <FriendsButtonComponent relationshipType={relationshipType} shouldShowTooltip={true} type={"icon"} themeColor={"secondary"} user={user} />
+                <MoreOverflowButtonComponent user={user} />
             </>
         );
         case 2: return (
@@ -186,8 +216,8 @@ function HeaderButtonBuilder({currentUser, relationshipType, user}) {
                         </div>
                     </div>
                 </button>
-                <MessageButtonSmall onCLose={() => PopUtils.popAll()} userId={user.id} variant={"secondary"} />
-                <MoreOverflowButton.wV user={user} />
+                <MessageButtonSmallComponent onCLose={() => PopUtils.popAll()} userId={user.id} variant={"secondary"} />
+                <MoreOverflowButtonComponent user={user} />
             </>
         )
     }
