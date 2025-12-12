@@ -159,7 +159,7 @@ let CSS = webpackify(
     .profileButtons {
         display: flex;
         gap: 8px;
-        .lookFilled:is(.colorBrand, .colorPrimary:is(.grow)), .hasText {
+        .lookFilled:is(.colorBrand, .colorPrimary:is(.grow)), .hasText:not(.primaryFilled) {
             background: var(--green, var(--button-filled-brand-background));
             padding: 2px 16px;
             svg {
@@ -169,10 +169,10 @@ let CSS = webpackify(
                 padding: unset;
             } 
         }
-        .lookFilled:is(.colorBrand, .colorPrimary:is(.grow)):hover, .hasText:hover {
+        .lookFilled:is(.colorBrand, .colorPrimary:is(.grow)):hover, .hasText:not(.primaryFilled):hover {
             background: var(--green-hover, var(--button-filled-brand-background-hover)) !important;
         }
-        .lookFilled:is(.colorBrand, .colorPrimary:is(.grow)):active, .hasText:active {
+        .lookFilled:is(.colorBrand, .colorPrimary:is(.grow)):active, .hasText:not(.primaryFilled):active {
             background: var(--green-active, var(--button-filled-brand-background-active)) !important;
         }
         .themeColor.secondary, .sm:not(.hasText) {

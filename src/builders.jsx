@@ -1,4 +1,4 @@
-import { Webpack, Data, Utils } from 'betterdiscord';
+import { Webpack, Data, Utils, ContextMenu } from 'betterdiscord';
 import { useState, useRef, useEffect, useLayoutEffect, useMemo, Suspense } from 'react';
 import {
     AccessibilityStore,
@@ -32,12 +32,22 @@ import {
     Tooltip,
     OrbTooltip,
     Popout,
+    PopoutContainer,
     ModalSystem,
     Board,
     TagRenderer,
     DisplayNameStyleConfigurator,
     GameProfile,
-    OpenUserSettings
+    OpenUserSettings,
+    PopUtils,
+    MessageButtonLarge,
+    MessageButtonSmall,
+    FriendsButton,
+    MoreOverflowButton,
+    FriendAddButton,
+    EditProfileButton,
+    RelationshipUtils,
+    BlockToasts
 } from "./modules";
 import { tabs } from "./globals";
 import { CustomCards, ActivityCards, SpotifyCards, TwitchCards } from "./presence"
@@ -57,18 +67,11 @@ export const TooltipBuilder = ({ note, position, children }) => {
 }
 
 /* Lazy-Loaded Components */
-let ButtonFetch;
 let MarkdownFormat;
-let BadgeFetch;
 let NoteRenderer;
 let ConnectionRenderer;
 let BotDataRenderer;
 
-function ButtonComponent({user, currentUser, relationshipType}) {
-    ButtonFetch ??= Webpack.getByStrings('gameFriends', 'PENDING_OUTGOING', 'hasIncomingPendingGameFriends', 'onClose');
-
-    return <ButtonFetch user={user} currentUser={currentUser} relationshipType={relationshipType}/>
-}
 function MarkdownComponent({userBio}) {
     MarkdownFormat ??= Webpack.getByStrings('userBio', 'markup');
 
@@ -88,6 +91,99 @@ function BotDataComponent({user}) {
     BotDataRenderer ??= Webpack.getByStrings('user', 'hasMessageContent', 'hasGuildPresences');
 
     return <BotDataRenderer user={user} />
+}
+
+function BlockedPopout({userId, close}) {
+    return (
+        <ContextMenu.Menu navId="blocked-overflow" onClose={close}>
+            <ContextMenu.Item id="user-context-block" label={intl.intl.formatToPlainString(intl.t['Hro40y'])} action={() => { return RelationshipUtils.unblockUser(userId); BlockToasts.showUnblockSuccessToast(userId) }} />
+        </ContextMenu.Menu>
+    )
+}
+
+function HeaderButtonBuilder({currentUser, relationshipType, user}) {
+    const [showPopout, setShowPopout] = useState(false);
+    const refDOM = useRef(null);
+
+    if (user.id === currentUser.id) {
+        return (
+            <>
+                <EditProfileButton user={user} />
+                <MoreOverflowButton.wV user={user} />
+            </>
+        )
+    }
+    switch (relationshipType) {
+        case 0: return (
+            <>
+                <FriendAddButton autoFocus={true} userId={user.id} variant={"primary"} />
+                <MessageButtonSmall onCLose={() => PopUtils.popAll()} userId={user.id} variant={"secondary"} />
+                <MoreOverflowButton.wV user={user} />
+            </>
+        );
+        case (1 || 4): return (
+            <>
+                <MessageButtonLarge autoFocus={true} onClose={() => PopUtils.popAll()} userId={user.id} />
+                <FriendsButton relationshipType={relationshipType} shouldShowTooltip={true} type={"icon"} themeColor={"secondary"} user={user} />
+                <MoreOverflowButton.wV user={user} />
+                
+            </>
+        );
+        case 2: return (
+            <>
+                <Popout 
+                    targetElementRef={refDOM}
+                    clickTrap={true}
+                    onRequestClose={ () => setShowPopout(false) } 
+                    renderPopout={ () => <PopoutContainer position="right"><BlockedPopout userId={user.id} close={ () => setShowPopout(false) } /></PopoutContainer> } 
+                    position="right" 
+                    shouldShow={showPopout}>
+                    {(props) => <span
+                        {...props}  
+                        ref={refDOM} 
+                        onClick={ () => { setShowPopout(true) }}>
+                        <TooltipBuilder note={intl.intl.formatToPlainString(intl.t['UKOtz+'])}>
+                            <div className={`${ButtonClasses.button} ${ButtonClasses.sm} ${ButtonClasses.secondary}`} type={"button"}>
+                                <div className={`${ButtonClasses.buttonChildrenWrapper}`}>
+                                    <div className={`${ButtonClasses.buttonChildren}`}>
+                                        <svg className={`${ButtonClasses.icon}`} role="img" width="24" height="24" viewBox="0 0 24 24">
+                                            <path d="M4 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm10-2a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm8 0a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z" fill="currentColor" />
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </TooltipBuilder>
+                    </span>}
+                </Popout>
+            </>
+        )
+        case 3: return (
+            <>
+                <button 
+                    className={`${ButtonClasses.button} ${ButtonClasses.sm} ${ButtonClasses.secondary} ${ButtonClasses.hasText} ${ButtonClasses.active}`} 
+                    type={"button"}
+                    onClick={() => RelationshipUtils.acceptFriendRequest({userId: user.id})}>
+                    <div className={`${ButtonClasses.buttonChildrenWrapper}`}>
+                        <div className={`${ButtonClasses.buttonChildren}`}>
+                            <div style={{fontSize: "14px", fontWeight: "500"}}>{intl.intl.formatToPlainString(intl.t['MMlhsr'])}</div>
+                        </div>
+                    </div>
+                </button>
+                <button 
+                    className={`${ButtonClasses.button} ${ButtonClasses.sm} ${ButtonClasses.secondary} ${ButtonClasses.hasText} primaryFilled`} 
+                    type={"button"}
+                    onClick={() => RelationshipUtils.cancelFriendRequest({userId: user.id})}>
+                    <div className={`${ButtonClasses.buttonChildrenWrapper}`}>
+                        <div className={`${ButtonClasses.buttonChildren}`}>
+                            <div style={{fontSize: "14px", fontWeight: "500"}}>{intl.intl.formatToPlainString(intl.t['xuio0C'])}</div>
+                        </div>
+                    </div>
+                </button>
+                <MessageButtonSmall onCLose={() => PopUtils.popAll()} userId={user.id} variant={"secondary"} />
+                <MoreOverflowButton.wV user={user} />
+            </>
+        )
+    }
 }
 
 function BadgeBuilder({badge, index, id}) {
@@ -674,7 +770,7 @@ function HeaderInnerBuilder({user, currentUser, displayProfile, tagName, display
                 }
             </div>
             <div className="profileButtons">
-                <ButtonComponent user={user} currentUser={currentUser} relationshipType={RelationshipStore.getRelationshipType(user.id)}/>
+                <HeaderButtonBuilder currentUser={currentUser} relationshipType={RelationshipStore.getRelationshipType(user.id)} user={user} />
             </div>
         </header>
     )
