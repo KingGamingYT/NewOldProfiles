@@ -96,7 +96,7 @@ function BotDataComponent({user}) {
 function BlockedPopout({userId, close}) {
     return (
         <ContextMenu.Menu navId="blocked-overflow" onClose={close}>
-            <ContextMenu.Item id="user-context-block" label={intl.intl.formatToPlainString(intl.t['Hro40y'])} action={() => { return RelationshipUtils.unblockUser(userId); BlockToasts.showUnblockSuccessToast(userId) }} />
+            <ContextMenu.Item id="user-context-block" label={intl.intl.formatToPlainString(intl.t['Hro40y'])} action={() => { return RelationshipUtils.unblockUser(userId), BlockToasts.showUnblockSuccessToast(userId) }} />
         </ContextMenu.Menu>
     )
 }
@@ -113,6 +113,14 @@ function HeaderButtonBuilder({currentUser, relationshipType, user}) {
             </>
         )
     }
+    if (user.bot) {
+        return (
+            <>
+                <MessageButtonLarge autoFocus={true} onClose={() => PopUtils.popAll()} userId={user.id} />
+                <MoreOverflowButton.wV user={user} />
+            </>
+        )
+    }
     switch (relationshipType) {
         case 0: return (
             <>
@@ -121,12 +129,11 @@ function HeaderButtonBuilder({currentUser, relationshipType, user}) {
                 <MoreOverflowButton.wV user={user} />
             </>
         );
-        case (1 || 4): return (
+        case 1, 4: return (
             <>
                 <MessageButtonLarge autoFocus={true} onClose={() => PopUtils.popAll()} userId={user.id} />
                 <FriendsButton relationshipType={relationshipType} shouldShowTooltip={true} type={"icon"} themeColor={"secondary"} user={user} />
                 <MoreOverflowButton.wV user={user} />
-                
             </>
         );
         case 2: return (
@@ -146,7 +153,7 @@ function HeaderButtonBuilder({currentUser, relationshipType, user}) {
                             <div className={`${ButtonClasses.button} ${ButtonClasses.sm} ${ButtonClasses.secondary}`} type={"button"}>
                                 <div className={`${ButtonClasses.buttonChildrenWrapper}`}>
                                     <div className={`${ButtonClasses.buttonChildren}`}>
-                                        <svg className={`${ButtonClasses.icon}`} role="img" width="24" height="24" viewBox="0 0 24 24">
+                                        <svg className={`${ButtonClasses.icon}`} role="img" width="16" height="16" viewBox="0 0 24 24">
                                             <path d="M4 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm10-2a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm8 0a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z" fill="currentColor" />
                                         </svg>
                                     </div>
@@ -172,7 +179,7 @@ function HeaderButtonBuilder({currentUser, relationshipType, user}) {
                 <button 
                     className={`${ButtonClasses.button} ${ButtonClasses.sm} ${ButtonClasses.secondary} ${ButtonClasses.hasText} primaryFilled`} 
                     type={"button"}
-                    onClick={() => RelationshipUtils.cancelFriendRequest({userId: user.id})}>
+                    onClick={() => RelationshipUtils.cancelFriendRequest(user.id)}>
                     <div className={`${ButtonClasses.buttonChildrenWrapper}`}>
                         <div className={`${ButtonClasses.buttonChildren}`}>
                             <div style={{fontSize: "14px", fontWeight: "500"}}>{intl.intl.formatToPlainString(intl.t['xuio0C'])}</div>

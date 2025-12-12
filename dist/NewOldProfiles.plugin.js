@@ -121,11 +121,9 @@ const [
 	{ filter: betterdiscord.Webpack.Filters.byKeys("popAll") },
 	{ filter: betterdiscord.Webpack.Filters.byStrings('["userId",'), searchExports: true },
 	{ filter: betterdiscord.Webpack.Filters.byStrings('["userId",', '["text"]'), searchExports: true },
-	{ filter: betterdiscord.Webpack.Filters.byStrings('["type",', "relationshipType"), searchExports: true },
+	{ filter: betterdiscord.Webpack.Filters.byStrings('["user",', "relationshipType", ".pt"), searchExports: true },
 	{ filter: betterdiscord.Webpack.Filters.bySource("user-profile-overflow-menu"), searchExports: true },
 	{ filter: betterdiscord.Webpack.Filters.byStrings('["userId",', "analyticsLocation"), searchExports: true },
-	{ filter: betterdiscord.Webpack.Filters.byKeys("openUserSettings") },
-	{ filter: betterdiscord.Webpack.Filters.byKeys("openUserSettings") },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("trackUserProfileAction", "EDIT_PROFILE"), searchExports: true },
 	{ filter: (x) => x.unblockUser },
 	{ filter: (x) => x.showUnblockSuccessToast }
@@ -436,7 +434,7 @@ function BotDataComponent({ user }) {
 }
 function BlockedPopout({ userId, close }) {
 	return BdApi.React.createElement(betterdiscord.ContextMenu.Menu, { navId: "blocked-overflow", onClose: close }, BdApi.React.createElement(betterdiscord.ContextMenu.Item, { id: "user-context-block", label: intl.intl.formatToPlainString(intl.t["Hro40y"]), action: () => {
-		return RelationshipUtils.unblockUser(userId);
+		return RelationshipUtils.unblockUser(userId), BlockToasts.showUnblockSuccessToast(userId);
 	} }));
 }
 function HeaderButtonBuilder({ currentUser, relationshipType, user }) {
@@ -445,10 +443,13 @@ function HeaderButtonBuilder({ currentUser, relationshipType, user }) {
 	if (user.id === currentUser.id) {
 		return BdApi.React.createElement(BdApi.React.Fragment, null, BdApi.React.createElement(EditProfileButton, { user }), BdApi.React.createElement(MoreOverflowButton.wV, { user }));
 	}
+	if (user.bot) {
+		return BdApi.React.createElement(BdApi.React.Fragment, null, BdApi.React.createElement(MessageButtonLarge, { autoFocus: true, onClose: () => PopUtils.popAll(), userId: user.id }), BdApi.React.createElement(MoreOverflowButton.wV, { user }));
+	}
 	switch (relationshipType) {
 		case 0:
 			return BdApi.React.createElement(BdApi.React.Fragment, null, BdApi.React.createElement(FriendAddButton, { autoFocus: true, userId: user.id, variant: "primary" }), BdApi.React.createElement(MessageButtonSmall, { onCLose: () => PopUtils.popAll(), userId: user.id, variant: "secondary" }), BdApi.React.createElement(MoreOverflowButton.wV, { user }));
-		case 1:
+		case (4):
 			return BdApi.React.createElement(BdApi.React.Fragment, null, BdApi.React.createElement(MessageButtonLarge, { autoFocus: true, onClose: () => PopUtils.popAll(), userId: user.id }), BdApi.React.createElement(FriendsButton, { relationshipType, shouldShowTooltip: true, type: "icon", themeColor: "secondary", user }), BdApi.React.createElement(MoreOverflowButton.wV, { user }));
 		case 2:
 			return BdApi.React.createElement(BdApi.React.Fragment, null, BdApi.React.createElement(
@@ -470,7 +471,7 @@ function HeaderButtonBuilder({ currentUser, relationshipType, user }) {
 							setShowPopout(true);
 						}
 					},
-					BdApi.React.createElement(TooltipBuilder, { note: intl.intl.formatToPlainString(intl.t["UKOtz+"]) }, BdApi.React.createElement("div", { className: `${ButtonClasses.button} ${ButtonClasses.sm} ${ButtonClasses.secondary}`, type: "button" }, BdApi.React.createElement("div", { className: `${ButtonClasses.buttonChildrenWrapper}` }, BdApi.React.createElement("div", { className: `${ButtonClasses.buttonChildren}` }, BdApi.React.createElement("svg", { className: `${ButtonClasses.icon}`, role: "img", width: "24", height: "24", viewBox: "0 0 24 24" }, BdApi.React.createElement("path", { d: "M4 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm10-2a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm8 0a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z", fill: "currentColor" }))))))
+					BdApi.React.createElement(TooltipBuilder, { note: intl.intl.formatToPlainString(intl.t["UKOtz+"]) }, BdApi.React.createElement("div", { className: `${ButtonClasses.button} ${ButtonClasses.sm} ${ButtonClasses.secondary}`, type: "button" }, BdApi.React.createElement("div", { className: `${ButtonClasses.buttonChildrenWrapper}` }, BdApi.React.createElement("div", { className: `${ButtonClasses.buttonChildren}` }, BdApi.React.createElement("svg", { className: `${ButtonClasses.icon}`, role: "img", width: "16", height: "16", viewBox: "0 0 24 24" }, BdApi.React.createElement("path", { d: "M4 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm10-2a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm8 0a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z", fill: "currentColor" }))))))
 				)
 			));
 		case 3:
@@ -487,7 +488,7 @@ function HeaderButtonBuilder({ currentUser, relationshipType, user }) {
 				{
 					className: `${ButtonClasses.button} ${ButtonClasses.sm} ${ButtonClasses.secondary} ${ButtonClasses.hasText} primaryFilled`,
 					type: "button",
-					onClick: () => RelationshipUtils.cancelFriendRequest({ userId: user.id })
+					onClick: () => RelationshipUtils.cancelFriendRequest(user.id)
 				},
 				BdApi.React.createElement("div", { className: `${ButtonClasses.buttonChildrenWrapper}` }, BdApi.React.createElement("div", { className: `${ButtonClasses.buttonChildren}` }, BdApi.React.createElement("div", { style: { fontSize: "14px", fontWeight: "500" } }, intl.intl.formatToPlainString(intl.t["xuio0C"]))))
 			), BdApi.React.createElement(MessageButtonSmall, { onCLose: () => PopUtils.popAll(), userId: user.id, variant: "secondary" }), BdApi.React.createElement(MoreOverflowButton.wV, { user }));

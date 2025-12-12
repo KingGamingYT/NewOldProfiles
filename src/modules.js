@@ -87,11 +87,9 @@ export const [
     { filter: /* @__PURE__ */ Webpack.Filters.byKeys('popAll') },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('["userId",'), searchExports: true },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('["userId",', '["text"]'), searchExports: true },
-    { filter: /* @__PURE__ */ Webpack.Filters.byStrings('["type",', 'relationshipType'), searchExports: true },
+    { filter: /* @__PURE__ */ Webpack.Filters.byStrings('["user",', 'relationshipType', '.pt'), searchExports: true },
     { filter: /* @__PURE__ */ Webpack.Filters.bySource('user-profile-overflow-menu'), searchExports: true },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('["userId",', 'analyticsLocation'), searchExports: true },
-    { filter: /* @__PURE__ */ Webpack.Filters.byKeys('openUserSettings') },
-    { filter: /* @__PURE__ */ Webpack.Filters.byKeys('openUserSettings') },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('trackUserProfileAction', 'EDIT_PROFILE'), searchExports: true },
     { filter: x => x.unblockUser },
     { filter: x => x.showUnblockSuccessToast }
