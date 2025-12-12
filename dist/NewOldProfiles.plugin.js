@@ -449,7 +449,8 @@ function HeaderButtonBuilder({ currentUser, relationshipType, user }) {
 	switch (relationshipType) {
 		case 0:
 			return BdApi.React.createElement(BdApi.React.Fragment, null, BdApi.React.createElement(FriendAddButton, { autoFocus: true, userId: user.id, variant: "primary" }), BdApi.React.createElement(MessageButtonSmall, { onCLose: () => PopUtils.popAll(), userId: user.id, variant: "secondary" }), BdApi.React.createElement(MoreOverflowButton.wV, { user }));
-		case (4):
+		case 1:
+		case 4:
 			return BdApi.React.createElement(BdApi.React.Fragment, null, BdApi.React.createElement(MessageButtonLarge, { autoFocus: true, onClose: () => PopUtils.popAll(), userId: user.id }), BdApi.React.createElement(FriendsButton, { relationshipType, shouldShowTooltip: true, type: "icon", themeColor: "secondary", user }), BdApi.React.createElement(MoreOverflowButton.wV, { user }));
 		case 2:
 			return BdApi.React.createElement(BdApi.React.Fragment, null, BdApi.React.createElement(

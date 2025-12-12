@@ -129,7 +129,7 @@ function HeaderButtonBuilder({currentUser, relationshipType, user}) {
                 <MoreOverflowButton.wV user={user} />
             </>
         );
-        case 1, 4: return (
+        case 1: case 4: return (
             <>
                 <MessageButtonLarge autoFocus={true} onClose={() => PopUtils.popAll()} userId={user.id} />
                 <FriendsButton relationshipType={relationshipType} shouldShowTooltip={true} type={"icon"} themeColor={"secondary"} user={user} />
