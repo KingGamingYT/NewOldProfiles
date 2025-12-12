@@ -228,6 +228,7 @@ let CSS = webpackify(
         align-items: center;
         margin-right: 40px;
         font-size: 14px;
+        font-weight: 500;
         color: var(--interactive-normal);
         border-bottom: 3px solid transparent;
         cursor: pointer;
