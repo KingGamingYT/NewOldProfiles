@@ -25,7 +25,6 @@ let CSS = webpackify(
     `
     body {
         --text-tertiary: var(--neutral-22);
-        --header-secondary: color-mix(in oklab,var(--neutral-9) 100%, var(--custom-theme-text-color, #000) var(--custom-theme-text-color-amount, 0%));
         .custom-user-profile-theme:not(.disable-profile-themes) {
             --button-filled-brand-background: var(--profile-gradient-button-color);
             --button-filled-brand-background-hover: color-mix(in srgb, var(--profile-gradient-button-color) 80%, transparent);
@@ -132,13 +131,13 @@ let CSS = webpackify(
         align-items: baseline;
     }
     .nameSection .displayName {
-        color: var(--header-primary);
+        color: var(--interactive-text-active);
         font-weight: 600;
         font-size: 18px;
         margin-right: 5px;
     }
     .nameSection .nameTag {
-        color: var(--header-secondary);
+        color: var(--header-secondary, var(--text-default));
         font-weight: 500;
         font-size: 14px;
     }
@@ -186,15 +185,15 @@ let CSS = webpackify(
             }
         }
         .themeColor.secondary:hover, .sm:not(.hasText):hover {
-            color: var(--interactive-hover);
+            color: var(--interactive-hover, var(--interactive-text-hover));
             svg {
-                stroke: var(--interactive-hover);
+                stroke: var(--interactive-hover, var(--interactive-text-hover));
             }
         }
         .themeColor.secondary:active, .sm:not(.hasText):active {
-            color: var(--interactive-active);
+            color: var(--interactive-active, var(--interactive-text-active));
             svg {
-                stroke: var(--interactive-active);
+                stroke: var(--interactive-active, var(--interactive-text-active));
             }
         }
     }
@@ -229,19 +228,19 @@ let CSS = webpackify(
         margin-right: 40px;
         font-size: 14px;
         font-weight: 500;
-        color: var(--interactive-normal);
+        color: var(--interactive-normal, var(--interactive-text-default));
         border-bottom: 3px solid transparent;
         cursor: pointer;
     }
     .tabBarItem:hover {
-        color: var(--interactive-hover);
+        color: var(--interactive-hover, var(--interactive-text-hover));
         border-bottom: 3px solid transparent;
-        border-bottom-color: var(--interactive-active);
+        border-bottom-color: var(--interactive-active, var(--interactive-text-active));
     }
     .tabBarItem[aria-selected=true] {
-        color: var(--interactive-active);
+        color: var(--interactive-active, var(--interactive-text-active));
         border-bottom: 3px solid transparent;
-        border-bottom-color: var(--interactive-active);
+        border-bottom-color: var(--interactive-active, var(--interactive-text-active));
     }
     .inner .body {
         display: flex;
@@ -300,7 +299,7 @@ let CSS = webpackify(
         text-transform: uppercase;
     }
     .divider {
-        background-color: var(--interactive-normal);
+        background-color: var(--interactive-normal, var(--interactive-text-default));
         border-radius: 50%;
         height: 4px;
         width: 4px;
@@ -318,7 +317,7 @@ let CSS = webpackify(
         font-size: 12px; 
         line-height: 1.2857142857142858;
         font-weight: 600;
-        color: var(--header-secondary);
+        color: var(--header-secondary, var(--text-default));
         margin-bottom: 8px;
         text-transform: uppercase;
     }
@@ -331,7 +330,7 @@ let CSS = webpackify(
             height: 20px;
             width: 20px;
         }
-        .emoji+.customStatusText {
+        .emoji+span+.customStatusText {
             display: inline;
         }
         &:has(.customStatusText:empty) .emoji {
@@ -340,7 +339,7 @@ let CSS = webpackify(
         }
     }
     .customStatusContent .customStatusText {
-        color: var(--header-secondary);
+        color: var(--header-secondary, var(--text-default));
         font-weight: 500;
         font-size: 14px;
     }
@@ -409,7 +408,7 @@ let CSS = webpackify(
         line-height: 16px;
         margin-top: 12px;
         text-transform: uppercase;
-        color: var(--header-secondary);
+        color: var(--header-secondary, var(--text-default));
     }
     :is(.theme-dark) .emptyIconFriends {
         background-image: url(https://discord.com/assets/ca3f5ec71bb86c6aeb015bb0d54a10fa.svg);
@@ -781,7 +780,7 @@ let CSS = webpackify(
             color: rgba(255, 255, 255, 0.6);
         }
         .tabBarItem[aria-selected=true] {
-            color: var(--interactive-active);
+            color: var(--interactive-active, var(--interactive-text-active));
         }
         .activityHeader {
             color: var(--white);

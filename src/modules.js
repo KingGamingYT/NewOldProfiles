@@ -40,7 +40,10 @@ export const [
     OpenUserSettings,
     PopUtils,
     RelationshipUtils,
-    BlockToasts 
+    BlockToasts,
+    Dispatcher,
+    Endpoints,
+    RestAPI
 ] = /* @__PURE__ */ Webpack.getBulk(
     { filter: /* @__PURE__ */ Webpack.Filters.bySource('forceShowPremium', 'pendingThemeColors') },
     { filter: x => x.openUserProfileModal },
@@ -80,7 +83,11 @@ export const [
     { filter: /* @__PURE__ */ Webpack.Filters.byKeys('openUserSettings') },
     { filter: /* @__PURE__ */ Webpack.Filters.byKeys('popAll') },
     { filter: x => x.unblockUser },
-    { filter: x => x.showUnblockSuccessToast }
+    { filter: x => x.showUnblockSuccessToast },
+    { filter: x => x._dispatch },
+    { filter: x => x.AnalyticsObjectTypes && x.GuildFeatures },
+    { filter: x => typeof x === "object" && x.del && x.put, searchExports: true }
+
 )
 export const AccessibilityStore = /* @__PURE__ */ Webpack.getStore('AccessibilityStore');
 export const RelationshipStore = /* @__PURE__ */ Webpack.getStore('RelationshipStore');
