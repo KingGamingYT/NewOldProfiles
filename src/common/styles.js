@@ -25,9 +25,9 @@ let CSS = webpackify(
     `
     body {
         .custom-user-profile-theme:not(.disable-profile-themes) {
-            --button-filled-brand-background: var(--profile-gradient-button-color);
-            --button-filled-brand-background-hover: color-mix(in srgb, var(--profile-gradient-button-color) 80%, transparent);
-            --button-filled-brand-background-active: color-mix(in srgb, var(--profile-gradient-button-color) 70%, transparent);
+            --control-primary-background-default: var(--profile-gradient-button-color);
+            --control-primary-background-hover: color-mix(in srgb, var(--profile-gradient-button-color) 80%, transparent);
+            --control-primary-background-active: color-mix(in srgb, var(--profile-gradient-button-color) 70%, transparent);
         }
     }
 
@@ -163,20 +163,22 @@ let CSS = webpackify(
         display: flex;
         gap: 8px;
         .lookFilled:is(.colorBrand, .colorPrimary:is(.grow)), .hasText:not(.primaryFilled) {
-            background: var(--green, var(--button-filled-brand-background));
-            padding: 2px 16px;
+            background: var(--green, var(--control-primary-background-default));
             svg {
                 display: none;
             }
+        }
+        .lookFilled:is(.colorBrand, .colorPrimary:is(.grow)), .hasText {
+            padding: 2px 16px;
             .buttonChildrenWrapper {
                 padding: unset;
             } 
         }
         .lookFilled:is(.colorBrand, .colorPrimary:is(.grow)):hover, .hasText:not(.primaryFilled):hover {
-            background: var(--green-hover, var(--button-filled-brand-background-hover)) !important;
+            background: var(--green-hover, var(--control-primary-background-hover)) !important;
         }
         .lookFilled:is(.colorBrand, .colorPrimary:is(.grow)):active, .hasText:not(.primaryFilled):active {
-            background: var(--green-active, var(--button-filled-brand-background-active)) !important;
+            background: var(--green-active, var(--control-primary-background-active)) !important;
         }
         .themeColor.secondary, .sm:not(.hasText) {
             background: unset !important;
