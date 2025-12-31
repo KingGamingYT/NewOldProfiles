@@ -1,10 +1,12 @@
-import { Webpack, Data, Patcher, DOM, Utils, Components } from "betterdiscord";
-import { entireProfileModal, FormSwitch, ProfileFetch, UserProfileStore } from "./modules";
-import { settings } from "./settings";
+import { Data, Patcher, DOM, Utils, Components } from "betterdiscord";
+import { entireProfileModal, FormSwitch, ProfileFetch } from "@modules/common";
+import { UserProfileStore } from '@modules/stores';
+import { settings } from "@common/settings";
 import { createElement, useState, useRef, useMemo, useEffect } from "react";
-import { tabs } from "./globals";
-import { headerBuilder, bodyBuilder } from "./builders";
-import { addProfileCSS } from "./styles";
+import { tabs } from "@common/tabs";
+import { headerBuilder } from '@components/builders/header/builder';
+import { bodyBuilder } from '@components/builders/bodyBase';
+import { addProfileCSS } from "@common/styles";
 
 function Starter({props, res}) {
     const options = {

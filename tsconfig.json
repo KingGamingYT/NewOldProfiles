@@ -1,0 +1,14 @@
+{
+	"compilerOptions": {
+		"resolveJsonModule": true,
+		"esModuleInterop": true,
+		"jsx": "react-jsx",
+        "baseUrl": ".",
+        "paths": {
+            "@common/*": ["src/common/*"],
+            "@components/*": ["src/components/*"],
+            "@methods/*": ["src/methods/*"],
+            "@modules/*": ["src/modules/*"]
+        }
+	}
+}

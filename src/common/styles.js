@@ -24,7 +24,6 @@ const styles = Object.assign(
 let CSS = webpackify(
     `
     body {
-        --text-tertiary: var(--neutral-22);
         .custom-user-profile-theme:not(.disable-profile-themes) {
             --button-filled-brand-background: var(--profile-gradient-button-color);
             --button-filled-brand-background-hover: color-mix(in srgb, var(--profile-gradient-button-color) 80%, transparent);
@@ -42,6 +41,11 @@ let CSS = webpackify(
         --profile-gradient-start: color-mix(in oklab, var(--profile-gradient-primary-color) 100%, var(--profile-gradient-primary-color)) !important;
         --profile-gradient-end: color-mix(in oklab, var(--profile-gradient-secondary-color) 100%, var(--profile-gradient-secondary-color)) !important;
         --custom-user-profile-theme-color-blend: linear-gradient(color-mix(in oklab, var(--profile-gradient-overlay-color), var(--profile-gradient-start)), color-mix(in oklab, var(--profile-gradient-overlay-color), var(--profile-gradient-end)));
+    }
+    .outer.user-profile-modal-v2.custom-user-profile-theme:not(.disable-profile-themes) {
+        :is(.topSectionNormal, .body) {
+            background-color: unset !important;
+        }
     }
     .inner {
         position: relative;
@@ -690,6 +694,9 @@ let CSS = webpackify(
         -webkit-user-drag: none;
         background-size: 100%;
         border-radius: 3px;
+    }
+    .activityProfile .userList {
+        padding-top: 3px;
     }
     .activityProfile .assets .assetsLargeImage {
         width: 90px;
