@@ -161,6 +161,7 @@ let CSS = webpackify(
     }
     .profileButtons {
         display: flex;
+        align-items: center;
         gap: 8px;
         .lookFilled:is(.colorBrand, .colorPrimary:is(.grow)), .hasText:not(.primaryFilled) {
             background: var(--green, var(--control-primary-background-default));
