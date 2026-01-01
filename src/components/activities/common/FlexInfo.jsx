@@ -7,7 +7,7 @@ import { locale } from '@common/locale';
 function Header({ activity, channel, check }) {
     const guildChannel = useStateFromStores([ GuildStore ], () => GuildStore.getGuild(channel?.guild_id));
     if (channel) {
-        const nickname = useStateFromStores([ RelationshipStore ], () => RelationshipStore.getNickname(guildChannel.ownerId || channel.getRecipientId()))
+        const nickname = useStateFromStores([ RelationshipStore ], () => RelationshipStore.getNickname(guildChannel?.ownerId || channel.getRecipientId()))
         return (
             <h3 className="textRow" style={{ display: "flex", alignItems: "center" }}>
                 {VoiceIcon({ channel: channel })}

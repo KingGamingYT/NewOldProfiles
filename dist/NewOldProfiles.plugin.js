@@ -803,7 +803,7 @@ function getVoiceParticipants({ voice }) {
 function Header({ activity, channel, check }) {
 	const guildChannel = useStateFromStores([GuildStore], () => GuildStore.getGuild(channel?.guild_id));
 	if (channel) {
-		const nickname = useStateFromStores([RelationshipStore], () => RelationshipStore.getNickname(guildChannel.ownerId || channel.getRecipientId()));
+		const nickname = useStateFromStores([RelationshipStore], () => RelationshipStore.getNickname(guildChannel?.ownerId || channel.getRecipientId()));
 		return BdApi.React.createElement("h3", { className: "textRow", style: { display: "flex", alignItems: "center" } }, VoiceIcon({ channel }), BdApi.React.createElement("h3", { className: "nameWrap nameNormal textRow", style: { fontWeight: "600" } }, channel.name || nickname));
 	}
 	if (!activity) return;
