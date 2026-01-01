@@ -1098,6 +1098,10 @@ let CSS = webpackify(
             }
         }
     }
+
+    .settingsContainer > div {
+        padding-bottom: 10px;
+    }
     `
 )
 let profileCSS = webpackify(CSS);

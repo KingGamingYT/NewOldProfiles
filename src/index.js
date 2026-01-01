@@ -68,44 +68,48 @@ export default class NewOldProfiles {
 
     getSettingsPanel() {
         return [
-            createElement(() => Object.keys(settings.main).map((key) => {
-                    const { name, note, initial, changed } = settings.main[key];
-                    const [state, setState] = useState(Data.load(key));
+            createElement('div', { className: "settingsContainer" },
+                createElement(() => Object.keys(settings.main).map((key) => {
+                        const { name, note, initial, changed } = settings.main[key];
+                        const [state, setState] = useState(Data.load(key));
 
-                    return createElement(FormSwitch, {
-                        label: name,
-                        description: note,
-                        checked: state ?? initial,
-                        onChange: (v) => {
-                            Data.save(key, v);
-                            setState(v);
-                            if (changed)
-                                changed(v);
-                        }
-                    });
-                }
-            )),
+                        return createElement(FormSwitch, {
+                            label: name,
+                            description: note,
+                            checked: state ?? initial,
+                            onChange: (v) => {
+                                Data.save(key, v);
+                                setState(v);
+                                if (changed)
+                                    changed(v);
+                            }
+                        });
+                    }
+                ))
+            ),
             createElement(Components.SettingGroup, {
             name: "Server Profile Settings",
             collapsible: true,
             shown: false,
             children:
-                createElement(() => Object.keys(settings.serverCategory).map((key) => {
-                    const { name, note, initial, changed } = settings.serverCategory[key];
-                    const [state, setState] = useState(Data.load(key));
+                createElement('div', { className: "settingsContainer" },
+                    createElement(() => Object.keys(settings.serverCategory).map((key) => {
+                        const { name, note, initial, changed } = settings.serverCategory[key];
+                        const [state, setState] = useState(Data.load(key));
 
-                    return createElement(FormSwitch, {
-                        label: name,
-                        description: note,
-                        checked: state ?? initial,
-                        onChange: (v) => {
-                            Data.save(key, v);
-                            setState(v);
-                            if (changed)
-                                changed(v);
-                        }
-                    });
-                }))
+                        return createElement(FormSwitch, {
+                            label: name,
+                            description: note,
+                            checked: state ?? initial,
+                            onChange: (v) => {
+                                Data.save(key, v);
+                                setState(v);
+                                if (changed)
+                                    changed(v);
+                            }
+                        });
+                    }))
+                )
             }
         )
 	]}
