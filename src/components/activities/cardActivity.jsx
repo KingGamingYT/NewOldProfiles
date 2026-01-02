@@ -64,7 +64,7 @@ export function ActivityCard({user, activity, check}) {
                         activity?.assets && activity?.assets?.large_image && activity?.assets?.small_image && (
                             <RichImageAsset 
                                 url={
-                                    activity?.assets?.large_image?.includes('external') ? `https://media.discordapp.net/external/${activity.assets.small_image.substring(activity.assets.small_image.indexOf('/'))}`
+                                    activity?.assets?.small_image?.includes('external') ? `https://media.discordapp.net/external/${activity.assets.small_image.substring(activity.assets.small_image.indexOf('/'))}`
                                     : `https://cdn.discordapp.com/app-assets/${activity.application_id}/${activity?.assets.small_image}.png`
                                 }
                                 tooltipText={activity.assets.small_text || activity?.details}
