@@ -141,6 +141,7 @@ function DiscordTag({ user, displayProfile, tagName, displayName }) {
     const displayNameStylesEnabled = AccessibilityStore.displayNameStylesEnabled;
     const informationHidden = StreamerModeStore.hidePersonalInformation;
     const legacyName = displayProfile._userProfile?.legacyUsername;
+    const isPomelo = (!legacyName && !user.bot);
 
     return (
         <div className="nameSection">
@@ -154,25 +155,14 @@ function DiscordTag({ user, displayProfile, tagName, displayName }) {
                     />
                     : <div className="displayName">{displayName || tagName}</div>
             }
-            {
-                !informationHidden && !Data.load('disableDiscrim') && legacyName ? 
-                    <div
-                        className="nameTag"
-                        style={{ marginLeft: "-5px" }}>
-                        {legacyName?.substring(legacyName?.indexOf("#"))}
-                    </div>
-                : user.bot ? 
-                    <div
-                        className="nameTag"
-                        style={{ marginLeft: "-5px" }}>
-                        {`#${user.discriminator}`}
-                    </div>
+            <div className={Utils.className("nameTag", isPomelo && "nameTagPomelo")}>{
+                !informationHidden && !Data.load('disableDiscrim') && legacyName ?
+                    legacyName?.substring(legacyName?.indexOf("#"))
+                : user.bot ?
+                    `#${user.discriminator}`
                 :
-                    <div
-                        className="nameTag">
-                        {`@${tagName}`}
-                    </div>
-            }
+                    `@${tagName}`
+            }</div>
             {
                 user.bot && <BotTagRenderer.Z
                     className="botTag"

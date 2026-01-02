@@ -138,12 +138,14 @@ let CSS = webpackify(
         color: var(--interactive-text-active);
         font-weight: 600;
         font-size: 18px;
-        margin-right: 5px;
     }
     .nameSection .nameTag {
         color: var(--header-secondary, var(--text-default));
         font-weight: 500;
         font-size: 14px;
+    }
+    .nameSection .nameTag.nameTagPomelo {
+        margin-left: 5px;
     }
     .profileBadges, .profileBadges:is([style="display: contents;"]) .profileBadgeWrapper {
         margin-top: 4px;
