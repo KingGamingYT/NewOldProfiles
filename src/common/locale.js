@@ -35,6 +35,8 @@ export const locale = {
         PRONOUNS: getIntlString('1w6drw'),
         ROLE: getIntlString('XPGZXP'),
         ROLES: getIntlString('2SZsWX'),
+        SEND_FRIEND_REQUEST: getIntlString('gc9aSx'),
+        SEND_MESSAGE: getIntlString('YzpScd'),
         STREAM: getIntlString('5AyH/p'),
         STREAMING: (name) => getIntlString('4CQq9Q', name),
         STREAMER_MODE_ENABLED: getIntlString('Br1ls3'),
