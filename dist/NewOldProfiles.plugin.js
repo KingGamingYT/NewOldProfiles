@@ -66,7 +66,6 @@ const [
 	Popout,
 	PopoutContainer,
 	FormSwitch,
-	Board,
 	ProfileFetch,
 	OpenSpotifyAlbumFromStatus,
 	GameProfile,
@@ -109,7 +108,6 @@ const [
 	{ filter: betterdiscord.Webpack.Filters.byStrings("Unsupported animation config:"), searchExports: true },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("type", "position", "data-popout-animating"), searchExports: true },
 	{ filter: betterdiscord.Webpack.Filters.byStrings('"data-toggleable-component":"switch"', 'layout:"horizontal"'), searchExports: true },
-	{ filter: betterdiscord.Webpack.Filters.byStrings('["user"]'), searchExports: true },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("connectionsRoleId", "USER_PROFILE_FETCH_START"), searchExports: true },
 	{ filter: betterdiscord.Webpack.Filters.byStrings(".metadata)?void", ".EPISODE?"), searchExports: true },
 	{ filter: (x) => x.openGameProfileModal },
@@ -262,6 +260,7 @@ let MarkdownFormat;
 let NoteRenderer;
 let ConnectionRenderer;
 let BotDataRenderer;
+let Board;
 function MessageButtonLargeComponent({ autoFocus, onClose, userId }) {
 	MessageButtonLarge ??= betterdiscord.Webpack.getByStrings('["userId",', { searchExports: true });
 	return BdApi.React.createElement(MessageButtonLarge, { autoFocus, onClose: () => PopUtils.popAll(), userId });
@@ -301,6 +300,10 @@ function ConnectionComponent({ connectedAccount, userId }) {
 function BotDataComponent({ user }) {
 	BotDataRenderer ??= betterdiscord.Webpack.getByStrings("user", "hasMessageContent", "hasGuildPresences");
 	return BdApi.React.createElement(BotDataRenderer, { user });
+}
+function BoardEditRenderer({ user }) {
+	Board ??= betterdiscord.Webpack.getByStrings('["user"]', { searchExports: true });
+	return BdApi.React.createElement(Board, { user });
 }
 
 // components/common/TooltipBuilder.jsx
@@ -1290,7 +1293,7 @@ function BoardButton({ user }) {
 		{
 			className: `${ButtonClasses.button} ${ButtonClasses.sm} ${ButtonClasses.primary} ${ButtonClasses.hasText}`,
 			onClick: () => ModalSystem$1.openModal(
-				(props) => BdApi.React.createElement(ModalRoot.Modal, { ...props, title: locale.Strings.PROFILE_WIDGETS }, BdApi.React.createElement(Board, { user }))
+				(props) => BdApi.React.createElement(ModalRoot.Modal, { ...props, title: locale.Strings.PROFILE_WIDGETS }, BdApi.React.createElement(BoardEditRenderer, { user }))
 			)
 		},
 		BdApi.React.createElement("div", { className: `${ButtonClasses.buttonChildrenWrapper}` }, BdApi.React.createElement("div", { className: `${ButtonClasses.buttonChildren}`, style: { fontSize: "14px" } }, locale.Strings.EDIT))

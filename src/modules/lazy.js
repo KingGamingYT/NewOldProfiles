@@ -11,6 +11,7 @@ let MarkdownFormat;
 let NoteRenderer;
 let ConnectionRenderer;
 let BotDataRenderer;
+let Board;
 
 function MessageButtonLargeComponent({ autoFocus, onClose, userId }) {
     MessageButtonLarge ??= Webpack.getByStrings('["userId",', { searchExports: true });
@@ -62,6 +63,11 @@ function BotDataComponent({ user }) {
 
     return <BotDataRenderer user={user} />
 }
+function BoardEditRenderer({ user }) {
+    Board ??= Webpack.getByStrings('["user"]', { searchExports: true });
+
+    return <Board user={user} />
+}
 
 export {
     MessageButtonLargeComponent,
@@ -73,5 +79,6 @@ export {
     MarkdownComponent,
     NoteComponent,
     ConnectionComponent,
-    BotDataComponent
+    BotDataComponent,
+    BoardEditRenderer,
 }

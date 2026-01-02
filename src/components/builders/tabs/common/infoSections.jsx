@@ -1,7 +1,7 @@
 import { Data } from 'betterdiscord';
-import { Board, IconUtils, ButtonClasses, ModalRoot, ModalSystem, RoleRenderer } from '@modules/common';
+import { IconUtils, ButtonClasses, ModalRoot, ModalSystem, RoleRenderer } from '@modules/common';
 import { GuildMemberStore, GuildStore } from '@modules/stores';
-import { ConnectionComponent, MarkdownComponent, NoteComponent } from '@modules/lazy';
+import { ConnectionComponent, MarkdownComponent, NoteComponent, BoardEditRenderer } from '@modules/lazy';
 import { locale } from '@common/locale';
 import { FavoriteWidgetBuilder, ShelfWidgetBuilder, CurrentWidgetBuilder } from '@components/builders/widgets/index';
 import { TooltipBuilder } from '@components/common/TooltipBuilder';
@@ -28,7 +28,7 @@ function BoardButton({user}) {
             className={`${ButtonClasses.button} ${ButtonClasses.sm} ${ButtonClasses.primary} ${ButtonClasses.hasText}`}
             onClick={() => ModalSystem.openModal((props) =>
                 <ModalRoot.Modal {...props} title={locale.Strings.PROFILE_WIDGETS}>
-                    <Board user={user} />
+                    <BoardEditRenderer user={user} />
                 </ModalRoot.Modal>
             )}>
             <div className={`${ButtonClasses.buttonChildrenWrapper}`}>
