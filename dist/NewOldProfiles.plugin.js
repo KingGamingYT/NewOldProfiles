@@ -364,6 +364,7 @@ const locale = {
 		STREAM: getIntlString("5AyH/p"),
 		STREAMING: (name) => getIntlString("4CQq9Q", name),
 		STREAMER_MODE_ENABLED: getIntlString("Br1ls3"),
+		STREAMING_GAME_IN: (game, server) => `${getIntlString("4CQq9Q", game)} ${getIntlString("5YBAcS", server)}`,
 		STREAMING_TO: (server) => getIntlString("sddlGK", server),
 		UNBLOCK: getIntlString("Hro40y"),
 		USER: getIntlString("E466pL"),
@@ -1142,12 +1143,11 @@ function headerBuilder({ user, currentUser, displayProfile, tab, setTab, ref }) 
 
 // components/builders/widgets/common/gameCover.jsx
 function GameCover({ game, image, imageURL }) {
-	const user = UserStore.getCurrentUser();
+	UserStore.getCurrentUser();
 	return BdApi.React.createElement(
 		"div",
 		{
-			className: "gameCover hoverActiveEffect",
-			onClick: () => imageURL != null && GameProfileOpen({ gameId: game.id, userId: user.id })
+			className: "gameCover hoverActiveEffect"
 		},
 		BdApi.React.createElement(
 			"img",
@@ -1163,7 +1163,7 @@ function GameCover({ game, image, imageURL }) {
 
 // components/builders/widgets/common/fallbackCover.jsx
 function FallbackCover(game) {
-	return BdApi.React.createElement("div", { className: "gameCover" }, BdApi.React.createElement("div", { className: "fallback gameCover" }, BdApi.React.createElement("div", { className: "coverFallbackText" }, game?.name || "Unknown Game")));
+	return BdApi.React.createElement("div", { className: "gameCover" }, BdApi.React.createElement("div", { className: "fallback gameCover" }, BdApi.React.createElement("div", { className: "coverFallbackText" }, game?.game?.name || "Unknown Game")));
 }
 
 // components/builders/widgets/common/widgetCard.jsx
@@ -1194,7 +1194,7 @@ function WidgetCard({ widget, game, image, imageURL, index, loading, ref, type }
 // components/builders/widgets/widgetFavorite.jsx
 function FavoriteWidgetBuilder({ widget, game }) {
 	const [loading, setLoading] = react.useState(true);
-	let imageURL = useStateFromStores([DetectableGameSupplementalStore], () => DetectableGameSupplementalStore.getCoverImageUrl(game?.id), [game?.id]);
+	let imageURL = IconUtils.getGameAssetURL({ id: game?.id, hash: game?.coverImage, size: "1024", keepAspectRatio: true });
 	const image = react.useMemo(() => new Image(), []);
 	const ref = react.useRef(null);
 	react.useLayoutEffect(() => {
@@ -1222,7 +1222,7 @@ function FavoriteWidgetBuilder({ widget, game }) {
 // components/builders/widgets/widgetShelf.jsx
 function ShelfWidgetBuilder({ game }) {
 	const [loading, setLoading] = react.useState(() => true);
-	let imageURL = useStateFromStores([DetectableGameSupplementalStore], () => DetectableGameSupplementalStore.getCoverImageUrl(game?.id), [game?.id]);
+	let imageURL = IconUtils.getGameAssetURL({ id: game?.id, hash: game?.coverImage, size: "1024", keepAspectRatio: true });
 	const image = react.useMemo(() => new Image(), []);
 	const ref = react.useRef(null);
 	react.useLayoutEffect(() => {
@@ -1250,7 +1250,7 @@ function ShelfWidgetBuilder({ game }) {
 // components/builders/widgets/widgetCurrent.jsx
 function CurrentWidgetBuilder({ widget, game, index }) {
 	const [loading, setLoading] = react.useState(() => true);
-	let imageURL = useStateFromStores([DetectableGameSupplementalStore], () => DetectableGameSupplementalStore.getCoverImageUrl(game?.id), [game?.id]);
+	let imageURL = IconUtils.getGameAssetURL({ id: game?.id, hash: game?.coverImage, size: "1024", keepAspectRatio: true });
 	const image = react.useMemo(() => new Image(), []);
 	const ref = react.useRef(null);
 	react.useLayoutEffect(() => {

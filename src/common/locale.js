@@ -40,6 +40,7 @@ export const locale = {
         STREAM: getIntlString('5AyH/p'),
         STREAMING: (name) => getIntlString('4CQq9Q', name),
         STREAMER_MODE_ENABLED: getIntlString('Br1ls3'),
+        STREAMING_GAME_IN: (game, server) => `${getIntlString('4CQq9Q', game)} ${getIntlString('5YBAcS', server)}`,
         STREAMING_TO: (server) => getIntlString('sddlGK', server),
         UNBLOCK: getIntlString('Hro40y'),
         USER: getIntlString('E466pL'),

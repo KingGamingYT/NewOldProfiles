@@ -1,12 +1,11 @@
 import { useState, useLayoutEffect, useMemo, useRef } from 'react';
-import { FetchGames } from '@modules/common';
-import { DetectableGameSupplementalStore, useStateFromStores } from '@modules/stores';
+import { IconUtils, FetchGames } from '@modules/common';
 import { WidgetCard } from './common/widgetCard';
 
 export function CurrentWidgetBuilder({ widget, game, index }) {
     const [loading, setLoading] = useState(() => true);
 
-    let imageURL = useStateFromStores([DetectableGameSupplementalStore], () => DetectableGameSupplementalStore.getCoverImageUrl(game?.id), [game?.id]);
+    let imageURL = IconUtils.getGameAssetURL({id: game?.id, hash: game?.coverImage, size:"1024", keepAspectRatio: true});
     const image = useMemo(() => new Image(), []);
 
     const ref = useRef(null);

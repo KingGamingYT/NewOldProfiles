@@ -1,6 +1,5 @@
 import { useState, useLayoutEffect, useMemo, useRef } from 'react';
-import { FetchGames } from '@modules/common';
-import { DetectableGameSupplementalStore, useStateFromStores } from '@modules/stores';
+import { IconUtils, FetchGames } from '@modules/common';
 import { TooltipBuilder } from '@components/common/TooltipBuilder';
 import { GameCover } from './common/gameCover';
 import { FallbackCover } from './common/fallbackCover';
@@ -8,7 +7,7 @@ import { FallbackCover } from './common/fallbackCover';
 export function ShelfWidgetBuilder({ game }) {
     const [loading, setLoading] = useState(() => true);
 
-    let imageURL = useStateFromStores([DetectableGameSupplementalStore], () => DetectableGameSupplementalStore.getCoverImageUrl(game?.id), [game?.id]);
+    let imageURL = IconUtils.getGameAssetURL({id: game?.id, hash: game?.coverImage, size: "1024", keepAspectRatio: true});
     const image = useMemo(() => new Image(), []);
 
     const ref = useRef(null);

@@ -7,7 +7,7 @@ export function GameCover({game, image, imageURL}) {
     return (
         <div 
             className="gameCover hoverActiveEffect"
-            onClick={() => imageURL != null && GameProfileOpen({gameId: game.id, userId: user.id})}>
+            /*onClick={() => imageURL != null && GameProfileOpen({gameId: game.id, userId: user.id})}*/>
             <img
                 alt={game?.name}
                 className="gameCover"
