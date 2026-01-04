@@ -1,6 +1,13 @@
+import { Data } from 'betterdiscord';
 import { getIntlString } from './getIntlString';
+import { tabs } from './tabs';
 
 export const locale = {
+    Sections: {
+        MUTUAL_FRIENDS: tabs.FRIENDS,
+        MUTUAL_GUILDS: tabs.SERVERS,
+        WIDGETS: Data.load('boardTab') ? tabs.BOARD : null
+    },
     Strings: {
         ABOUT_ME: getIntlString('61W33d'),
         ACCEPT: getIntlString('MMlhsr'),

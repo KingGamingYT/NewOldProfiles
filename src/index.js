@@ -2,7 +2,8 @@ import { Data, Patcher, DOM, Utils, Components } from "betterdiscord";
 import { entireProfileModal, FormSwitch, ProfileFetch } from "@modules/common";
 import { UserProfileStore } from '@modules/stores';
 import { settings } from "@common/settings";
-import { createElement, useState, useRef, useMemo, useEffect } from "react";
+import { createElement, useState, useRef, useEffect } from "react";
+import { locale } from "@common/locale";
 import { tabs } from "@common/tabs";
 import { headerBuilder } from '@components/builders/header/builder';
 import { bodyBuilder } from '@components/builders/bodyBase';
@@ -20,17 +21,13 @@ function Starter({props, res}) {
     const user = data.user;
     const currentUser = data.currentUser;
     const displayProfile = data.displayProfile;
-    const [tab, setTab] = useState(tabs.ABOUT);
+    const [tab, setTab] = useState(locale.Sections[data.initialSection] || tabs.ABOUT);
     const ref = useRef(null);
 
-    const detailsCheck = useMemo(() => { 
-        if (!data.displayProfile._userProfile) return null;
-        return data.displayProfile._userProfile; }, [ data.displayProfile._userProfile ]
-    );
-    if (!detailsCheck) return;
     if (Data.load('disableProfileThemes')) {
         res.props.className = Utils.className(res.props.className, "disable-profile-themes");
     }
+    
     useEffect(() => {
         (async () => {
             if (!UserProfileStore.getMutualFriends(user.id)) { 
