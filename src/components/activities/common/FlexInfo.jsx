@@ -49,7 +49,7 @@ function ActivityType({ type, filterCheck, activity, voice, channel, stream }) {
         );
         case "TWITCH": return (
             <>
-                {activity.state && <div className="state textRow ellipsis">{`${locale.Strings.PLAYING} ${activity.state}`}</div>}
+                {activity.state && <div className="state textRow ellipsis">{`${locale.Strings.PLAYING()} ${activity.state}`}</div>}
             </>
         )
         case "SPOTIFY": return (

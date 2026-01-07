@@ -31,7 +31,7 @@ export function TabBarBuilder({ user, displayProfile, currentUser, tab, setTab, 
                     ref={ref}
                     tabIndex={0}
                     selectedItem="ABOUT"
-                    label={`${user.bot ? locale.Strings.BOT : locale.Strings.USER.substring(0, 1).toUpperCase() + locale.Strings.USER.substring(1)} ${locale.Strings.INFO}`}
+                    label={`${user.bot ? locale.Strings.BOT() : locale.Strings.USER().substring(0, 1).toUpperCase() + locale.Strings.USER().substring(1)} ${locale.Strings.INFO()}`}
                 />
                 {hasBoard === true && <TabBarItem
                     tab={tab}
@@ -39,7 +39,7 @@ export function TabBarBuilder({ user, displayProfile, currentUser, tab, setTab, 
                     ref={ref}
                     tabIndex={1}
                     selectedItem="BOARD"
-                    label={locale.Strings.BOARD}
+                    label={locale.Strings.BOARD()}
                 />}
                 <TabBarItem
                     tab={tab}
@@ -47,7 +47,7 @@ export function TabBarBuilder({ user, displayProfile, currentUser, tab, setTab, 
                     ref={ref}
                     tabIndex={hasBoard === true ? 2 : 1}
                     selectedItem="SERVERS"
-                    label={locale.Strings.MUTUAL_SERVERS}
+                    label={locale.Strings.MUTUAL_SERVERS()}
                 />
                 {user.bot ?
                     <TabBarItem
@@ -56,7 +56,7 @@ export function TabBarBuilder({ user, displayProfile, currentUser, tab, setTab, 
                         ref={ref}
                         tabIndex={2}
                         selectedItem="DATA"
-                        label={locale.Strings.DATA_ACCESS}
+                        label={locale.Strings.DATA_ACCESS()}
                     />
                     :
                     <TabBarItem
@@ -65,7 +65,7 @@ export function TabBarBuilder({ user, displayProfile, currentUser, tab, setTab, 
                         ref={ref}
                         tabIndex={hasBoard === true ? 3 : 2}
                         selectedItem="FRIENDS"
-                        label={locale.Strings.MUTUAL_FRIENDS}
+                        label={locale.Strings.MUTUAL_FRIENDS()}
                     />
                 }
             </div>

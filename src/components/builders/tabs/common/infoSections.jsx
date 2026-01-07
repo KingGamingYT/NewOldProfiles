@@ -1,5 +1,5 @@
-import { Data } from 'betterdiscord';
-import { IconUtils, ButtonClasses, ModalRoot, ModalSystem, RoleRenderer } from '@modules/common';
+import { Data, Utils } from 'betterdiscord';
+import { IconUtils, ButtonClasses, ModalRoot, ModalSystem, RoleRenderer, intl } from '@modules/common';
 import { GuildMemberStore, GuildStore } from '@modules/stores';
 import { ConnectionComponent, MarkdownComponent, NoteComponent, BoardEditRenderer } from '@modules/lazy';
 import { locale } from '@common/locale';
@@ -13,10 +13,10 @@ function SectionHeader({children}) {
 function MemberDateSupplementalBuilder({date, member}) {
     return (
         <div 
-            className={`memberSince${member && "Server"}`} 
+            className={Utils.className("memberSince", member && "memberSinceServer")} 
             style={{ color: "var(--text-default)" }}>
                 {
-                    `${date.toString().substring(3, 7)} ${date.getDate()}, ${date.toString().substring(11, 15)}`
+                    intl.intl.data.formatDate(new Date(date), {dateStyle: "medium"})
                 }
         </div>
     )
@@ -27,12 +27,12 @@ function BoardButton({user}) {
         <button
             className={`${ButtonClasses.button} ${ButtonClasses.sm} ${ButtonClasses.primary} ${ButtonClasses.hasText}`}
             onClick={() => ModalSystem.openModal((props) =>
-                <ModalRoot.Modal {...props} title={locale.Strings.PROFILE_WIDGETS}>
+                <ModalRoot.Modal {...props} title={locale.Strings.PROFILE_WIDGETS()}>
                     <BoardEditRenderer user={user} />
                 </ModalRoot.Modal>
             )}>
             <div className={`${ButtonClasses.buttonChildrenWrapper}`}>
-                <div className={`${ButtonClasses.buttonChildren}`} style={{ fontSize: "14px" }}>{locale.Strings.EDIT}</div>
+                <div className={`${ButtonClasses.buttonChildren}`} style={{ fontSize: "14px" }}>{locale.Strings.EDIT()}</div>
             </div>
         </button>
     )
@@ -41,7 +41,7 @@ function BoardButton({user}) {
 export function PronounsBuilder({ displayProfile }) {
     return (
         <div className="userInfoSection">
-            <SectionHeader>{locale.Strings.PRONOUNS}</SectionHeader>
+            <SectionHeader>{locale.Strings.PRONOUNS()}</SectionHeader>
             <div className="userPronouns" style={{ color: "var(--text-default)", fontSize: "14px" }}>{displayProfile.pronouns}</div>
         </div>
     )
@@ -51,7 +51,7 @@ export function BioBuilder({ displayProfile }) {
     if (!displayProfile._userProfile.bio) return;
     return (
         <div className="userInfoSection">
-            <SectionHeader>{locale.Strings.ABOUT_ME}</SectionHeader>
+            <SectionHeader>{locale.Strings.ABOUT_ME()}</SectionHeader>
             <MarkdownComponent 
                 userBio={
                     displayProfile?._guildMemberProfile?.bio && Data.load('serverBio') ? displayProfile.bio
@@ -72,8 +72,8 @@ export function RoleBuilder({ user, data }) {
         <div className="userInfoSection">
             <SectionHeader>
                 {
-                    serverMember?.roles?.length !== 1 ? locale.Strings.ROLES
-                    : locale.Strings.ROLE
+                    serverMember?.roles?.length !== 1 ? locale.Strings.ROLES()
+                    : locale.Strings.ROLE()
                 }
             </SectionHeader>
             <RoleRenderer user={user} currentUser={data.currentUser} guild={GuildStore.getGuild(data?.guildId)} />
@@ -88,7 +88,7 @@ export function MemberDateBuilder({ data, user }) {
 
     return (
         <div className="userInfoSection">
-            <SectionHeader>{user.bot ? locale.Strings.CREATED_ON : locale.Strings.MEMBER_SINCE}</SectionHeader>
+            <SectionHeader>{user.bot ? locale.Strings.CREATED_ON() : locale.Strings.MEMBER_SINCE()}</SectionHeader>
             <div className="memberSinceWrapper" style={{ display: "flex", gap: "8px", alignItems: "center" }}>
                 <MemberDateSupplementalBuilder date={user.createdAt} />
                 {data?.guildId && serverMember &&
@@ -96,7 +96,12 @@ export function MemberDateBuilder({ data, user }) {
                         <div className="divider" />
                         <TooltipBuilder note={server.name}>
                             <div className="guildIcon">
-                                <img src={IconUtils.getGuildIconURL(server) + 'size=16'} />
+                                {
+                                    IconUtils.getGuildIconURL(server) ? <img src={IconUtils.getGuildIconURL(server) + 'size=16'} />
+                                    : <div className="noIcon guildIcon" style={{ fontSize: "10px", backgroundImage: "none" }}>
+                                        <div className="acronym" >{server.name.substring(0, 1)}</div>
+                                    </div>
+                                }   
                             </div>
                         </TooltipBuilder>
                         <MemberDateSupplementalBuilder date={serverDate} member={serverMember} />
@@ -110,7 +115,7 @@ export function MemberDateBuilder({ data, user }) {
 export function NoteBuilder({ user }) {
     return (
         <div className="userInfoSection">
-            <SectionHeader>{locale.Strings.NOTE}</SectionHeader>
+            <SectionHeader>{locale.Strings.NOTE()}</SectionHeader>
             <NoteComponent userId={user.id} />
         </div>
     )
@@ -119,7 +124,7 @@ export function NoteBuilder({ user }) {
 export function BoardButtonBuilder({ user }) {
     return (
         <div className="userInfoSection" style={{ paddingBottom: "20px" }}>
-            <SectionHeader>{locale.Strings.PROFILE_WIDGETS}</SectionHeader>
+            <SectionHeader>{locale.Strings.PROFILE_WIDGETS()}</SectionHeader>
             <BoardButton user={user} />
         </div>
     )

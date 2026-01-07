@@ -316,6 +316,24 @@ let CSS = webpackify(
     .userBio .lineClamp2Plus {
         -webkit-line-clamp: unset !important;
     }
+    .noIcon {
+        line-height: 16px;
+        background-color: var(--background-base-lower);
+        color: var(--text-default);
+        text-align: center;
+        width: 16px;
+        height: 16px;
+        background-clip: padding-box;
+        background-position: 50%;
+        background-size: 100% 100%;
+        position: relative;
+        border-radius: 4px;
+    }
+    .acronym {
+        overflow: hidden;
+        white-space: nowrap;
+        width: 100%;
+    }
     .inner .activity {
         padding: 20px;
         border-radius: var(--radius-sm);

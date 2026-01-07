@@ -1,10 +1,11 @@
-import { EmojiRenderer } from '@modules/common'; 
+import { EmojiRenderer } from '@modules/common';
+import { locale } from '@common/locale'; 
 
-function ActivityHeader({activity}) {
+function ActivityHeader({}) {
     return (
         <div 
             className="activityHeader">
-            {activity.name}
+            {locale.Strings.CUSTOM_STATUS()}
         </div>
     )
 }
@@ -26,7 +27,7 @@ export function CustomCard({activities}) {
 
     return (
         _activities.map(activity => <div className="activity">
-            <ActivityHeader activity={activity} />
+            <ActivityHeader />
             <CustomActivityContent activity={activity} activities={_activities} />
         </div>)
     )

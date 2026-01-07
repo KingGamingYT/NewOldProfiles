@@ -10,7 +10,7 @@ export function ServersTab({ data, user }) {
             <Scroller type="LIST">
                 <div className="empty">
                     <div className="emptyIconGuilds emptyIcon" />
-                    <div className="emptyText">{locale.Strings.NO_SERVERS_IN_COMMON}</div>
+                    <div className="emptyText">{locale.Strings.NO_SERVERS_IN_COMMON()}</div>
                 </div>
             </Scroller>
         )

@@ -7,7 +7,7 @@ import { TooltipBuilder } from '@components/common/TooltipBuilder';
 function BlockedPopout({ userId, close }) {
     return (
         <ContextMenu.Menu navId="blocked-overflow" onClose={close}>
-            <ContextMenu.Item id="user-context-block" label={locale.Strings.UNBLOCK} action={() => { return RelationshipUtils.unblockUser(userId), BlockToasts.showUnblockSuccessToast(userId) }} />
+            <ContextMenu.Item id="user-context-block" label={locale.Strings.UNBLOCK()} action={() => { return RelationshipUtils.unblockUser(userId), BlockToasts.showUnblockSuccessToast(userId) }} />
         </ContextMenu.Menu>
     )
 }
@@ -28,7 +28,7 @@ export function BlockedPopoutButton({ user }) {
                 {...props}
                 ref={refDOM}
                 onClick={() => { setShowPopout(true) }}>
-                <TooltipBuilder note={locale.Strings.MORE}>
+                <TooltipBuilder note={locale.Strings.MORE()}>
                     <button className={`${ButtonClasses.button} ${ButtonClasses.sm} ${ButtonClasses.secondary}`} type={"button"}>
                         <div className={`${ButtonClasses.buttonChildrenWrapper}`}>
                             <div className={`${ButtonClasses.buttonChildren}`}>
@@ -52,7 +52,7 @@ export function AcceptButton({ user }) {
             onClick={() => RelationshipUtils.acceptFriendRequest({ userId: user.id })}>
             <div className={`${ButtonClasses.buttonChildrenWrapper}`}>
                 <div className={`${ButtonClasses.buttonChildren}`}>
-                    <div style={{ fontSize: "14px", fontWeight: "500" }}>{locale.Strings.ACCEPT}</div>
+                    <div style={{ fontSize: "14px", fontWeight: "500" }}>{locale.Strings.ACCEPT()}</div>
                 </div>
             </div>
         </button>
@@ -67,7 +67,7 @@ export function IgnoreButton({ user }) {
             onClick={() => RelationshipUtils.cancelFriendRequest(user.id)}>
             <div className={`${ButtonClasses.buttonChildrenWrapper}`}>
                 <div className={`${ButtonClasses.buttonChildren}`}>
-                    <div style={{ fontSize: "14px", fontWeight: "500" }}>{locale.Strings.IGNORE}</div>
+                    <div style={{ fontSize: "14px", fontWeight: "500" }}>{locale.Strings.IGNORE()}</div>
                 </div>
             </div>
         </button>

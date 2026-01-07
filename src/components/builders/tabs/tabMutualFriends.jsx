@@ -10,7 +10,7 @@ export function FriendsTab({ data, user }) {
             <Scroller type="LIST">
                 <div className="empty">
                     <div className="emptyIconFriends emptyIcon" />
-                    <div className="emptyText">{locale.Strings.NO_FRIENDS_IN_COMMON}</div>
+                    <div className="emptyText">{locale.Strings.NO_FRIENDS_IN_COMMON()}</div>
                 </div>
             </Scroller>
         )

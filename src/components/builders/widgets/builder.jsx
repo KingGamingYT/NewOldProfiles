@@ -6,10 +6,10 @@ import { BoardBuilder } from '@components/builders/tabs/common/infoSections';
 
 function getWidgetIntl(widget) {
     let header;
-    if (widget.type.includes("favorite_games")) header = locale.Strings.FAVORITE_GAME;
-    else if (widget.type.includes("played_games")) header = locale.Strings.GAMES_I_LIKE;
-    else if (widget.type.includes("want_to_play_games")) header = locale.Strings.WANT_TO_PLAY;
-    else if (widget.type.includes("current_games")) header = locale.Strings.GAMES_IN_ROTATION;
+    if (widget.type.includes("favorite_games")) header = locale.Strings.FAVORITE_GAME();
+    else if (widget.type.includes("played_games")) header = locale.Strings.GAMES_I_LIKE();
+    else if (widget.type.includes("want_to_play_games")) header = locale.Strings.WANT_TO_PLAY();
+    else if (widget.type.includes("current_games")) header = locale.Strings.GAMES_IN_ROTATION();
 
     return header;
 }
