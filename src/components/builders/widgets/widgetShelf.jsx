@@ -1,5 +1,6 @@
 import { useState, useLayoutEffect, useMemo, useRef } from 'react';
 import { IconUtils, FetchGames } from '@modules/common';
+import { DetectableGameSupplementalStore } from '@modules/stores';
 import { TooltipBuilder } from '@components/common/TooltipBuilder';
 import { GameCover } from './common/gameCover';
 import { FallbackCover } from './common/fallbackCover';
@@ -15,7 +16,7 @@ export function ShelfWidgetBuilder({ game }) {
     useLayoutEffect(() => { FetchGames.getDetectableGamesSupplemental([game?.id]); }, [game?.id]);
 
     useLayoutEffect(() => {
-        if (imageURL == null) imageURL = `https://cdn.discordapp.com/app-icons/${game?.id}/${game?.coverImage}.png?size=1024&keep_aspect_ratio=true`
+        if (!imageURL) imageURL = DetectableGameSupplementalStore.getCoverImageUrl(game?.id);
         image.src = imageURL;
         
         if (!image.src) {

@@ -1154,7 +1154,7 @@ function GameCover({ game, image, imageURL }) {
 		"div",
 		{
 			className: "gameCover hoverActiveEffect",
-			onClick: () => imageURL != null && DetectableGameSupplementalStore.getGame(game.id) && GameProfileOpen({ gameId: game.id, userId: user.id })
+			onClick: () => DetectableGameSupplementalStore.getGame(game.id) && GameProfileOpen({ gameId: game.id, userId: user.id })
 		},
 		BdApi.React.createElement(
 			"img",
@@ -1208,7 +1208,7 @@ function FavoriteWidgetBuilder({ widget, game }) {
 		FetchGames.getDetectableGamesSupplemental([game?.id]);
 	}, [game?.id]);
 	react.useLayoutEffect(() => {
-		if (imageURL == null) imageURL = `https://cdn.discordapp.com/app-icons/${game?.id}/${game?.coverImage}.png?size=1024&keep_aspect_ratio=true`;
+		if (!imageURL) imageURL = DetectableGameSupplementalStore.getCoverImageUrl(game?.id);
 		image.src = imageURL;
 		if (!image.src) {
 			setLoading(true);
@@ -1236,7 +1236,7 @@ function ShelfWidgetBuilder({ game }) {
 		FetchGames.getDetectableGamesSupplemental([game?.id]);
 	}, [game?.id]);
 	react.useLayoutEffect(() => {
-		if (imageURL == null) imageURL = `https://cdn.discordapp.com/app-icons/${game?.id}/${game?.coverImage}.png?size=1024&keep_aspect_ratio=true`;
+		if (!imageURL) imageURL = DetectableGameSupplementalStore.getCoverImageUrl(game?.id);
 		image.src = imageURL;
 		if (!image.src) {
 			setLoading(true);
@@ -1264,7 +1264,7 @@ function CurrentWidgetBuilder({ widget, game, index }) {
 		FetchGames.getDetectableGamesSupplemental([game?.id]);
 	}, [game?.id]);
 	react.useLayoutEffect(() => {
-		if (imageURL == null) imageURL = `https://cdn.discordapp.com/app-icons/${game?.id}/${game?.coverImage}.png?size=1024&keep_aspect_ratio=true`;
+		if (!imageURL) imageURL = DetectableGameSupplementalStore.getCoverImageUrl(game?.id);
 		image.src = imageURL;
 		if (!image.src) {
 			setLoading(true);
