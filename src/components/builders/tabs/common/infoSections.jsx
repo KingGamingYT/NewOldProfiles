@@ -34,8 +34,8 @@ function MemberDateIcon({ server }) {
                 </div>
                 : <div className="guildIcon">
                     <img 
-                        src={IconUtils.getGuildIconURL(server) + 'size=16'} 
-                        style={{ borderRadius: "inherit" }} 
+                        src={IconUtils.getGuildIconURL(server) + 'size=128'} 
+                        style={{ borderRadius: "inherit", width: "inherit" }} 
                         onError={() => (setShouldFallback(true))}
                     />  
                 </div>
