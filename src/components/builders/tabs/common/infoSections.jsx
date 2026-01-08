@@ -1,4 +1,5 @@
 import { Data, Utils } from 'betterdiscord';
+import { useState } from 'react';
 import { IconUtils, ButtonClasses, ModalRoot, ModalSystem, RoleRenderer, intl } from '@modules/common';
 import { GuildMemberStore, GuildStore } from '@modules/stores';
 import { ConnectionComponent, MarkdownComponent, NoteComponent, BoardEditRenderer } from '@modules/lazy';
@@ -6,11 +7,11 @@ import { locale } from '@common/locale';
 import { FavoriteWidgetBuilder, ShelfWidgetBuilder, CurrentWidgetBuilder } from '@components/builders/widgets/index';
 import { TooltipBuilder } from '@components/common/TooltipBuilder';
 
-function SectionHeader({children}) {
+function SectionHeader({ children }) {
     return <div className="userInfoSectionHeader">{children}</div>
 }
 
-function MemberDateSupplementalBuilder({date, member}) {
+function MemberDateSupplementalBuilder({ date, member }) {
     return (
         <div 
             className={Utils.className("memberSince", member && "memberSinceServer")} 
@@ -22,7 +23,28 @@ function MemberDateSupplementalBuilder({date, member}) {
     )
 }
 
-function BoardButton({user}) {
+function MemberDateIcon({ server }) {
+    const [shouldFallback, setShouldFallback] = useState(false);
+    
+    return (
+        <TooltipBuilder note={server.name}>
+            {
+                shouldFallback ? <div className="noIcon guildIcon" style={{ fontSize: "10px", backgroundImage: "none" }}>
+                    <div className="acronym" >{server.name.substring(0, 1)}</div>
+                </div>
+                : <div className="guildIcon">
+                    <img 
+                        src={IconUtils.getGuildIconURL(server) + 'size=16'} 
+                        style={{ borderRadius: "inherit" }} 
+                        onError={() => (setShouldFallback(true))}
+                    />  
+                </div>
+            }
+        </TooltipBuilder>
+    )
+}
+
+function BoardButton({ user }) {
     return (
         <button
             className={`${ButtonClasses.button} ${ButtonClasses.sm} ${ButtonClasses.primary} ${ButtonClasses.hasText}`}
@@ -94,16 +116,7 @@ export function MemberDateBuilder({ data, user }) {
                 {data?.guildId && serverMember &&
                     <>
                         <div className="divider" />
-                        <TooltipBuilder note={server.name}>
-                            <div className="guildIcon">
-                                {
-                                    IconUtils.getGuildIconURL(server) ? <img src={IconUtils.getGuildIconURL(server) + 'size=16'} />
-                                    : <div className="noIcon guildIcon" style={{ fontSize: "10px", backgroundImage: "none" }}>
-                                        <div className="acronym" >{server.name.substring(0, 1)}</div>
-                                    </div>
-                                }   
-                            </div>
-                        </TooltipBuilder>
+                        <MemberDateIcon server={server} />
                         <MemberDateSupplementalBuilder date={serverDate} member={serverMember} />
                     </>
                 }

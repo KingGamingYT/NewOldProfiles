@@ -316,6 +316,9 @@ let CSS = webpackify(
     .userBio .lineClamp2Plus {
         -webkit-line-clamp: unset !important;
     }
+    .guildIcon {
+        border-radius: 4px;
+    }
     .noIcon {
         line-height: 16px;
         background-color: var(--background-base-lower);
