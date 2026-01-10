@@ -318,6 +318,8 @@ let CSS = webpackify(
     }
     .guildIcon {
         border-radius: 4px;
+        width: 16px;
+        height: 16px;
     }
     .noIcon {
         line-height: 16px;

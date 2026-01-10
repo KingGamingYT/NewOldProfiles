@@ -32,7 +32,7 @@ export function ActivityCard({user, activity, check}) {
                         activity?.assets && activity?.assets.large_image && !activity?.platform?.includes('xbox') && (
                             <RichImageAsset 
                                 url={
-                                    activity?.assets?.large_image?.includes('external') ? `https://media.discordapp.net/external/${activity.assets.large_image.substring(activity.assets.large_image.indexOf('/'))}`
+                                    isNaN(activity?.assets?.large_image) ? `https://media.discordapp.net/${activity.assets.large_image.substring(activity.assets.large_image.indexOf(':')+1)}`
                                     : `https://cdn.discordapp.com/app-assets/${activity.application_id}/${activity?.assets.large_image}.png`
                                 }
                                 tooltipText={activity.assets.large_text || activity?.details}
@@ -64,7 +64,7 @@ export function ActivityCard({user, activity, check}) {
                         activity?.assets && activity?.assets?.large_image && activity?.assets?.small_image && (
                             <RichImageAsset 
                                 url={
-                                    activity?.assets?.small_image?.includes('external') ? `https://media.discordapp.net/external${activity.assets.small_image.substring(activity.assets.small_image.indexOf('/'))}`
+                                    isNaN(activity?.assets?.small_image) ? `https://media.discordapp.net/${activity.assets.small_image.substring(activity.assets.small_image.indexOf(':')+1)}`
                                     : `https://cdn.discordapp.com/app-assets/${activity.application_id}/${activity?.assets.small_image}.png`
                                 }
                                 tooltipText={activity.assets.small_text || activity?.details}
