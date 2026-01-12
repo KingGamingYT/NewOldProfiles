@@ -2,7 +2,7 @@
  * @name NewOldProfiles
  * @author KingGamingYT
  * @description A full, largely accurate restoration of Discord's profile layout used from 2018 to 2021. Features modern additions such as banners, theme colors, and guild tags.
- * @version 1.0.5
+ * @version 1.0.5-dev
  */
 
 /*@cc_on
@@ -189,6 +189,14 @@ const settings = {
 			note: "When viewing a user's profile in a server, that user's custom about me will be displayed instead of their default one.",
 			initial: true
 		}
+	},
+	default: {
+		showGuildTag: true,
+		disableDiscrim: false,
+		disableProfileThemes: false,
+		boardTab: false,
+		showRoles: true,
+		serverBio: true
 	}
 };
 

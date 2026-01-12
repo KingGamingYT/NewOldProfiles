@@ -32,5 +32,13 @@ export const settings = {
             note: "When viewing a user's profile in a server, that user's custom about me will be displayed instead of their default one.",
             initial: true,
         },
+    },
+    default: {
+        showGuildTag: true,
+        disableDiscrim: false,
+        disableProfileThemes: false,
+        boardTab: false,
+        showRoles: true,
+        serverBio: true,
     }
 };
