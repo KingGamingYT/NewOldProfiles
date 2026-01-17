@@ -339,6 +339,11 @@ let CSS = webpackify(
         white-space: nowrap;
         width: 100%;
     }
+    .rolesList {
+        [data-text-variant="text-xs/normal"] {
+            font-weight: 500;
+        }
+    }
     .inner .activity {
         padding: 20px;
         border-radius: var(--radius-sm);

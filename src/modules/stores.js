@@ -13,6 +13,7 @@ export const ApplicationStore = /* @__PURE__ */ Webpack.getStore('ApplicationSto
 export const ApplicationStreamPreviewStore = /* @__PURE__ */ Webpack.getStore('ApplicationStreamPreviewStore');
 export const VoiceStateStore = /* @__PURE__ */ Webpack.getStore('VoiceStateStore');
 export const GuildMemberStore = /* @__PURE__ */ Webpack.getStore('GuildMemberStore');
+export const GuildRoleStore = /* @__PURE__ */ Webpack.getStore('GuildRoleStore');
 export const StreamerModeStore = /* @__PURE__ */ Webpack.getStore('StreamerModeStore');
 export const { useStateFromStores } = /* @__PURE__ */ Webpack.getMangled(m => m.Store, {
         useStateFromStores: /* @__PURE__ */ Webpack.Filters.byStrings("useStateFromStores")

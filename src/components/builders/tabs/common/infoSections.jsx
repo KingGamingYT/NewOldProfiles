@@ -1,7 +1,7 @@
 import { Data, Utils } from 'betterdiscord';
 import { useState } from 'react';
-import { IconUtils, ButtonClasses, ModalRoot, ModalSystem, RoleRenderer, intl } from '@modules/common';
-import { GuildMemberStore, GuildStore } from '@modules/stores';
+import { IconUtils, ButtonClasses, ModalRoot, ModalSystem, RoleRenderer, RolePermissionCheck, RoleUpdater, intl } from '@modules/common';
+import { GuildMemberStore, GuildRoleStore, GuildStore } from '@modules/stores';
 import { ConnectionComponent, MarkdownComponent, NoteComponent, BoardEditRenderer } from '@modules/lazy';
 import { locale } from '@common/locale';
 import { FavoriteWidgetBuilder, ShelfWidgetBuilder, CurrentWidgetBuilder } from '@components/builders/widgets/index';
@@ -90,6 +90,7 @@ export function RoleBuilder({ user, data }) {
     if (!serverMember || serverMember?.roles?.length === 0) {
         return;
     }
+    const memberRoles = serverMember.roles?.map(role => GuildRoleStore.getRole(data?.guildId, role))
     return (
         <div className="userInfoSection">
             <SectionHeader>
@@ -98,7 +99,13 @@ export function RoleBuilder({ user, data }) {
                     : locale.Strings.ROLE()
                 }
             </SectionHeader>
-            <RoleRenderer user={user} currentUser={data.currentUser} guild={GuildStore.getGuild(data?.guildId)} />
+            <RoleRenderer 
+                userId={user.id} 
+                roles={memberRoles} 
+                guild={GuildStore.getGuild(data?.guildId)} 
+                className="rolesList" 
+                allowEditing={RolePermissionCheck({guildId: data.guildId}).canRemove}
+            />
         </div>
     )
 }
