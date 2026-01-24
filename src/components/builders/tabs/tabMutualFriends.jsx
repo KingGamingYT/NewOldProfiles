@@ -5,7 +5,7 @@ import { Scroller } from './common/scroller';
 
 export function FriendsTab({ data, user }) {
     const mutualFriends = UserProfileStore.getMutualFriends(user.id)
-    if (mutualFriends?.length == 0) {
+    if (!mutualFriends || mutualFriends?.length == 0) {
         return (
             <Scroller type="LIST">
                 <div className="empty">

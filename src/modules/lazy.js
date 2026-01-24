@@ -14,7 +14,7 @@ let BotDataRenderer;
 let Board;
 
 function MessageButtonLargeComponent({ autoFocus, onClose, userId }) {
-    MessageButtonLarge ??= Webpack.getByStrings('["userId",', { searchExports: true });
+    MessageButtonLarge ??= Webpack.getByStrings('["userId",', '"variant"]', { searchExports: true });
 
     return <MessageButtonLarge autoFocus={autoFocus} onClose={() => PopUtils.popAll()} userId={userId} />
 }
@@ -31,7 +31,7 @@ function FriendsButtonComponent({ relationshipType, shouldShowTooltip, type, the
 function MoreOverflowButtonComponent({ user }) {
     MoreOverflowButton ??= Webpack.getBySource('user-profile-overflow-menu', { searchExports: true });
 
-    return <MoreOverflowButton.wV user={user} />
+    return <MoreOverflowButton.Zt user={user} />
 }
 function FriendAddButtonComponent({ autoFocus, userId, variant }) {
     FriendAddButton ??= Webpack.getByStrings('["userId",', 'analyticsLocation', { searchExports: true });
@@ -44,7 +44,7 @@ function EditProfileButtonComponent({ user }) {
     return <EditProfileButton user={user} />
 }
 function MarkdownComponent({ userBio }) {
-    MarkdownFormat ??= Webpack.getByStrings('userBio', 'markup');
+    MarkdownFormat ??= Webpack.getByStrings('userBio', 'disableAnimations');
 
     return <MarkdownFormat className="userBio" userBio={userBio} />
 }

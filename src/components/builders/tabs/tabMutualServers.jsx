@@ -5,7 +5,7 @@ import { Scroller } from './common/scroller';
 
 export function ServersTab({ data, user }) {
     const mutualServers = UserProfileStore.getMutualGuilds(user.id);
-    if (mutualServers?.length == 0) {
+    if (!mutualServers || mutualServers?.length == 0) {
         return (
             <Scroller type="LIST">
                 <div className="empty">

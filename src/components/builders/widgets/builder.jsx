@@ -1,3 +1,4 @@
+import { Utils } from 'betterdiscord';
 import { useState, useEffect } from 'react';
 import { locale } from '@common/locale';
 import { RestAPI, Dispatcher, Endpoints } from '@modules/common';
@@ -24,9 +25,9 @@ export function WidgetBuilder({ widget }) {
         (async () => {
             if (isLoaded) return;
             const urlSearch = new URLSearchParams(gameIds.map(x => ["application_ids", x])).toString();
-            const applicationPublic = await RestAPI.get({ url: Endpoints.ANM.APPLICATIONS_PUBLIC, query: urlSearch });
+            const applicationPublic = await RestAPI.get({ url: Endpoints.APPLICATIONS_PUBLIC, query: urlSearch });
 
-            const supplementalData = await RestAPI.get({ url: Endpoints.ANM.APPLICATIONS_GAMES_SUPPLEMENTAL, query: urlSearch });
+            const supplementalData = await RestAPI.get({ url: Endpoints.APPLICATIONS_GAMES_SUPPLEMENTAL, query: urlSearch });
 
             Dispatcher.dispatch({
                 type: "APPLICATIONS_FETCH_SUCCESS",

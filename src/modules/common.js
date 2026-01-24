@@ -46,7 +46,7 @@ export const [
     Endpoints,
     RestAPI
 ] = /* @__PURE__ */ Webpack.getBulk(
-    { filter: /* @__PURE__ */ Webpack.Filters.bySource('forceShowPremium', 'pendingThemeColors') },
+    { filter: /* @__PURE__ */ Webpack.Filters.bySource('forceShowPremium', 'pendingThemeColors', 'profileThemeClassName') },
     { filter: x => x.openUserProfileModal },
     { filter: x=>x.Modal },
     { filter: x => x.t && x.t.formatToMarkdownString },
@@ -67,14 +67,14 @@ export const [
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('PRESS_JOIN_CALL_BUTTON') },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('users', 'channel', 'themeType') },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('maxUsers', 'guildId') },
-    { filter: /* @__PURE__ */ Webpack.Filters.byStrings('channel', 'isGuildStageVoice', 'isDM', 'Pl.CONNECT') },
+    { filter: /* @__PURE__ */ Webpack.Filters.byStrings('channel', 'isGuildStageVoice', 'isDM', '.CONNECT') },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('guildId', 'name', 'setPopoutRef', 'onClose', 'fetchGuildProfile') },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('roles', 'guild', 'canRemoveAnyRoles', 'map(e'), searchExports: true },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('.ADMINISTRATOR', '.MANAGE_MESSAGES') },
     { filter: /* @__PURE__ */ x=>x.updateMemberRoles },
     { filter: /* @__PURE__ */ Webpack.Filters.bySource(".botTag", "invertColor") },
     { filter: /* @__PURE__ */ Webpack.Filters.byPrototypeKeys(("renderTooltip")), searchExports: true  },
-    { filter: /* @__PURE__ */ Webpack.Filters.byStrings('showSubtext', 'orbBadgeAsset') },
+    { filter: /* @__PURE__ */ Webpack.Filters.byStrings('showSubtext', 'tooltipWordmarkComponent') },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings("Unsupported animation config:"), searchExports: true },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('type', 'position', 'data-popout-animating'), searchExports: true },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('"data-toggleable-component":"switch"', 'layout:"horizontal"'), searchExports: true },
@@ -86,8 +86,8 @@ export const [
     { filter: /* @__PURE__ */ Webpack.Filters.byKeys('popAll') },
     { filter: x => x.unblockUser },
     { filter: x => x.showUnblockSuccessToast },
-    { filter: x => x._dispatch },
-    { filter: x => x.AnalyticsObjectTypes && x.GuildFeatures },
+    { filter: x => x._dispatch, searchExports: true },
+    { filter: /* @__PURE__ */ Webpack.Filters.byKeys("GUILD_EMOJI", "GUILD_EMOJIS"), searchExports: true },
     { filter: x => typeof x === "object" && x.del && x.put, searchExports: true }
 )
 
@@ -104,4 +104,4 @@ export const ModalSystem = Webpack.getMangled(".modalKey?", {
     closeModal: Webpack.Filters.byStrings(".onCloseCallback()"),
     closeAllModals: Webpack.Filters.byStrings(".getState();for")
 });
-export const TagRenderer = lazy(async () => ({ default: (await Webpack.waitForModule(Webpack.Filters.bySource('tag', 'isCurrentUser', 'widgetType', 'TAG_REMOVED'))).Z}))
+export const TagRenderer = lazy(async () => ({ default: (await Webpack.waitForModule(Webpack.Filters.bySource('tag', 'isCurrentUser', 'widgetType', 'TAG_REMOVED'))).A}))

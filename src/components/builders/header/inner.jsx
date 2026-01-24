@@ -164,9 +164,9 @@ function DiscordTag({ user, displayProfile, tagName, displayName }) {
                     `@${tagName}`
             }</div>
             {
-                user.bot && <BotTagRenderer.Z
+                user.bot && <BotTagRenderer.A
                     className="botTag"
-                    type={user.system ? BotTagRenderer.Z.Types.OFFICIAL : BotTagRenderer.Z.Types.BOT}
+                    type={user.system ? BotTagRenderer.A.Types.OFFICIAL : BotTagRenderer.A.Types.BOT}
                     verified={user.publicFlags & (1 << 16)}
                 />
             }

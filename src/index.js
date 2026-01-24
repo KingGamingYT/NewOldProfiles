@@ -49,7 +49,7 @@ export default class NewOldProfiles {
     constructor(meta){}
     start() {
         addProfileCSS();
-        Patcher.after(entireProfileModal.Z, "render", (that, [props], res) => {
+        Patcher.after(entireProfileModal.A, "render", (that, [props], res) => {
             if (!props.themeType?.includes("MODAL")) return;
             if (!Utils.findInTree(props, x => x?.displayProfile, { walkable: ['props', 'children'] })) return;
             if (!Utils.findInTree(props, (tree) => Object.hasOwn(tree, 'initialSection'), { walkable: ['props', 'children'] })) {

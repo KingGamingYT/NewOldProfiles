@@ -8,17 +8,17 @@ const styles = Object.assign(
         buttonChildrenWrapper: Webpack.getModule(x=>x.primary && x.hasText && !x.hasTrailing).buttonChildrenWrapper,
         disabledButtonWrapper: Webpack.getByKeys('disabledButtonWrapper', 'sizeSmall').disabledButtonWrapper,
         fullscreenOnMobile: Webpack.getByKeys('focusLock', 'fullscreenOnMobile').fullscreenOnMobile,
-        clickableImage: Webpack.getByKeys('gameState', 'clickableImage').clickableImage
+        clickableImage: Webpack.getByKeys('gameState', 'clickableImage').clickableImage,
+        bannerButton: Webpack.getByKeys('bannerButton').bannerButton
     },
-    Webpack.getByKeys('container', 'bar', 'progress'),
-    Webpack.getModule(x=>x.container && x.badge && Object.keys(x).length === 2),
-    Webpack.getByKeys('colorPrimary', 'grow'),
-    Webpack.getByKeys('themeColor', 'secondary'),
-    Webpack.getByKeys('lineClamp2Plus'),
-    Webpack.getByKeys('badgeContainer', 'badgesContainer'),
-    Webpack.getByKeys('tabularNumbers'),
+    Object.getOwnPropertyDescriptors(Webpack.getByKeys('container', 'bar', 'progress')),
+    Object.getOwnPropertyDescriptors(Webpack.getModule(x=>x.container && x.badge && Object.keys(x).length === 2)),
+    Object.getOwnPropertyDescriptors(Webpack.getByKeys('colorPrimary', 'grow')),
+    Object.getOwnPropertyDescriptors(Webpack.getByKeys('lineClamp2Plus')),
+    Object.getOwnPropertyDescriptors(Webpack.getByKeys('badgeContainer', 'badgesContainer')),
+    Object.getOwnPropertyDescriptors(Webpack.getByKeys('tabularNumbers')),
     Webpack.getByKeys('icon', 'buttonInner'),
-    Webpack.getModule(x=>x.buttonContainer && Object.keys(x).length === 1),
+    Object.getOwnPropertyDescriptors(Webpack.getModule(x=>x.buttonContainer && Object.keys(x).length === 1)),
 );
 
 let CSS = webpackify(
@@ -183,7 +183,7 @@ let CSS = webpackify(
         .lookFilled:is(.colorBrand, .colorPrimary:is(.grow)):active, .hasText:not(.primaryFilled):active {
             background: var(--green-active, var(--control-primary-background-active)) !important;
         }
-        .themeColor.secondary, .sm:not(.hasText) {
+        .bannerButton, .sm:not(.hasText) {
             background: unset !important;
             border: unset !important;
             color: #7c7e81;
@@ -193,13 +193,13 @@ let CSS = webpackify(
                 stroke: #7c7e81;
             }
         }
-        .themeColor.secondary:hover, .sm:not(.hasText):hover {
+        .bannerButton:hover, .sm:not(.hasText):hover {
             color: var(--interactive-hover, var(--interactive-text-hover));
             svg {
                 stroke: var(--interactive-hover, var(--interactive-text-hover));
             }
         }
-        .themeColor.secondary:active, .sm:not(.hasText):active {
+        .bannerButton:active, .sm:not(.hasText):active {
             color: var(--interactive-active, var(--interactive-text-active));
             svg {
                 stroke: var(--interactive-active, var(--interactive-text-active));
@@ -806,7 +806,7 @@ let CSS = webpackify(
             .lookFilled:is(.colorBrand, .colorPrimary:is(.grow)):active, .hasText:active {
                 background: #e3e7f8 !important;
             }
-            .themeColor.secondary, .sm:not(.hasText) {
+            .bannerButton, .sm:not(.hasText) {
                 color: var(--white);
                 svg {
                     stroke: var(--white) !important;
@@ -1139,7 +1139,7 @@ let profileCSS = webpackify(CSS);
 export function addProfileCSS() {
     DOM.addStyle("profileCSS", profileCSS);
     Utils.forceLoad(Webpack.getBySource(`"USER_PROFILE_MODAL_KEY:".concat`, { raw: true }).id).then((r) => {
-        Object.assign(styles, Webpack.getByKeys("background", "content", "safetyTable"));
+        Object.assign(styles, Object.getOwnPropertyDescriptors(Webpack.getByKeys("background", "content", "safetyTable")));
         profileCSS = webpackify(CSS);
         DOM.addStyle("profileCSS", profileCSS);
     });
@@ -1148,7 +1148,7 @@ export function addProfileCSS() {
 export function webpackify(css) {
     for (const key in styles) {
         let regex = new RegExp(`\\.${key}([\\s,.):>])`, 'g');
-        css = css.replace(regex, `.${styles[key]}$1`);
+        css = styles[key]?.value ? css.replace(regex, `.${styles[key].value}$1`) : css.replace(regex, `.${styles[key]}$1`);
     }
     return css;
 }
