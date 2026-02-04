@@ -72,7 +72,7 @@ export const [
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('roles', 'guild', 'canRemoveAnyRoles', 'map(e'), searchExports: true },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('.ADMINISTRATOR', '.MANAGE_MESSAGES') },
     { filter: /* @__PURE__ */ x=>x.updateMemberRoles },
-    { filter: /* @__PURE__ */ Webpack.Filters.bySource(".botTag", "invertColor") },
+    { filter: /* @__PURE__ */ Webpack.Filters.bySource("BOT", "invertColor") },
     { filter: /* @__PURE__ */ Webpack.Filters.byPrototypeKeys(("renderTooltip")), searchExports: true  },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('showSubtext', 'tooltipWordmarkComponent') },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings("Unsupported animation config:"), searchExports: true },

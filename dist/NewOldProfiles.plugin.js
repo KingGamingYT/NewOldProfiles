@@ -2,7 +2,7 @@
  * @name NewOldProfiles
  * @author KingGamingYT
  * @description A full, largely accurate restoration of Discord's profile layout used from 2018 to 2021. Features modern additions such as banners, theme colors, and guild tags.
- * @version 1.0.7
+ * @version 1.0.8
  */
 
 /*@cc_on
@@ -106,7 +106,7 @@ const [
 	{ filter: betterdiscord.Webpack.Filters.byStrings("roles", "guild", "canRemoveAnyRoles", "map(e"), searchExports: true },
 	{ filter: betterdiscord.Webpack.Filters.byStrings(".ADMINISTRATOR", ".MANAGE_MESSAGES") },
 	{ filter: (x) => x.updateMemberRoles },
-	{ filter: betterdiscord.Webpack.Filters.bySource(".botTag", "invertColor") },
+	{ filter: betterdiscord.Webpack.Filters.bySource("BOT", "invertColor") },
 	{ filter: betterdiscord.Webpack.Filters.byPrototypeKeys("renderTooltip"), searchExports: true },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("showSubtext", "tooltipWordmarkComponent") },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("Unsupported animation config:"), searchExports: true },
@@ -1578,7 +1578,7 @@ function Starter({ props, res }) {
 	return [
 		react.createElement(
 			"div",
-			{ className: "inner" },
+			{ className: "inner", "data-user-id": user.id },
 			[
 				react.createElement(headerBuilder, { props, user, currentUser, displayProfile, tab, setTab, ref }),
 				react.createElement(bodyBuilder, { data, user, displayProfile, tab, ref })
