@@ -1138,7 +1138,7 @@ let profileCSS = webpackify(CSS);
 
 export function addProfileCSS() {
     DOM.addStyle("profileCSS", profileCSS);
-    Utils.forceLoad(Webpack.getBySource(`"USER_PROFILE_MODAL_KEY:".concat`, { raw: true }).id).then((r) => {
+    Utils.forceLoad(Webpack.getBySource("USER_PROFILE_MODAL_KEY:$", { raw: true }).id).then((r) => {
         Object.assign(styles, Object.getOwnPropertyDescriptors(Webpack.getByKeys("background", "content", "safetyTable")));
         profileCSS = webpackify(CSS);
         DOM.addStyle("profileCSS", profileCSS);

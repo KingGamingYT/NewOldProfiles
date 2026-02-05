@@ -1,5 +1,5 @@
 import { Webpack } from 'betterdiscord';
-import { PopUtils } from '@modules/common';
+import { PopUtils, MessageButtons } from '@modules/common';
 
 let MessageButtonLarge;
 let MessageButtonSmall;
@@ -14,17 +14,17 @@ let BotDataRenderer;
 let Board;
 
 function MessageButtonLargeComponent({ autoFocus, onClose, userId }) {
-    MessageButtonLarge ??= Webpack.getByStrings('["userId",', '"variant"]', { searchExports: true });
+    MessageButtonLarge ??= MessageButtons.Button;
 
     return <MessageButtonLarge autoFocus={autoFocus} onClose={() => PopUtils.popAll()} userId={userId} />
 }
 function MessageButtonSmallComponent({ onClose, userId, variant }) {
-    MessageButtonSmall ??= Webpack.getByStrings('["userId",', '["text"]', { searchExports: true });
+    MessageButtonSmall ??= MessageButtons.ButtonWithTooltip;
 
     return <MessageButtonSmall onClose={() => PopUtils.popAll()} userId={userId} variant={variant} />
 }
 function FriendsButtonComponent({ relationshipType, shouldShowTooltip, type, themeColor, user }) {
-    FriendsButton ??= Webpack.getAllByStrings('["user",', 'relationshipType', { searchExports: true })[1];
+    FriendsButton ??= Webpack.getByStrings('menuItems', 'relationshipType', { searchExports: true });
 
     return <FriendsButton relationshipType={relationshipType} shouldShowTooltip={shouldShowTooltip} type={type} themeColor={themeColor} user={user} />
 }
@@ -34,7 +34,7 @@ function MoreOverflowButtonComponent({ user }) {
     return <MoreOverflowButton.Zt user={user} />
 }
 function FriendAddButtonComponent({ autoFocus, userId, variant }) {
-    FriendAddButton ??= Webpack.getByStrings('["userId",', 'analyticsLocation', { searchExports: true });
+    FriendAddButton ??= Webpack.getByStrings("({userId", ",{variant", '"primary",', { searchExports: true});
 
     return <FriendAddButton autoFocus={autoFocus} userId={userId} variant={variant} />
 }

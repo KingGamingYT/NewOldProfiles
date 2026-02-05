@@ -104,4 +104,8 @@ export const ModalSystem = Webpack.getMangled(".modalKey?", {
     closeModal: Webpack.Filters.byStrings(".onCloseCallback()"),
     closeAllModals: Webpack.Filters.byStrings(".getState();for")
 });
+export const MessageButtons = Webpack.getMangled('.zROXEV', {
+    Button: Webpack.Filters.not(Webpack.Filters.byStrings("aria-label")),
+    ButtonWithTooltip: Webpack.Filters.byStrings("tooltipText")
+})
 export const TagRenderer = lazy(async () => ({ default: (await Webpack.waitForModule(Webpack.Filters.bySource('tag', 'isCurrentUser', 'widgetType', 'TAG_REMOVED'))).A}))

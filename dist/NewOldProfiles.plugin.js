@@ -2,7 +2,7 @@
  * @name NewOldProfiles
  * @author KingGamingYT
  * @description A full, largely accurate restoration of Discord's profile layout used from 2018 to 2021. Features modern additions such as banners, theme colors, and guild tags.
- * @version 1.0.8
+ * @version 1.0.9
  */
 
 /*@cc_on
@@ -136,6 +136,10 @@ const ModalSystem$1 = betterdiscord.Webpack.getMangled(".modalKey?", {
 	openModal: betterdiscord.Webpack.Filters.byStrings(",instant:"),
 	closeModal: betterdiscord.Webpack.Filters.byStrings(".onCloseCallback()"),
 	closeAllModals: betterdiscord.Webpack.Filters.byStrings(".getState();for")
+});
+const MessageButtons = betterdiscord.Webpack.getMangled(".zROXEV", {
+	Button: betterdiscord.Webpack.Filters.not(betterdiscord.Webpack.Filters.byStrings("aria-label")),
+	ButtonWithTooltip: betterdiscord.Webpack.Filters.byStrings("tooltipText")
 });
 const TagRenderer = react.lazy(async () => ({ default: (await betterdiscord.Webpack.waitForModule(betterdiscord.Webpack.Filters.bySource("tag", "isCurrentUser", "widgetType", "TAG_REMOVED"))).A }));
 
@@ -337,15 +341,15 @@ let ConnectionRenderer;
 let BotDataRenderer;
 let Board;
 function MessageButtonLargeComponent({ autoFocus, onClose, userId }) {
-	MessageButtonLarge ??= betterdiscord.Webpack.getByStrings('["userId",', '"variant"]', { searchExports: true });
+	MessageButtonLarge ??= MessageButtons.Button;
 	return BdApi.React.createElement(MessageButtonLarge, { autoFocus, onClose: () => PopUtils.popAll(), userId });
 }
 function MessageButtonSmallComponent({ onClose, userId, variant }) {
-	MessageButtonSmall ??= betterdiscord.Webpack.getByStrings('["userId",', '["text"]', { searchExports: true });
+	MessageButtonSmall ??= MessageButtons.ButtonWithTooltip;
 	return BdApi.React.createElement(MessageButtonSmall, { onClose: () => PopUtils.popAll(), userId, variant });
 }
 function FriendsButtonComponent({ relationshipType, shouldShowTooltip, type, themeColor, user }) {
-	FriendsButton ??= betterdiscord.Webpack.getAllByStrings('["user",', "relationshipType", { searchExports: true })[1];
+	FriendsButton ??= betterdiscord.Webpack.getByStrings("menuItems", "relationshipType", { searchExports: true });
 	return BdApi.React.createElement(FriendsButton, { relationshipType, shouldShowTooltip, type, themeColor, user });
 }
 function MoreOverflowButtonComponent({ user }) {
@@ -353,7 +357,7 @@ function MoreOverflowButtonComponent({ user }) {
 	return BdApi.React.createElement(MoreOverflowButton.Zt, { user });
 }
 function FriendAddButtonComponent({ autoFocus, userId, variant }) {
-	FriendAddButton ??= betterdiscord.Webpack.getByStrings('["userId",', "analyticsLocation", { searchExports: true });
+	FriendAddButton ??= betterdiscord.Webpack.getByStrings("({userId", ",{variant", '"primary",', { searchExports: true });
 	return BdApi.React.createElement(FriendAddButton, { autoFocus, userId, variant });
 }
 function EditProfileButtonComponent({ user }) {
@@ -1536,7 +1540,7 @@ let CSS = webpackify(
 let profileCSS = webpackify(CSS);
 function addProfileCSS() {
 	betterdiscord.DOM.addStyle("profileCSS", profileCSS);
-	betterdiscord.Utils.forceLoad(betterdiscord.Webpack.getBySource(`"USER_PROFILE_MODAL_KEY:".concat`, { raw: true }).id).then((r) => {
+	betterdiscord.Utils.forceLoad(betterdiscord.Webpack.getBySource("USER_PROFILE_MODAL_KEY:$", { raw: true }).id).then((r) => {
 		Object.assign(styles, Object.getOwnPropertyDescriptors(betterdiscord.Webpack.getByKeys("background", "content", "safetyTable")));
 		profileCSS = webpackify(CSS);
 		betterdiscord.DOM.addStyle("profileCSS", profileCSS);
