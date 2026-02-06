@@ -1,5 +1,5 @@
 import { Webpack } from 'betterdiscord';
-import { PopUtils, MessageButtons } from '@modules/common';
+import { PopUtils, MessageButtons, FriendButton } from '@modules/common';
 
 let MessageButtonLarge;
 let MessageButtonSmall;
@@ -14,12 +14,12 @@ let BotDataRenderer;
 let Board;
 
 function MessageButtonLargeComponent({ autoFocus, onClose, userId }) {
-    MessageButtonLarge ??= MessageButtons.Button;
+    MessageButtonLarge ??= Webpack.getByStrings("let{userId", ",{variant", '"primary",', { searchExports: true});
 
     return <MessageButtonLarge autoFocus={autoFocus} onClose={() => PopUtils.popAll()} userId={userId} />
 }
 function MessageButtonSmallComponent({ onClose, userId, variant }) {
-    MessageButtonSmall ??= MessageButtons.ButtonWithTooltip;
+    MessageButtonSmall ??= Webpack.getByStrings("userId", "tooltipText:", ",variant", "{text", { searchExports: true });
 
     return <MessageButtonSmall onClose={() => PopUtils.popAll()} userId={userId} variant={variant} />
 }
@@ -34,7 +34,7 @@ function MoreOverflowButtonComponent({ user }) {
     return <MoreOverflowButton.Zt user={user} />
 }
 function FriendAddButtonComponent({ autoFocus, userId, variant }) {
-    FriendAddButton ??= Webpack.getByStrings("({userId", ",{variant", '"primary",', { searchExports: true});
+    FriendAddButton ??= FriendButton.AddFriend;
 
     return <FriendAddButton autoFocus={autoFocus} userId={userId} variant={variant} />
 }
@@ -64,7 +64,7 @@ function BotDataComponent({ user }) {
     return <BotDataRenderer user={user} />
 }
 function BoardEditRenderer({ user }) {
-    Board ??= Webpack.getByStrings('["user"]', { searchExports: true });
+    Board ??= Webpack.getByStrings('data-scroller', 'fade:!0,', {searchExports: true});
 
     return <Board user={user} />
 }

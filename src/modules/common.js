@@ -108,4 +108,7 @@ export const MessageButtons = Webpack.getMangled('.zROXEV', {
     Button: Webpack.Filters.not(Webpack.Filters.byStrings("aria-label")),
     ButtonWithTooltip: Webpack.Filters.byStrings("tooltipText")
 })
+export const FriendButton = Webpack.getMangled('SEND_FRIEND_REQUEST,icon', {
+    AddFriend: Webpack.Filters.combine(Webpack.Filters.byStrings('{userId:'), Webpack.Filters.not(Webpack.Filters.byStrings('tooltipText')))
+})
 export const TagRenderer = lazy(async () => ({ default: (await Webpack.waitForModule(Webpack.Filters.bySource('tag', 'isCurrentUser', 'widgetType', 'TAG_REMOVED'))).A}))

@@ -113,7 +113,7 @@ function HeaderButtonBuilder({ currentUser, relationshipType, user }) {
     switch (relationshipType) {
         case 0: return (
             <>
-                <FriendAddButtonComponent autoFocus={true} userId={user.id} variant={"primary"} />
+                <FriendAddButtonComponent user={user} currentUser={currentUser} relationshipType={relationshipType} />
                 <MessageButtonSmallComponent onCLose={() => PopUtils.popAll()} userId={user.id} variant={"secondary"} />
                 <MoreOverflowButtonComponent user={user} />
             </>

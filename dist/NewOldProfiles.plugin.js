@@ -137,9 +137,12 @@ const ModalSystem$1 = betterdiscord.Webpack.getMangled(".modalKey?", {
 	closeModal: betterdiscord.Webpack.Filters.byStrings(".onCloseCallback()"),
 	closeAllModals: betterdiscord.Webpack.Filters.byStrings(".getState();for")
 });
-const MessageButtons = betterdiscord.Webpack.getMangled(".zROXEV", {
+betterdiscord.Webpack.getMangled(".zROXEV", {
 	Button: betterdiscord.Webpack.Filters.not(betterdiscord.Webpack.Filters.byStrings("aria-label")),
 	ButtonWithTooltip: betterdiscord.Webpack.Filters.byStrings("tooltipText")
+});
+const FriendButton = betterdiscord.Webpack.getMangled("SEND_FRIEND_REQUEST,icon", {
+	AddFriend: betterdiscord.Webpack.Filters.combine(betterdiscord.Webpack.Filters.byStrings("{userId:"), betterdiscord.Webpack.Filters.not(betterdiscord.Webpack.Filters.byStrings("tooltipText")))
 });
 const TagRenderer = react.lazy(async () => ({ default: (await betterdiscord.Webpack.waitForModule(betterdiscord.Webpack.Filters.bySource("tag", "isCurrentUser", "widgetType", "TAG_REMOVED"))).A }));
 
@@ -341,11 +344,11 @@ let ConnectionRenderer;
 let BotDataRenderer;
 let Board;
 function MessageButtonLargeComponent({ autoFocus, onClose, userId }) {
-	MessageButtonLarge ??= MessageButtons.Button;
+	MessageButtonLarge ??= betterdiscord.Webpack.getByStrings("let{userId", ",{variant", '"primary",', { searchExports: true });
 	return BdApi.React.createElement(MessageButtonLarge, { autoFocus, onClose: () => PopUtils.popAll(), userId });
 }
 function MessageButtonSmallComponent({ onClose, userId, variant }) {
-	MessageButtonSmall ??= MessageButtons.ButtonWithTooltip;
+	MessageButtonSmall ??= betterdiscord.Webpack.getByStrings("userId", "tooltipText:", ",variant", "{text", { searchExports: true });
 	return BdApi.React.createElement(MessageButtonSmall, { onClose: () => PopUtils.popAll(), userId, variant });
 }
 function FriendsButtonComponent({ relationshipType, shouldShowTooltip, type, themeColor, user }) {
@@ -357,7 +360,7 @@ function MoreOverflowButtonComponent({ user }) {
 	return BdApi.React.createElement(MoreOverflowButton.Zt, { user });
 }
 function FriendAddButtonComponent({ autoFocus, userId, variant }) {
-	FriendAddButton ??= betterdiscord.Webpack.getByStrings("({userId", ",{variant", '"primary",', { searchExports: true });
+	FriendAddButton ??= FriendButton.AddFriend;
 	return BdApi.React.createElement(FriendAddButton, { autoFocus, userId, variant });
 }
 function EditProfileButtonComponent({ user }) {
@@ -381,7 +384,7 @@ function BotDataComponent({ user }) {
 	return BdApi.React.createElement(BotDataRenderer, { user });
 }
 function BoardEditRenderer({ user }) {
-	Board ??= betterdiscord.Webpack.getByStrings('["user"]', { searchExports: true });
+	Board ??= betterdiscord.Webpack.getByStrings("data-scroller", "fade:!0,", { searchExports: true });
 	return BdApi.React.createElement(Board, { user });
 }
 
@@ -555,7 +558,7 @@ function HeaderButtonBuilder({ currentUser, relationshipType, user }) {
 	}
 	switch (relationshipType) {
 		case 0:
-			return BdApi.React.createElement(BdApi.React.Fragment, null, BdApi.React.createElement(FriendAddButtonComponent, { autoFocus: true, userId: user.id, variant: "primary" }), BdApi.React.createElement(MessageButtonSmallComponent, { onCLose: () => PopUtils.popAll(), userId: user.id, variant: "secondary" }), BdApi.React.createElement(MoreOverflowButtonComponent, { user }));
+			return BdApi.React.createElement(BdApi.React.Fragment, null, BdApi.React.createElement(FriendAddButtonComponent, { user, currentUser, relationshipType }), BdApi.React.createElement(MessageButtonSmallComponent, { onCLose: () => PopUtils.popAll(), userId: user.id, variant: "secondary" }), BdApi.React.createElement(MoreOverflowButtonComponent, { user }));
 		case 1:
 		case 4:
 			return BdApi.React.createElement(BdApi.React.Fragment, null, BdApi.React.createElement(MessageButtonLargeComponent, { autoFocus: true, onClose: () => PopUtils.popAll(), userId: user.id }), BdApi.React.createElement(FriendsButtonComponent, { relationshipType, shouldShowTooltip: true, type: "icon", themeColor: "secondary", user }), BdApi.React.createElement(MoreOverflowButtonComponent, { user }));
