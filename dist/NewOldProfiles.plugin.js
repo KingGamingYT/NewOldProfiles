@@ -2,7 +2,7 @@
  * @name NewOldProfiles
  * @author KingGamingYT
  * @description A full, largely accurate restoration of Discord's profile layout used from 2018 to 2021. Features modern additions such as banners, theme colors, and guild tags.
- * @version 1.0.9
+ * @version 1.1.0
  */
 
 /*@cc_on
@@ -125,11 +125,11 @@ const [
 	{ filter: (x) => typeof x === "object" && x.del && x.put, searchExports: true }
 );
 const NavigationUtils = betterdiscord.Webpack.getMangled("transitionTo - Transitioning to", {
-	transitionTo: betterdiscord.Webpack.Filters.byStrings('"transitionTo - Transitioning to "'),
-	replace: betterdiscord.Webpack.Filters.byStrings('"Replacing route with "'),
+	transitionTo: betterdiscord.Webpack.Filters.byStrings("transitionTo - Transitioning to "),
+	replace: betterdiscord.Webpack.Filters.byStrings("Replacing route with"),
 	goBack: betterdiscord.Webpack.Filters.byStrings(".goBack()"),
 	goForward: betterdiscord.Webpack.Filters.byStrings(".goForward()"),
-	transitionToGuild: betterdiscord.Webpack.Filters.byStrings('"transitionToGuild - Transitioning to "')
+	transitionToGuild: betterdiscord.Webpack.Filters.byStrings("transitionToGuild - Transitioning to")
 });
 const ModalSystem$1 = betterdiscord.Webpack.getMangled(".modalKey?", {
 	openModalLazy: betterdiscord.Webpack.Filters.byStrings(".modalKey?"),
