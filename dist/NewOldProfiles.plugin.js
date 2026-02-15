@@ -2,7 +2,7 @@
  * @name NewOldProfiles
  * @author KingGamingYT
  * @description A full, largely accurate restoration of Discord's profile layout used from 2018 to 2021. Features modern additions such as banners, theme colors, and guild tags.
- * @version 1.1.0
+ * @version 1.1.0-dev
  */
 
 /*@cc_on
@@ -917,7 +917,7 @@ function SpotifyCard({ user, activities, check }) {
 	return BdApi.React.createElement("div", { className: "activityProfileContainer activityProfileContainerSpotify" }, _activities.map((activity) => BdApi.React.createElement("div", { className: "activityProfile activity" }, BdApi.React.createElement(ActivityHeader$1, { activity, check }), BdApi.React.createElement("div", { className: "bodyNormal", style: { display: "flex", alignItems: "center", width: "auto" } }, BdApi.React.createElement("div", { className: "assets", style: { position: "relative" } }, BdApi.React.createElement(
 		RichImageAsset,
 		{
-			url: `https://i.scdn.co/image/${activity?.assets?.large_image.substring(activity?.assets?.large_image.indexOf(":") + 1)}`,
+			url: `https://i.scdn.co/image/${activity?.assets?.large_image?.substring(activity?.assets?.large_image.indexOf(":") + 1)}`,
 			tooltipText: activity?.assets?.large_text || activity?.details,
 			onClick: () => OpenSpotifyAlbumFromStatus(activity, user.id),
 			type: "Large"
@@ -988,43 +988,7 @@ function headerBuilder({ user, currentUser, displayProfile, tab, setTab, ref }) 
 	const check = activityCheck({ activities });
 	const voice = useStateFromStores([VoiceStateStore], () => VoiceStateStore.getVoiceStateForUser(user.id)?.channelId);
 	const stream = useStateFromStores([StreamStore], () => StreamStore.getAnyStreamForUser(user.id));
-	if (activities.length !== 0 && (check.playing || check.listening || check.watching || check.competing) && (!check.spotify && !check.streaming && !check.xbox) || voice !== void 0) {
-		return BdApi.React.createElement("div", { className: "topSectionPlaying", style: { backgroundColor: "var(--background-brand)" } }, displayProfile.banner && BdApi.React.createElement(Banner, { url: displayProfile.getBannerURL({ canAnimate: true }) }), BdApi.React.createElement(
-			HeaderInnerBuilder,
-			{
-				user,
-				currentUser,
-				displayProfile,
-				tagName,
-				displayName
-			}
-		), BdApi.React.createElement("div", { className: "headerFill" }, BdApi.React.createElement(
-			CustomCard,
-			{
-				className: "activity",
-				activities
-			}
-		), BdApi.React.createElement("div", { className: "activityCardsContainer", style: { overflow: "hidden auto", display: "flex", flexDirection: "column" } }, BdApi.React.createElement(
-			ActivityCardWrapper,
-			{
-				user,
-				activities,
-				voice,
-				stream,
-				check
-			}
-		)), BdApi.React.createElement(
-			TabBarBuilder,
-			{
-				user,
-				displayProfile,
-				currentUser,
-				tab,
-				setTab,
-				ref
-			}
-		)));
-	} else if (activities.length !== 0 && check.streaming || voice !== void 0) {
+	if (activities.length !== 0 && check.streaming) {
 		return BdApi.React.createElement("div", { className: "topSectionStreaming", style: { backgroundColor: "#593695" } }, displayProfile.banner && BdApi.React.createElement(Banner, { url: displayProfile.getBannerURL({ canAnimate: true }) }), BdApi.React.createElement(
 			HeaderInnerBuilder,
 			{
@@ -1050,6 +1014,8 @@ function headerBuilder({ user, currentUser, displayProfile, tab, setTab, ref }) 
 			ActivityCardWrapper,
 			{
 				user,
+				voice: voice && voice,
+				stream: stream && stream,
 				activities,
 				check
 			}
@@ -1064,7 +1030,7 @@ function headerBuilder({ user, currentUser, displayProfile, tab, setTab, ref }) 
 				ref
 			}
 		)));
-	} else if (activities.length !== 0 && check.spotify || voice !== void 0) {
+	} else if (activities.length !== 0 && check.spotify) {
 		return BdApi.React.createElement("div", { className: "topSectionSpotify", style: { backgroundColor: "#1db954" } }, displayProfile.banner && BdApi.React.createElement(Banner, { url: displayProfile.getBannerURL({ canAnimate: true }) }), BdApi.React.createElement(
 			HeaderInnerBuilder,
 			{
@@ -1090,6 +1056,8 @@ function headerBuilder({ user, currentUser, displayProfile, tab, setTab, ref }) 
 			ActivityCardWrapper,
 			{
 				user,
+				voice: voice && voice,
+				stream: stream && stream,
 				activities,
 				check
 			}
@@ -1104,7 +1072,7 @@ function headerBuilder({ user, currentUser, displayProfile, tab, setTab, ref }) 
 				ref
 			}
 		)));
-	} else if (activities.length !== 0 && check?.xbox || voice !== void 0) {
+	} else if (activities.length !== 0 && check?.xbox) {
 		return BdApi.React.createElement("div", { className: "topSectionXbox", style: { backgroundColor: "#107c10" } }, displayProfile.banner && BdApi.React.createElement(Banner, { url: displayProfile.getBannerURL({ canAnimate: true }) }), BdApi.React.createElement(
 			HeaderInnerBuilder,
 			{
@@ -1124,7 +1092,45 @@ function headerBuilder({ user, currentUser, displayProfile, tab, setTab, ref }) 
 			ActivityCardWrapper,
 			{
 				user,
+				voice: voice && voice,
+				stream: stream && stream,
 				activities,
+				check
+			}
+		)), BdApi.React.createElement(
+			TabBarBuilder,
+			{
+				user,
+				displayProfile,
+				currentUser,
+				tab,
+				setTab,
+				ref
+			}
+		)));
+	} else if (activities.length !== 0 && (check.playing || check.listening || check.watching || check.competing) && (!check.spotify && !check.streaming && !check.xbox) || voice !== void 0) {
+		return BdApi.React.createElement("div", { className: "topSectionPlaying", style: { backgroundColor: "var(--background-brand)" } }, displayProfile.banner && BdApi.React.createElement(Banner, { url: displayProfile.getBannerURL({ canAnimate: true }) }), BdApi.React.createElement(
+			HeaderInnerBuilder,
+			{
+				user,
+				currentUser,
+				displayProfile,
+				tagName,
+				displayName
+			}
+		), BdApi.React.createElement("div", { className: "headerFill" }, BdApi.React.createElement(
+			CustomCard,
+			{
+				className: "activity",
+				activities
+			}
+		), BdApi.React.createElement("div", { className: "activityCardsContainer", style: { overflow: "hidden auto", display: "flex", flexDirection: "column" } }, BdApi.React.createElement(
+			ActivityCardWrapper,
+			{
+				user,
+				activities,
+				voice,
+				stream,
 				check
 			}
 		)), BdApi.React.createElement(

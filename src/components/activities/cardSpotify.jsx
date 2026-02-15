@@ -13,7 +13,7 @@ export function SpotifyCard({user, activities, check}) {
                 <div className="bodyNormal" style={{ display: "flex", alignItems: "center", width: "auto" }}>
                     <div className="assets" style={{ position: "relative" }}>
                         <RichImageAsset 
-                            url={`https://i.scdn.co/image/${activity?.assets?.large_image.substring(activity?.assets?.large_image.indexOf(':')+1)}`}
+                            url={`https://i.scdn.co/image/${activity?.assets?.large_image?.substring(activity?.assets?.large_image.indexOf(':')+1)}`}
                             tooltipText={activity?.assets?.large_text || activity?.details}
                             onClick={() => OpenSpotifyAlbumFromStatus(activity, user.id)}
                             type="Large"

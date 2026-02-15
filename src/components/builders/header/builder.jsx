@@ -26,44 +26,7 @@ export function headerBuilder({ user, currentUser, displayProfile, tab, setTab, 
     const voice = useStateFromStores([VoiceStateStore], () => VoiceStateStore.getVoiceStateForUser(user.id)?.channelId);
     const stream = useStateFromStores([StreamStore], () => StreamStore.getAnyStreamForUser(user.id));
 
-    if (activities.length !== 0 && (check.playing || check.listening || check.watching || check.competing) && (!check.spotify && !check.streaming && !check.xbox) || voice !== undefined) {
-        return (
-            <div className="topSectionPlaying" style={{ backgroundColor: "var(--background-brand)" }}>
-                {displayProfile.banner && <Banner url={displayProfile.getBannerURL({ canAnimate: true })} />}
-                <HeaderInnerBuilder
-                    user={user}
-                    currentUser={currentUser}
-                    displayProfile={displayProfile}
-                    tagName={tagName}
-                    displayName={displayName}
-                />
-                <div className="headerFill">
-                    <CustomCard
-                        className="activity"
-                        activities={activities}
-                    />
-                    <div className="activityCardsContainer" style={{ overflow: "hidden auto", display: "flex", flexDirection: "column" }}>
-                        <ActivityCardWrapper
-                            user={user}
-                            activities={activities}
-                            voice={voice}
-                            stream={stream}
-                            check={check}
-                        />
-                    </div>
-                    <TabBarBuilder
-                        user={user}
-                        displayProfile={displayProfile}
-                        currentUser={currentUser}
-                        tab={tab}
-                        setTab={setTab}
-                        ref={ref}
-                    />
-                </div>
-            </div>
-        )
-    }
-    else if (activities.length !== 0 && check.streaming || voice !== undefined) {
+    if (activities.length !== 0 && check.streaming) {
         return (
             <div className="topSectionStreaming" style={{ backgroundColor: "#593695" }}>
                 {displayProfile.banner && <Banner url={displayProfile.getBannerURL({ canAnimate: true })} />}
@@ -86,6 +49,8 @@ export function headerBuilder({ user, currentUser, displayProfile, tab, setTab, 
                         />
                         <ActivityCardWrapper
                             user={user}
+                            voice={voice && voice}
+                            stream={stream && stream}
                             activities={activities}
                             check={check}
                         />
@@ -102,7 +67,7 @@ export function headerBuilder({ user, currentUser, displayProfile, tab, setTab, 
             </div>
         )
     }
-    else if (activities.length !== 0 && check.spotify || voice !== undefined) {
+    else if (activities.length !== 0 && check.spotify) {
         return (
             <div className="topSectionSpotify" style={{ backgroundColor: "#1db954" }}>
                 {displayProfile.banner && <Banner url={displayProfile.getBannerURL({ canAnimate: true })} />}
@@ -125,6 +90,8 @@ export function headerBuilder({ user, currentUser, displayProfile, tab, setTab, 
                         />
                         <ActivityCardWrapper
                             user={user}
+                            voice={voice && voice}
+                            stream={stream && stream}
                             activities={activities}
                             check={check}
                         />
@@ -141,7 +108,7 @@ export function headerBuilder({ user, currentUser, displayProfile, tab, setTab, 
             </div>
         )
     }
-    else if (activities.length !== 0 && check?.xbox || voice !== undefined) {
+    else if (activities.length !== 0 && check?.xbox) {
         return (
             <div className="topSectionXbox" style={{ backgroundColor: "#107c10" }}>
                 {displayProfile.banner && <Banner url={displayProfile.getBannerURL({ canAnimate: true })} />}
@@ -160,7 +127,46 @@ export function headerBuilder({ user, currentUser, displayProfile, tab, setTab, 
                     <div className="activityCardsContainer" style={{ overflow: "hidden auto", display: "flex", flexDirection: "column" }}>
                         <ActivityCardWrapper
                             user={user}
+                            voice={voice && voice}
+                            stream={ stream && stream}
                             activities={activities}
+                            check={check}
+                        />
+                    </div>
+                    <TabBarBuilder
+                        user={user}
+                        displayProfile={displayProfile}
+                        currentUser={currentUser}
+                        tab={tab}
+                        setTab={setTab}
+                        ref={ref}
+                    />
+                </div>
+            </div>
+        )
+    }
+    else if (activities.length !== 0 && (check.playing || check.listening || check.watching || check.competing) && (!check.spotify && !check.streaming && !check.xbox) || voice !== undefined) {
+        return (
+            <div className="topSectionPlaying" style={{ backgroundColor: "var(--background-brand)" }}>
+                {displayProfile.banner && <Banner url={displayProfile.getBannerURL({ canAnimate: true })} />}
+                <HeaderInnerBuilder
+                    user={user}
+                    currentUser={currentUser}
+                    displayProfile={displayProfile}
+                    tagName={tagName}
+                    displayName={displayName}
+                />
+                <div className="headerFill">
+                    <CustomCard
+                        className="activity"
+                        activities={activities}
+                    />
+                    <div className="activityCardsContainer" style={{ overflow: "hidden auto", display: "flex", flexDirection: "column" }}>
+                        <ActivityCardWrapper
+                            user={user}
+                            activities={activities}
+                            voice={voice}
+                            stream={stream}
                             check={check}
                         />
                     </div>
