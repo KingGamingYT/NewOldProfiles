@@ -842,17 +842,16 @@ function FlexInfo(props) {
 
 // components/activities/cardActivity.jsx
 function ActivityCard({ user, activity, check }) {
-	const gameId = activity?.application_id;
-	const game = NewGameStore.getGame(gameId);
 	const application = ApplicationStore.getApplication(activity?.application_id);
+	const useGameProfile = GameProfileCheck({ trackEntryPointImpression: false, applicationId: application?.id });
 	return BdApi.React.createElement("div", { className: "activityProfile activity", id: `${activity.created_at}-${activity.type}`, key: `${activity.created_at}-${activity.type}` }, BdApi.React.createElement(ActivityHeader$1, { activity, check }), BdApi.React.createElement("div", { className: "bodyNormal", style: { display: "flex", alignItems: "center", width: "auto" } }, BdApi.React.createElement(
 		"div",
 		{
 			className: "assets",
 			style: { position: "relative" },
-			onMouseOver: (e) => game && e.currentTarget.classList.add(`${ActivityCardClasses.clickableImage}`),
-			onMouseLeave: (e) => game && e.currentTarget.classList.remove(`${ActivityCardClasses.clickableImage}`),
-			onClick: GameProfileCheck({ trackEntryPointImpression: false, applicationId: game?.id })
+			onMouseOver: (e) => Boolean(useGameProfile) && e.currentTarget.classList.add(`${ActivityCardClasses.clickableImage}`),
+			onMouseLeave: (e) => Boolean(useGameProfile) && e.currentTarget.classList.remove(`${ActivityCardClasses.clickableImage}`),
+			onClick: useGameProfile
 		},
 		activity?.assets && activity?.assets.large_image && !activity?.platform?.includes("xbox") && BdApi.React.createElement(
 			RichImageAsset,

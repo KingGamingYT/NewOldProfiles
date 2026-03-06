@@ -1,24 +1,21 @@
-import { useEffect } from 'react';
 import { ActivityButtons, ActivityCardClasses, GameProfileCheck } from '@modules/common';
-import { ApplicationStore, NewGameStore } from '@modules/stores';
+import { ApplicationStore } from '@modules/stores';
 import { ActivityHeader } from './common/ActivityHeader';
 import { ConsoleImageAsset, FallbackAsset, GameIconAsset, RichImageAsset } from './common/ActivityAssets';
 import { FlexInfo } from './common/FlexInfo';
 
 export function ActivityCard({user, activity, check}) {
-    const gameId = activity?.application_id;
-          
-    const game = NewGameStore.getGame(gameId);
     const application = ApplicationStore.getApplication(activity?.application_id);
+    const useGameProfile = GameProfileCheck({trackEntryPointImpression: false, applicationId: application?.id});
 
     return (
         <div className="activityProfile activity" id={`${activity.created_at}-${activity.type}`} key={`${activity.created_at}-${activity.type}`}>
             <ActivityHeader activity={activity} check={check}/>
             <div className="bodyNormal" style={{ display: "flex", alignItems: "center", width: "auto" }}>
                 <div className="assets" style={{ position: "relative" }}
-                    onMouseOver={(e) => game && e.currentTarget.classList.add(`${ActivityCardClasses.clickableImage}`)}
-                    onMouseLeave={(e) => game && e.currentTarget.classList.remove(`${ActivityCardClasses.clickableImage}`)}
-                    onClick={GameProfileCheck({trackEntryPointImpression: false, applicationId: game?.id})}>
+                    onMouseOver={(e) => Boolean(useGameProfile) && e.currentTarget.classList.add(`${ActivityCardClasses.clickableImage}`)}
+                    onMouseLeave={(e) => Boolean(useGameProfile) && e.currentTarget.classList.remove(`${ActivityCardClasses.clickableImage}`)}
+                    onClick={useGameProfile}>
                     { 
                         activity?.assets && activity?.assets.large_image && !activity?.platform?.includes('xbox') && (
                             <RichImageAsset 
