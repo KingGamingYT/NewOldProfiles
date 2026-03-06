@@ -2,7 +2,7 @@
  * @name NewOldProfiles
  * @author KingGamingYT
  * @description A full, largely accurate restoration of Discord's profile layout used from 2018 to 2021. Features modern additions such as banners, theme colors, and guild tags.
- * @version 1.1.1
+ * @version 1.1.2
  */
 
 /*@cc_on
@@ -43,7 +43,6 @@ const [
 	ButtonClasses,
 	ActivityCardClasses,
 	AnchorClasses,
-	FetchGames,
 	FetchApplications,
 	IconUtils,
 	AvatarFetch,
@@ -71,6 +70,7 @@ const [
 	ProfileFetch,
 	OpenSpotifyAlbumFromStatus,
 	GameProfile,
+	GameProfileCheck,
 	DisplayNameStyleConfigurator,
 	OpenUserSettings,
 	PopUtils,
@@ -87,7 +87,6 @@ const [
 	{ filter: (x) => x.button && x.hasText && !x.hasTrailing },
 	{ filter: betterdiscord.Webpack.Filters.byKeys("gameState", "clickableImage") },
 	{ filter: betterdiscord.Webpack.Filters.byKeys("anchor", "anchorUnderlineOnHover") },
-	{ filter: betterdiscord.Webpack.Filters.byKeys("getDetectableGamesSupplemental") },
 	{ filter: betterdiscord.Webpack.Filters.byKeys("fetchApplication") },
 	{ filter: betterdiscord.Webpack.Filters.byKeys("getGuildIconURL") },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("displayProfile", "onOpenProfile", "animateOnHover", "previewStatus") },
@@ -115,6 +114,7 @@ const [
 	{ filter: betterdiscord.Webpack.Filters.byStrings("connectionsRoleId", "USER_PROFILE_FETCH_START"), searchExports: true },
 	{ filter: betterdiscord.Webpack.Filters.byStrings(".metadata)?void", ".EPISODE?"), searchExports: true },
 	{ filter: (x) => x.openGameProfileModal },
+	{ filter: betterdiscord.Webpack.Filters.byStrings("gameProfileModalChecks", "onOpened") },
 	{ filter: (x) => betterdiscord.Webpack.Filters.byStrings("data-username-with-effects")(x?.type) },
 	{ filter: betterdiscord.Webpack.Filters.byKeys("openUserSettings") },
 	{ filter: betterdiscord.Webpack.Filters.byKeys("popAll") },
@@ -152,7 +152,7 @@ const RelationshipStore = betterdiscord.Webpack.getStore("RelationshipStore");
 const ActivityStore = betterdiscord.Webpack.getStore("PresenceStore");
 const UserStore = betterdiscord.Webpack.getStore("UserStore");
 const ChannelStore = betterdiscord.Webpack.getStore("ChannelStore");
-const DetectableGameSupplementalStore = betterdiscord.Webpack.getStore("DetectableGameSupplementalStore");
+const NewGameStore = betterdiscord.Webpack.getStore("NewGameStore");
 const GuildStore = betterdiscord.Webpack.getStore("GuildStore");
 const StreamStore = betterdiscord.Webpack.getStore("ApplicationStreamingStore");
 const UserProfileStore = betterdiscord.Webpack.getStore("UserProfileStore");
@@ -331,7 +331,7 @@ function activityCheck({ activities }) {
 	return pass;
 }
 
-// modules/lazy.js
+// modules/lazy.jsx
 let MessageButtonLarge;
 let MessageButtonSmall;
 let FriendsButton;
@@ -675,20 +675,6 @@ function ActivityCardWrapper({ user, activities, voice, stream }) {
 	return BdApi.React.createElement("div", { className: "activityProfileContainer activityProfileContainerNormal" }, !stream ? BdApi.React.createElement(VoiceCard, { voice, stream }) : BdApi.React.createElement(StreamCard, { user, voice }), _activities.map((activity) => BdApi.React.createElement(ActivityCard, { user, activity, check: filterCheck })));
 }
 
-// common/GameProfileOpen.js
-function GameProfileOpen({ gameId, userId }) {
-	return GameProfile.openGameProfileModal({
-		applicationId: gameId,
-		gameProfileModalChecks: {
-			shouldOpenGameProfile: true,
-			applicationId: gameId
-		},
-		source: "tony",
-		sourceUserId: userId,
-		appContext: {}
-	});
-}
-
 // methods/activities/headers.js
 const headers = {
 	0: locale.Strings.PLAYING_A_GAME(),
@@ -857,14 +843,7 @@ function FlexInfo(props) {
 // components/activities/cardActivity.jsx
 function ActivityCard({ user, activity, check }) {
 	const gameId = activity?.application_id;
-	react.useEffect(() => {
-		(async () => {
-			if (!DetectableGameSupplementalStore.getGame(gameId)) {
-				await FetchGames.getDetectableGamesSupplemental([gameId]);
-			}
-		})();
-	}, [gameId]);
-	const game = DetectableGameSupplementalStore.getGame(gameId);
+	const game = NewGameStore.getGame(gameId);
 	const application = ApplicationStore.getApplication(activity?.application_id);
 	return BdApi.React.createElement("div", { className: "activityProfile activity", id: `${activity.created_at}-${activity.type}`, key: `${activity.created_at}-${activity.type}` }, BdApi.React.createElement(ActivityHeader$1, { activity, check }), BdApi.React.createElement("div", { className: "bodyNormal", style: { display: "flex", alignItems: "center", width: "auto" } }, BdApi.React.createElement(
 		"div",
@@ -873,7 +852,7 @@ function ActivityCard({ user, activity, check }) {
 			style: { position: "relative" },
 			onMouseOver: (e) => game && e.currentTarget.classList.add(`${ActivityCardClasses.clickableImage}`),
 			onMouseLeave: (e) => game && e.currentTarget.classList.remove(`${ActivityCardClasses.clickableImage}`),
-			onClick: () => game && GameProfileOpen({ gameId, userId: user.id })
+			onClick: GameProfileCheck({ trackEntryPointImpression: false, applicationId: game?.id })
 		},
 		activity?.assets && activity?.assets.large_image && !activity?.platform?.includes("xbox") && BdApi.React.createElement(
 			RichImageAsset,
@@ -1175,12 +1154,11 @@ function headerBuilder({ user, currentUser, displayProfile, tab, setTab, ref }) 
 
 // components/builders/widgets/common/gameCover.jsx
 function GameCover({ game, image, imageURL }) {
-	const user = UserStore.getCurrentUser();
 	return BdApi.React.createElement(
 		"div",
 		{
 			className: "gameCover hoverActiveEffect",
-			onClick: () => DetectableGameSupplementalStore.getGame(game.id) && GameProfileOpen({ gameId: game.id, userId: user.id })
+			onClick: GameProfileCheck({ trackEntryPointImpression: false, applicationId: game.id })
 		},
 		BdApi.React.createElement(
 			"img",
@@ -1231,10 +1209,7 @@ function FavoriteWidgetBuilder({ widget, game }) {
 	const image = react.useMemo(() => new Image(), []);
 	const ref = react.useRef(null);
 	react.useLayoutEffect(() => {
-		FetchGames.getDetectableGamesSupplemental([game?.id]);
-	}, [game?.id]);
-	react.useLayoutEffect(() => {
-		if (!imageURL) imageURL = DetectableGameSupplementalStore.getCoverImageUrl(game?.id);
+		if (!imageURL) imageURL = NewGameStore.getCoverImageUrl(game?.id);
 		image.src = imageURL;
 		if (!image.src) {
 			setLoading(true);
@@ -1259,10 +1234,7 @@ function ShelfWidgetBuilder({ game }) {
 	const image = react.useMemo(() => new Image(), []);
 	const ref = react.useRef(null);
 	react.useLayoutEffect(() => {
-		FetchGames.getDetectableGamesSupplemental([game?.id]);
-	}, [game?.id]);
-	react.useLayoutEffect(() => {
-		if (!imageURL) imageURL = DetectableGameSupplementalStore.getCoverImageUrl(game?.id);
+		if (!imageURL) imageURL = NewGameStore.getCoverImageUrl(game?.id);
 		image.src = imageURL;
 		if (!image.src) {
 			setLoading(true);
@@ -1287,10 +1259,7 @@ function CurrentWidgetBuilder({ widget, game, index }) {
 	const image = react.useMemo(() => new Image(), []);
 	const ref = react.useRef(null);
 	react.useLayoutEffect(() => {
-		FetchGames.getDetectableGamesSupplemental([game?.id]);
-	}, [game?.id]);
-	react.useLayoutEffect(() => {
-		if (!imageURL) imageURL = DetectableGameSupplementalStore.getCoverImageUrl(game?.id);
+		if (!imageURL) imageURL = NewGameStore.getCoverImageUrl(game?.id);
 		image.src = imageURL;
 		if (!image.src) {
 			setLoading(true);
@@ -1433,16 +1402,10 @@ function WidgetBuilder({ widget }) {
 			if (isLoaded) return;
 			const urlSearch = new URLSearchParams(gameIds.map((x) => ["application_ids", x])).toString();
 			const applicationPublic = await RestAPI.get({ url: Endpoints.APPLICATIONS_PUBLIC, query: urlSearch });
-			const supplementalData = await RestAPI.get({ url: Endpoints.APPLICATIONS_GAMES_SUPPLEMENTAL, query: urlSearch });
 			Dispatcher.dispatch({
 				type: "APPLICATIONS_FETCH_SUCCESS",
 				applications: applicationPublic.body,
 				unknownApplicationIds: []
-			});
-			Dispatcher.dispatch({
-				type: "DETECTABLE_GAME_SUPPLEMENTAL_FETCH_SUCCESS",
-				applicationIds: gameIds,
-				supplementalGameData: supplementalData.body.supplemental_game_data
 			});
 			setIsLoaded(true);
 		})();

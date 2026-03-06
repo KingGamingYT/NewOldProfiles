@@ -1,23 +1,14 @@
 import { useEffect } from 'react';
-import { ActivityButtons, ActivityCardClasses, FetchGames } from '@modules/common';
-import { ApplicationStore, DetectableGameSupplementalStore } from '@modules/stores';
-import { GameProfileOpen } from '@common/GameProfileOpen';
+import { ActivityButtons, ActivityCardClasses, GameProfileCheck } from '@modules/common';
+import { ApplicationStore, NewGameStore } from '@modules/stores';
 import { ActivityHeader } from './common/ActivityHeader';
 import { ConsoleImageAsset, FallbackAsset, GameIconAsset, RichImageAsset } from './common/ActivityAssets';
 import { FlexInfo } from './common/FlexInfo';
 
 export function ActivityCard({user, activity, check}) {
     const gameId = activity?.application_id;
-
-    useEffect(() => { 
-        (async () => {
-            if (!DetectableGameSupplementalStore.getGame(gameId)) {
-                await FetchGames.getDetectableGamesSupplemental([gameId]);
-            }
-        })()
-    }, [gameId]);
           
-    const game = DetectableGameSupplementalStore.getGame(gameId);
+    const game = NewGameStore.getGame(gameId);
     const application = ApplicationStore.getApplication(activity?.application_id);
 
     return (
@@ -27,7 +18,7 @@ export function ActivityCard({user, activity, check}) {
                 <div className="assets" style={{ position: "relative" }}
                     onMouseOver={(e) => game && e.currentTarget.classList.add(`${ActivityCardClasses.clickableImage}`)}
                     onMouseLeave={(e) => game && e.currentTarget.classList.remove(`${ActivityCardClasses.clickableImage}`)}
-                    onClick={() => game && GameProfileOpen({gameId: gameId, userId: user.id})}>
+                    onClick={GameProfileCheck({trackEntryPointImpression: false, applicationId: game?.id})}>
                     { 
                         activity?.assets && activity?.assets.large_image && !activity?.platform?.includes('xbox') && (
                             <RichImageAsset 

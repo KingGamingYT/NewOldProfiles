@@ -1,13 +1,10 @@
-import { UserStore, DetectableGameSupplementalStore } from '@modules/stores';
-import { GameProfileOpen } from '@common/GameProfileOpen';
+import { GameProfileCheck } from '@modules/common'
 
 export function GameCover({game, image, imageURL}) {
-    const user = UserStore.getCurrentUser();
-
     return (
         <div 
             className="gameCover hoverActiveEffect"
-            onClick={() => DetectableGameSupplementalStore.getGame(game.id) && GameProfileOpen({gameId: game.id, userId: user.id})}>
+            onClick={GameProfileCheck({trackEntryPointImpression: false, applicationId: game.id})}>
             <img
                 alt={game?.name}
                 className="gameCover"

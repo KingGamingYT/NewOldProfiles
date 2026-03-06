@@ -27,18 +27,10 @@ export function WidgetBuilder({ widget }) {
             const urlSearch = new URLSearchParams(gameIds.map(x => ["application_ids", x])).toString();
             const applicationPublic = await RestAPI.get({ url: Endpoints.APPLICATIONS_PUBLIC, query: urlSearch });
 
-            const supplementalData = await RestAPI.get({ url: Endpoints.APPLICATIONS_GAMES_SUPPLEMENTAL, query: urlSearch });
-
             Dispatcher.dispatch({
                 type: "APPLICATIONS_FETCH_SUCCESS",
                 applications: applicationPublic.body,
                 unknownApplicationIds: []
-            })
-
-            Dispatcher.dispatch({
-                type: "DETECTABLE_GAME_SUPPLEMENTAL_FETCH_SUCCESS",
-                applicationIds: gameIds,
-                supplementalGameData: supplementalData.body.supplemental_game_data
             })
 
             setIsLoaded(true);

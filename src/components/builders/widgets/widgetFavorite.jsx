@@ -1,6 +1,6 @@
 import { useState, useLayoutEffect, useMemo, useRef } from 'react';
-import { IconUtils, FetchGames } from '@modules/common';
-import { DetectableGameSupplementalStore } from '@modules/stores';
+import { IconUtils } from '@modules/common';
+import { NewGameStore } from '@modules/stores';
 import { WidgetCard } from './common/widgetCard';
 
 export function FavoriteWidgetBuilder({ widget, game }) {
@@ -11,10 +11,8 @@ export function FavoriteWidgetBuilder({ widget, game }) {
 
     const ref = useRef(null);
 
-    useLayoutEffect(() => { FetchGames.getDetectableGamesSupplemental([game?.id]); }, [game?.id]);
-
     useLayoutEffect(() => {
-        if (!imageURL) imageURL = DetectableGameSupplementalStore.getCoverImageUrl(game?.id);
+        if (!imageURL) imageURL = NewGameStore.getCoverImageUrl(game?.id);
         image.src = imageURL;
 
         if (!image.src) {
