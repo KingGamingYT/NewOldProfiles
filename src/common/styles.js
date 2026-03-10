@@ -23,12 +23,8 @@ const styles = Object.assign(
 
 let CSS = webpackify(
     `
-    body {
-        .custom-user-profile-theme:not(.disable-profile-themes) {
-            --control-primary-background-default: var(--profile-gradient-button-color);
-            --control-primary-background-hover: color-mix(in srgb, var(--profile-gradient-button-color) 80%, transparent);
-            --control-primary-background-active: color-mix(in srgb, var(--profile-gradient-button-color) 70%, transparent);
-        }
+    :root .custom-user-profile-theme:is(.disable-profile-themes) {
+        --control-primary-background-default: var(--blurple-50) !important;
     }
 
     .outer.user-profile-modal-v2, .outer.user-profile-modal {
@@ -40,7 +36,7 @@ let CSS = webpackify(
         border: unset;
         --profile-gradient-start: color-mix(in oklab, var(--profile-gradient-primary-color) 100%, var(--profile-gradient-primary-color)) !important;
         --profile-gradient-end: color-mix(in oklab, var(--profile-gradient-secondary-color) 100%, var(--profile-gradient-secondary-color)) !important;
-        --custom-user-profile-theme-color-blend: linear-gradient(color-mix(in oklab, var(--profile-gradient-overlay-color), var(--profile-gradient-start)), color-mix(in oklab, var(--profile-gradient-overlay-color), var(--profile-gradient-end)));
+        --custom-user-profile-theme-color-blend: linear-gradient(color-mix(in oklab, var(--profile-gradient-modal-background-color), var(--profile-gradient-start)), color-mix(in oklab, var(--profile-gradient-modal-background-color), var(--profile-gradient-end)));
     }
     .outer.user-profile-modal-v2.custom-user-profile-theme:not(.disable-profile-themes) {
         :is(.topSectionNormal, .body) {
@@ -54,11 +50,12 @@ let CSS = webpackify(
         flex-direction: column;
         min-height: 0;
     }
+
     :where(.theme-dark) .custom-user-profile-theme:not(.disable-profile-themes).user-profile-modal-v2 {
         background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), var(--custom-theme-base-color, var(--background-secondary, var(--background-base-lower))) !important;
     }
     :where(.theme-light) .custom-user-profile-theme:not(.disable-profile-themes).user-profile-modal-v2 {
-        background: var(--custom-theme-base-color, var(--background-secondary, var(--background-base-lower))) !important;
+        background: linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.5)), var(--custom-theme-base-color, var(--background-secondary, var(--background-base-lower))) !important;
     }
     .custom-theme-background:is(.user-profile-modal-v2) .theme-dark, .theme-dark.custom-theme-background:is(.user-profile-modal-v2) {
         --custom-theme-base-color: var(--custom-user-profile-theme-color-blend, var(--custom-theme-base-color-dark)) !important;
@@ -415,7 +412,7 @@ let CSS = webpackify(
         padding: 8px 14px 8px 8px;
         width: 240px;
         border: 1px solid;
-        border-color: var(--background-modifier-accent, var(--background-modifier-active));
+        border-color: var(--background-modifier-accent, var(--background-mod-strong));
         flex: 0 1 auto !important
     }
     .empty {
