@@ -54,23 +54,25 @@ let CSS = webpackify(
         flex-direction: column;
         min-height: 0;
     }
-    :where(.theme-dark) .outer:not(.disable-profile-themes) .inner {
+    :where(.theme-dark) .custom-user-profile-theme:not(.disable-profile-themes).user-profile-modal-v2 {
         background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), var(--custom-theme-base-color, var(--background-secondary, var(--background-base-lower))) !important;
     }
-    :where(.theme-light) .outer:not(.disable-profile-themes) .inner {
+    :where(.theme-light) .custom-user-profile-theme:not(.disable-profile-themes).user-profile-modal-v2 {
         background: var(--custom-theme-base-color, var(--background-secondary, var(--background-base-lower))) !important;
     }
     .custom-theme-background:is(.user-profile-modal-v2) .theme-dark, .theme-dark.custom-theme-background:is(.user-profile-modal-v2) {
-        --custom-theme-base-color: var(--custom-user-profile-theme-color-blend, var(--theme-base-color-dark)) !important;
+        --custom-theme-base-color: var(--custom-user-profile-theme-color-blend, var(--custom-theme-base-color-dark)) !important;
     }
     .custom-theme-background:is(.user-profile-modal-v2) .theme-light, .theme-light.custom-theme-background:is(.user-profile-modal-v2) {
-        --custom-theme-base-color: var(--custom-user-profile-theme-color-blend, var(--theme-base-color-light)) !important;
+        --custom-theme-base-color: var(--custom-user-profile-theme-color-blend, var(--custom-theme-base-color-light)) !important;
     }
     .custom-theme-background:is(.disable-profile-themes) {
-         --custom-theme-base-color: unset !important;
-         --custom-theme-base-color-amount: 0% !important;
+        --custom-user-profile-theme-color-blend: unset;
+        --custom-theme-base-color: unset !important;
+        --custom-theme-base-color-amount: 0% !important;
     }
     .custom-user-profile-theme:is(.disable-profile-themes) {
+        --custom-user-profile-theme-color-blend: unset;
         --custom-theme-text-color: unset !important;
         --custom-theme-text-color-amount: 0% !important;
     }
