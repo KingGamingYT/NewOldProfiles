@@ -179,7 +179,7 @@ export function HeaderInnerBuilder({ user, currentUser, displayProfile, tagName,
 
     return (
         <header className="header">
-            <AvatarFetch className="avatar" user={user} />
+            <AvatarFetch className="avatar" user={user} themeType={"POPOUT"} />
             <div className="headerInfo">
                 <DiscordTag user={user} displayProfile={displayProfile} tagName={tagName} displayName={displayName} />
                 {
