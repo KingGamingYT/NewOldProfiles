@@ -57,7 +57,7 @@ export const [
     { filter: /* @__PURE__ */ Webpack.Filters.byKeys("getGuildIconURL") },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('displayProfile', 'onOpenProfile', 'animateOnHover', 'previewStatus') },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('translateSurrogatesToInlineEmoji') },
-    { filter: /* @__PURE__ */ Webpack.Filters.byStrings('UserProfileMutualFriendRow') },
+    { filter: /* @__PURE__ */ Webpack.Filters.byStrings('MODAL_V2', 'discriminatorClass') },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('hasAvatarForGuild', 'nick') },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('timestamps', '.TEXT_FEEDBACK_POSITIVE'), searchExports: true },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('start', 'end', 'duration', 'percentage') },

@@ -91,7 +91,7 @@ const [
 	{ filter: betterdiscord.Webpack.Filters.byKeys("getGuildIconURL") },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("displayProfile", "onOpenProfile", "animateOnHover", "previewStatus") },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("translateSurrogatesToInlineEmoji") },
-	{ filter: betterdiscord.Webpack.Filters.byStrings("UserProfileMutualFriendRow") },
+	{ filter: betterdiscord.Webpack.Filters.byStrings("MODAL_V2", "discriminatorClass") },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("hasAvatarForGuild", "nick") },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("timestamps", ".TEXT_FEEDBACK_POSITIVE"), searchExports: true },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("start", "end", "duration", "percentage") },
