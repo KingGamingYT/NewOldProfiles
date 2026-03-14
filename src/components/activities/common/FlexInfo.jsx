@@ -1,5 +1,5 @@
 import { ActivityTimer, MediaProgressBar, VoiceIcon, VoiceList } from '@modules/common';
-import { GuildStore, RelationshipStore, useStateFromStores } from '@modules/stores';
+import { GuildStore, RelationshipStore, UserStore, useStateFromStores } from '@modules/stores';
 import { getVoiceParticipants } from '@methods/activities/getVoiceParticipants';
 import { activityCheck } from '@common/check';
 import { locale } from '@common/locale';
@@ -7,11 +7,12 @@ import { locale } from '@common/locale';
 function Header({ activity, channel, check }) {
     const guildChannel = useStateFromStores([ GuildStore ], () => GuildStore.getGuild(channel?.guild_id));
     if (channel) {
-        const nickname = useStateFromStores([ RelationshipStore ], () => RelationshipStore.getNickname(guildChannel?.ownerId || channel.getRecipientId()))
+        const user = useStateFromStores([ UserStore ], () => UserStore.getUser(channel?.getRecipientId()));
+        const nickname = useStateFromStores([ RelationshipStore ], () => RelationshipStore.getNickname(guildChannel?.ownerId || user?.id));
         return (
             <h3 className="textRow" style={{ display: "flex", alignItems: "center" }}>
                 {VoiceIcon({ channel: channel })}
-                <h3 className="nameWrap nameNormal textRow" style={{ fontWeight: "600" }}>{channel.name || nickname}</h3>
+                <h3 className="nameWrap nameNormal textRow" style={{ fontWeight: "600" }}>{channel.name || nickname || user.globalName || user.username}</h3>
             </h3>
         )
     }

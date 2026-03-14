@@ -2,7 +2,7 @@
  * @name NewOldProfiles
  * @author KingGamingYT
  * @description A full, largely accurate restoration of Discord's profile layout used from 2018 to 2021. Features modern additions such as banners, theme colors, and guild tags.
- * @version 1.1.5
+ * @version 1.1.6
  */
 
 /*@cc_on
@@ -107,7 +107,7 @@ const [
 	{ filter: (x) => x.updateMemberRoles },
 	{ filter: betterdiscord.Webpack.Filters.bySource("BOT", "invertColor") },
 	{ filter: betterdiscord.Webpack.Filters.byPrototypeKeys("renderTooltip"), searchExports: true },
-	{ filter: betterdiscord.Webpack.Filters.byStrings("showSubtext", "tooltipWordmarkComponent") },
+	{ filter: betterdiscord.Webpack.Filters.byStrings("showSubtext", "caretConfig"), searchExports: true },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("Unsupported animation config:"), searchExports: true },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("type", "position", "data-popout-animating"), searchExports: true },
 	{ filter: betterdiscord.Webpack.Filters.byStrings('"data-toggleable-component":"switch"', 'layout:"horizontal"'), searchExports: true },
@@ -455,7 +455,7 @@ function IgnoreButton({ user }) {
 }
 
 // components/builders/header/inner.jsx
-function BadgeBuilder({ badge, index, id }) {
+function BadgeInner({ badge, index, id }) {
 	const activities = useStateFromStores([ActivityStore], () => ActivityStore.getActivities(id)).filter((activity) => activity && ![4, 6].includes(activity?.type));
 	const voice = useStateFromStores([VoiceStateStore], () => VoiceStateStore.getVoiceStateForUser(id)?.channelId);
 	const stream = useStateFromStores([StreamStore], () => StreamStore.getAnyStreamForUser(id));
@@ -463,7 +463,7 @@ function BadgeBuilder({ badge, index, id }) {
 	const routes = ["quest_completed", "orb_profile_badge"];
 	const settings = ["early_supporter", "premium", "guild_booster"];
 	const settingsMatch = settings.filter((x) => badge.id.includes(x));
-	return BdApi.React.createElement("div", { className: "profileBadgeWrapper" }, BdApi.React.createElement(TooltipBuilder, { note: badge.id.includes("orb_profile_badge") ? BdApi.React.createElement(OrbTooltip, { showSubtext: true }) : badge.description }, BdApi.React.createElement(
+	return BdApi.React.createElement(
 		"a",
 		{
 			tabIndex: index + 1,
@@ -485,7 +485,11 @@ function BadgeBuilder({ badge, index, id }) {
 				className: betterdiscord.Utils.className((activities.length !== 0 || voice || stream) && "richBadge", "profileBadge", `profileBadge${badge.id.replaceAll(/(?:^|_)(\w)/g, (_, m) => m.toUpperCase())}`)
 			}
 		)
-	)));
+	);
+}
+function BadgeBuilder({ badge, index, id }) {
+	const refDOM = react.useRef(null);
+	return BdApi.React.createElement("div", { className: "profileBadgeWrapper", ref: refDOM }, badge.id.includes("orb_profile_badge") ? BdApi.React.createElement(OrbTooltip, { showSubtext: true, targetElementRef: refDOM }, BdApi.React.createElement(BadgeInner, { badge, index, id })) : BdApi.React.createElement(TooltipBuilder, { note: badge.description }, BdApi.React.createElement("div", null, BdApi.React.createElement(BadgeInner, { badge, index, id }))));
 }
 function BadgesBuilder({ badges, style, id }) {
 	if (!badges) return;
@@ -802,8 +806,9 @@ function getVoiceParticipants({ voice }) {
 function Header({ activity, channel, check }) {
 	const guildChannel = useStateFromStores([GuildStore], () => GuildStore.getGuild(channel?.guild_id));
 	if (channel) {
-		const nickname = useStateFromStores([RelationshipStore], () => RelationshipStore.getNickname(guildChannel?.ownerId || channel.getRecipientId()));
-		return BdApi.React.createElement("h3", { className: "textRow", style: { display: "flex", alignItems: "center" } }, VoiceIcon({ channel }), BdApi.React.createElement("h3", { className: "nameWrap nameNormal textRow", style: { fontWeight: "600" } }, channel.name || nickname));
+		const user = useStateFromStores([UserStore], () => UserStore.getUser(channel?.getRecipientId()));
+		const nickname = useStateFromStores([RelationshipStore], () => RelationshipStore.getNickname(guildChannel?.ownerId || user?.id));
+		return BdApi.React.createElement("h3", { className: "textRow", style: { display: "flex", alignItems: "center" } }, VoiceIcon({ channel }), BdApi.React.createElement("h3", { className: "nameWrap nameNormal textRow", style: { fontWeight: "600" } }, channel.name || nickname || user.globalName || user.username));
 	}
 	if (!activity) return;
 	let result = activity.name;

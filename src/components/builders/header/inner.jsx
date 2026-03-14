@@ -6,7 +6,7 @@ import { EditProfileButtonComponent, FriendAddButtonComponent, FriendsButtonComp
 import { TooltipBuilder } from '@components/common/TooltipBuilder';
 import { AcceptButton, BlockedPopoutButton, IgnoreButton } from './customButtons';
 
-function BadgeBuilder({ badge, index, id }) {
+function BadgeInner({ badge, index, id }) {
     const activities = useStateFromStores([ActivityStore], () => ActivityStore.getActivities(id)).filter(activity => activity && !([4, 6].includes(activity?.type)));
     const voice = useStateFromStores([VoiceStateStore], () => VoiceStateStore.getVoiceStateForUser(id)?.channelId);
     const stream = useStateFromStores([StreamStore], () => StreamStore.getAnyStreamForUser(id));
@@ -14,27 +14,35 @@ function BadgeBuilder({ badge, index, id }) {
     const routes = ['quest_completed', 'orb_profile_badge'];
     const settings = ['early_supporter', 'premium', 'guild_booster'];
     const settingsMatch = settings.filter(x => badge.id.includes(x));
+    
     return (
-        <div className="profileBadgeWrapper">
-            <TooltipBuilder note={badge.id.includes('orb_profile_badge') ? <OrbTooltip showSubtext={true} /> : badge.description}>
-                <a
-                    tabIndex={index + 1}
-                    className={`${AnchorClasses.anchor} ${AnchorClasses.anchorUnderlineOnHover}`}
-                    role={"button"}
-                    href={links.includes(badge.id) && badge?.link}
-                    rel="noreferrer noopener"
-                    target="_blank"
-                    onClick={() =>
-                        routes.includes(badge.id) ? (() => { NavigationUtils.transitionTo(badge.id.includes('orb_profile_badge') ? '/shop?tab=orbs' : badge?.link?.substring(badge?.link?.indexOf('m') + 1)); ModalSystem.closeAllModals() })()
-                            : settingsMatch.length && OpenUserSettings.openUserSettings((() => {
-                                if (settings.some(setting => settingsMatch.includes(setting))) return "nitro_panel";
-                            })())
-                    }>
-                    <div
-                        className={Utils.className((activities.length !== 0 || voice || stream) && "richBadge", "profileBadge", `profileBadge${badge.id.replaceAll(/(?:^|_)(\w)/g, (_, m) => m.toUpperCase())}`)}
-                    />
-                </a>
-            </TooltipBuilder>
+            <a
+                tabIndex={index + 1}
+                className={`${AnchorClasses.anchor} ${AnchorClasses.anchorUnderlineOnHover}`}
+                role={"button"}
+                href={links.includes(badge.id) && badge?.link}
+                rel="noreferrer noopener"
+                target="_blank"
+                onClick={() =>
+                    routes.includes(badge.id) ? (() => { NavigationUtils.transitionTo(badge.id.includes('orb_profile_badge') ? '/shop?tab=orbs' : badge?.link?.substring(badge?.link?.indexOf('m') + 1)); ModalSystem.closeAllModals() })()
+                        : settingsMatch.length && OpenUserSettings.openUserSettings((() => {
+                            if (settings.some(setting => settingsMatch.includes(setting))) return "nitro_panel";
+                        })())
+                }>
+                <div
+                    className={Utils.className((activities.length !== 0 || voice || stream) && "richBadge", "profileBadge", `profileBadge${badge.id.replaceAll(/(?:^|_)(\w)/g, (_, m) => m.toUpperCase())}`)}
+                />
+            </a>
+    )
+}
+
+function BadgeBuilder({ badge, index, id }) {
+    const refDOM = useRef(null);
+
+    return (
+        <div className="profileBadgeWrapper" ref={refDOM}>
+            {badge.id.includes('orb_profile_badge') ? <OrbTooltip showSubtext={true} targetElementRef={refDOM}><BadgeInner badge={badge} index={index} id={id} /></OrbTooltip> 
+            : <TooltipBuilder note={badge.description}><div><BadgeInner badge={badge} index={index} id={id}></BadgeInner></div></TooltipBuilder>}
         </div>
     )
 }

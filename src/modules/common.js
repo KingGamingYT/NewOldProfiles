@@ -73,7 +73,7 @@ export const [
     { filter: /* @__PURE__ */ x=>x.updateMemberRoles },
     { filter: /* @__PURE__ */ Webpack.Filters.bySource("BOT", "invertColor") },
     { filter: /* @__PURE__ */ Webpack.Filters.byPrototypeKeys(("renderTooltip")), searchExports: true  },
-    { filter: /* @__PURE__ */ Webpack.Filters.byStrings('showSubtext', 'tooltipWordmarkComponent') },
+    { filter: /* @__PURE__ */ Webpack.Filters.byStrings('showSubtext', 'caretConfig'), searchExports: true },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings("Unsupported animation config:"), searchExports: true },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('type', 'position', 'data-popout-animating'), searchExports: true },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('"data-toggleable-component":"switch"', 'layout:"horizontal"'), searchExports: true },
