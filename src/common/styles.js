@@ -9,7 +9,8 @@ const styles = Object.assign(
         disabledButtonWrapper: Webpack.getByKeys('disabledButtonWrapper', 'sizeSmall').disabledButtonWrapper,
         fullscreenOnMobile: Webpack.getByKeys('focusLock', 'fullscreenOnMobile').fullscreenOnMobile,
         clickableImage: Webpack.getByKeys('gameState', 'clickableImage').clickableImage,
-        bannerButton: Webpack.getByKeys('bannerButton').bannerButton
+        bannerButton: Webpack.getByKeys('bannerButton').bannerButton,
+        layoutContainer: Webpack.getByKeys('layoutContainer', 'profileAppConnections').layoutContainer
     },
     Object.getOwnPropertyDescriptors(Webpack.getByKeys('container', 'bar', 'progress')),
     Object.getOwnPropertyDescriptors(Webpack.getModule(x=>x.container && x.badge && Object.keys(x).length === 2)),
@@ -25,6 +26,11 @@ let CSS = webpackify(
     `
     :root .custom-user-profile-theme:is(.disable-profile-themes) {
         --control-primary-background-default: var(--blurple-50) !important;
+    }
+
+    .layoutContainer {
+        width: max-content;
+        max-width: unset;
     }
 
     .outer.user-profile-modal-v2, .outer.user-profile-modal {
