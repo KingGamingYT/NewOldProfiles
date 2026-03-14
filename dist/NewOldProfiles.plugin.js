@@ -805,8 +805,9 @@ function getVoiceParticipants({ voice }) {
 // components/activities/common/FlexInfo.jsx
 function Header({ activity, channel, check }) {
 	const guildChannel = useStateFromStores([GuildStore], () => GuildStore.getGuild(channel?.guild_id));
+	console.log(channel);
 	if (channel) {
-		const user = useStateFromStores([UserStore], () => UserStore.getUser(channel?.getRecipientId()));
+		const user = useStateFromStores([UserStore], () => UserStore.getUser(channel?.recipients?.[0]));
 		const nickname = useStateFromStores([RelationshipStore], () => RelationshipStore.getNickname(guildChannel?.ownerId || user?.id));
 		return BdApi.React.createElement("h3", { className: "textRow", style: { display: "flex", alignItems: "center" } }, VoiceIcon({ channel }), BdApi.React.createElement("h3", { className: "nameWrap nameNormal textRow", style: { fontWeight: "600" } }, channel.name || nickname || user.globalName || user.username));
 	}
