@@ -17,7 +17,7 @@ function Starter({props, res}) {
         ],
         ignore: []
     };
-    const data = Utils.findInTree(props, (tree) => Object.hasOwn(tree, 'initialSection'), options)
+    const data = Utils.findInTree(props, (tree) => tree && Object.hasOwn(tree, 'initialSection'), options)
     const user = data.user;
     const currentUser = data.currentUser;
     const displayProfile = data.displayProfile;
@@ -51,8 +51,9 @@ export default class NewOldProfiles {
         addProfileCSS();
         Patcher.after(entireProfileModal.A, "render", (that, [props], res) => {
             if (!props.themeType?.includes("MODAL")) return;
+
             if (!Utils.findInTree(props, x => x?.displayProfile, { walkable: ['props', 'children'] })) return;
-            if (!Utils.findInTree(props, (tree) => Object.hasOwn(tree, 'initialSection'), { walkable: ['props', 'children'] })) {
+            if (!Utils.findInTree(props, (tree) => { return tree && Object.hasOwn(tree, 'currentUser'), { walkable: ['props', 'children'] }})) {
                 return res.props.children;
             }
             res.props.children = createElement(Starter, {props, res})

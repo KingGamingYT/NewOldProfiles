@@ -1535,7 +1535,7 @@ function Starter({ props, res }) {
 		],
 		ignore: []
 	};
-	const data = betterdiscord.Utils.findInTree(props, (tree) => Object.hasOwn(tree, "initialSection"), options);
+	const data = betterdiscord.Utils.findInTree(props, (tree) => tree && Object.hasOwn(tree, "initialSection"), options);
 	const user = data.user;
 	const currentUser = data.currentUser;
 	const displayProfile = data.displayProfile;
@@ -1570,7 +1570,9 @@ class NewOldProfiles {
 		betterdiscord.Patcher.after(entireProfileModal.A, "render", (that, [props], res) => {
 			if (!props.themeType?.includes("MODAL")) return;
 			if (!betterdiscord.Utils.findInTree(props, (x) => x?.displayProfile, { walkable: ["props", "children"] })) return;
-			if (!betterdiscord.Utils.findInTree(props, (tree) => Object.hasOwn(tree, "initialSection"), { walkable: ["props", "children"] })) {
+			if (!betterdiscord.Utils.findInTree(props, (tree) => {
+				return { walkable: ["props", "children"] };
+			})) {
 				return res.props.children;
 			}
 			res.props.children = react.createElement(Starter, { props, res });
