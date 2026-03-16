@@ -6,7 +6,6 @@ import { locale } from '@common/locale';
 
 function Header({ activity, channel, check }) {
     const guildChannel = useStateFromStores([ GuildStore ], () => GuildStore.getGuild(channel?.guild_id));
-    console.log(channel)
     if (channel) {
         const user = useStateFromStores([ UserStore ], () => UserStore.getUser(channel?.recipients?.[0]));
         const nickname = useStateFromStores([ RelationshipStore ], () => RelationshipStore.getNickname(guildChannel?.ownerId || user?.id));
