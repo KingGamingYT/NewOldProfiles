@@ -1,5 +1,5 @@
 import { Data, Patcher, DOM, Utils, Components } from "betterdiscord";
-import { entireProfileModal, FormSwitch, ProfileFetch } from "@modules/common";
+import { entireProfileModal, FormSwitch, ProfileFetch, ProfileModalEntrypoint } from "@modules/common";
 import { UserProfileStore } from '@modules/stores';
 import { settings } from "@common/settings";
 import { createElement, useState, useRef, useEffect } from "react";
@@ -57,6 +57,11 @@ export default class NewOldProfiles {
                 return res.props.children;
             }
             res.props.children = createElement(Starter, {props, res})
+        })
+        Patcher.after(ProfileModalEntrypoint, "A", (that, [props], res) => {
+            const button = Utils.findInTree(res, (tree) => tree && Object.hasOwn(tree, 'parentComponent'), { walkable: ['props', 'children'] })
+            const layoutContainer = button.children[0].props.children.props;
+            layoutContainer.children[0] = undefined;
         })
     }
     stop() {

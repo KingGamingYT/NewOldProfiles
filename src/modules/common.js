@@ -44,7 +44,8 @@ export const [
     BlockToasts,
     Dispatcher,
     Endpoints,
-    RestAPI
+    RestAPI,
+    ProfileModalEntrypoint
 ] = /* @__PURE__ */ Webpack.getBulk(
     { filter: /* @__PURE__ */ Webpack.Filters.bySource('forceShowPremium', 'pendingThemeColors', 'profileThemeClassName') },
     { filter: x => x.openUserProfileModal },
@@ -88,7 +89,8 @@ export const [
     { filter: x => x.showUnblockSuccessToast },
     { filter: x => x._dispatch, searchExports: true },
     { filter: /* @__PURE__ */ Webpack.Filters.byKeys("GUILD_EMOJI", "GUILD_EMOJIS"), searchExports: true },
-    { filter: x => typeof x === "object" && x.del && x.put, searchExports: true }
+    { filter: x => typeof x === "object" && x.del && x.put, searchExports: true },
+    { filter: /* @__PURE__ */ Webpack.Filters.bySource('UserProfileModalV2', 'defaultWishlistId') }
 )
 
 export const NavigationUtils = /* @__PURE__ */ Webpack.getMangled("transitionTo - Transitioning to", {

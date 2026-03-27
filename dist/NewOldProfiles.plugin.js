@@ -2,7 +2,7 @@
  * @name NewOldProfiles
  * @author KingGamingYT
  * @description A full, largely accurate restoration of Discord's profile layout used from 2018 to 2021. Features modern additions such as banners, theme colors, and guild tags.
- * @version 1.1.6
+ * @version 1.1.7
  */
 
 /*@cc_on
@@ -78,7 +78,8 @@ const [
 	BlockToasts,
 	Dispatcher,
 	Endpoints,
-	RestAPI
+	RestAPI,
+	ProfileModalEntrypoint
 ] = betterdiscord.Webpack.getBulk(
 	{ filter: betterdiscord.Webpack.Filters.bySource("forceShowPremium", "pendingThemeColors", "profileThemeClassName") },
 	{ filter: (x) => x.openUserProfileModal },
@@ -122,7 +123,8 @@ const [
 	{ filter: (x) => x.showUnblockSuccessToast },
 	{ filter: (x) => x._dispatch, searchExports: true },
 	{ filter: betterdiscord.Webpack.Filters.byKeys("GUILD_EMOJI", "GUILD_EMOJIS"), searchExports: true },
-	{ filter: (x) => typeof x === "object" && x.del && x.put, searchExports: true }
+	{ filter: (x) => typeof x === "object" && x.del && x.put, searchExports: true },
+	{ filter: betterdiscord.Webpack.Filters.bySource("UserProfileModalV2", "defaultWishlistId") }
 );
 const NavigationUtils = betterdiscord.Webpack.getMangled("transitionTo - Transitioning to", {
 	transitionTo: betterdiscord.Webpack.Filters.byStrings("transitionTo - Transitioning to "),
@@ -1581,6 +1583,11 @@ class NewOldProfiles {
 				return res.props.children;
 			}
 			res.props.children = react.createElement(Starter, { props, res });
+		});
+		betterdiscord.Patcher.after(ProfileModalEntrypoint, "A", (that, [props], res) => {
+			const button = betterdiscord.Utils.findInTree(res, (tree) => tree && Object.hasOwn(tree, "parentComponent"), { walkable: ["props", "children"] });
+			const layoutContainer = button.children[0].props.children.props;
+			layoutContainer.children[0] = void 0;
 		});
 	}
 	stop() {
