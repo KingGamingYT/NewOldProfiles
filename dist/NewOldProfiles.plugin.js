@@ -2,7 +2,7 @@
  * @name NewOldProfiles
  * @author KingGamingYT
  * @description A full, largely accurate restoration of Discord's profile layout used from 2018 to 2021. Features modern additions such as banners, theme colors, and guild tags.
- * @version 1.1.7
+ * @version 1.1.8
  */
 
 /*@cc_on
@@ -100,7 +100,7 @@ const [
 	{ filter: betterdiscord.Webpack.Filters.byStrings("activity", "PRESS_PLAY_ON_SPOTIFY_BUTTON") },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("PRESS_JOIN_CALL_BUTTON") },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("users", "channel", "themeType") },
-	{ filter: betterdiscord.Webpack.Filters.byStrings("maxUsers", "guildId") },
+	{ filter: betterdiscord.Webpack.Filters.byStrings("maxUsers", "guildId", "getNickname") },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("channel", "isGuildStageVoice", "isDM", ".CONNECT") },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("guildId", "name", "setPopoutRef", "onClose", "fetchGuildProfile") },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("roles", "guild", "canRemoveAnyRoles", "map(e"), searchExports: true },

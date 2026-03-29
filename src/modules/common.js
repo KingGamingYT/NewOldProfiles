@@ -66,7 +66,7 @@ export const [
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('activity', 'PRESS_PLAY_ON_SPOTIFY_BUTTON') },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('PRESS_JOIN_CALL_BUTTON') },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('users', 'channel', 'themeType') },
-    { filter: /* @__PURE__ */ Webpack.Filters.byStrings('maxUsers', 'guildId') },
+    { filter: /* @__PURE__ */ Webpack.Filters.byStrings('maxUsers', 'guildId', 'getNickname') },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('channel', 'isGuildStageVoice', 'isDM', '.CONNECT') },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('guildId', 'name', 'setPopoutRef', 'onClose', 'fetchGuildProfile') },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('roles', 'guild', 'canRemoveAnyRoles', 'map(e'), searchExports: true },
