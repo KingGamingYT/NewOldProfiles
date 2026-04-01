@@ -38,8 +38,6 @@ let CSS = webpackify(
         min-height: 400px;
         max-width: 600px;
         min-width: 600px;
-        border-radius: 5px;
-        border: unset;
         --profile-gradient-start: color-mix(in oklab, var(--profile-gradient-primary-color) 100%, var(--profile-gradient-primary-color)) !important;
         --profile-gradient-end: color-mix(in oklab, var(--profile-gradient-secondary-color) 100%, var(--profile-gradient-secondary-color)) !important;
         --custom-user-profile-theme-color-blend: linear-gradient(color-mix(in oklab, var(--profile-gradient-modal-background-color), var(--profile-gradient-start)), color-mix(in oklab, var(--profile-gradient-modal-background-color), var(--profile-gradient-end)));
@@ -55,6 +53,17 @@ let CSS = webpackify(
         display: flex;
         flex-direction: column;
         min-height: 0;
+    }
+
+    .user-profile-modal-v2.disable-profile-themes {
+        border-radius: 5px;
+        border: unset;
+        .topSectionNormal, .topSectionPlaying, .topSectionSpotify, .topSectionStreaming, .topSectionXbox {
+            border-radius: 5px 5px 0 0;
+        }
+        .body {
+            border-radius: 0 0 5px 5px;
+        }
     }
 
     :where(.theme-dark) .custom-user-profile-theme:not(.disable-profile-themes).user-profile-modal-v2 {
@@ -80,6 +89,7 @@ let CSS = webpackify(
         --custom-theme-text-color-amount: 0% !important;
     }
     .inner .userBanner {
+        border-radius: inherit;
         position: absolute;
         z-index: 0;
         opacity: 25%;
