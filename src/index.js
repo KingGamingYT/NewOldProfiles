@@ -36,7 +36,7 @@ function Starter({props, res}) {
         })()
     }, [user.id])
     return [
-        createElement('div', {className: "inner", "data-user-id": user.id, "data-is-self": user === currentUser }, 
+        createElement('div', {className: "inner", "data-user-id": user.id, "data-is-self": user.id === currentUser.id }, 
             [
                 createElement(headerBuilder, {props, user, currentUser, displayProfile, tab, setTab, ref}),
                 createElement(bodyBuilder, {data, user, displayProfile, tab, ref})
