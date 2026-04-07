@@ -38,6 +38,9 @@ let CSS = webpackify(
         min-height: 360px;
         max-width: 600px;
         min-width: 600px;
+        border-block: unset;
+        border-inline: unset;
+        overflow: hidden;
         --profile-gradient-start: color-mix(in oklab, var(--profile-gradient-primary-color) 100%, var(--profile-gradient-primary-color)) !important;
         --profile-gradient-end: color-mix(in oklab, var(--profile-gradient-secondary-color) 100%, var(--profile-gradient-secondary-color)) !important;
         --custom-user-profile-theme-color-blend: linear-gradient(color-mix(in oklab, var(--profile-gradient-modal-background-color), var(--profile-gradient-start)), color-mix(in oklab, var(--profile-gradient-modal-background-color), var(--profile-gradient-end)));
