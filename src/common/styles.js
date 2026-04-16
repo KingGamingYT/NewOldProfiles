@@ -749,7 +749,7 @@ let CSS = webpackify(
         fill: #f6fbf9 !important;
     }
     .activityProfile .assets:not(:empty) {
-        margin-right: 20px;
+        margin-right: 10px;
     }
     .activityProfile .assets .gameIcon {
         -webkit-user-drag: none;
@@ -836,9 +836,13 @@ let CSS = webpackify(
             }
             .bannerButton, .sm:not(.hasText) {
                 color: var(--white);
+                opacity: 0.6;
                 svg {
-                    stroke: var(--white) !important;
+                    stroke: currentcolor !important;
                 }
+            }
+            .bannerButton, .sm:not(.hasText):hover {
+                opacity: 1;
             }
         }
         .tabBarItem {
