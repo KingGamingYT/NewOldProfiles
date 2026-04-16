@@ -45,7 +45,8 @@ export const [
     Dispatcher,
     Endpoints,
     RestAPI,
-    ProfileModalEntrypoint
+    ProfileModalEntrypoint,
+    ContentInventoryEntryByActivity
 ] = /* @__PURE__ */ Webpack.getBulk(
     { filter: /* @__PURE__ */ Webpack.Filters.bySource('forceShowPremium', 'pendingThemeColors', 'profileThemeClassName') },
     { filter: x => x.openUserProfileModal },
@@ -56,7 +57,7 @@ export const [
     { filter: /* @__PURE__ */ Webpack.Filters.byKeys('anchor', 'anchorUnderlineOnHover') },
     { filter: /* @__PURE__ */ Webpack.Filters.byKeys("fetchApplication") },
     { filter: /* @__PURE__ */ Webpack.Filters.byKeys("getGuildIconURL") },
-    { filter: /* @__PURE__ */ Webpack.Filters.byStrings('displayProfile', 'onOpenProfile', 'animateOnHover', 'previewStatus') },
+    { filter: /* @__PURE__ */ Webpack.Filters.byStrings('STREAMING', 'isVROnline') },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('translateSurrogatesToInlineEmoji') },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('MODAL_V2', 'discriminatorClass') },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('hasAvatarForGuild', 'nick') },
@@ -90,7 +91,8 @@ export const [
     { filter: x => x._dispatch, searchExports: true },
     { filter: /* @__PURE__ */ Webpack.Filters.byKeys("GUILD_EMOJI", "GUILD_EMOJIS"), searchExports: true },
     { filter: x => typeof x === "object" && x.del && x.put, searchExports: true },
-    { filter: /* @__PURE__ */ Webpack.Filters.bySource('UserProfileModalV2', 'defaultWishlistId') }
+    { filter: /* @__PURE__ */ Webpack.Filters.bySource('UserProfileModalV2', 'defaultWishlistId') },
+    { filter: /* @__PURE__ */ Webpack.Filters.byStrings('getMatchingInboxEntry', 'getMatchingOutboxEntry') }
 )
 
 export const NavigationUtils = /* @__PURE__ */ Webpack.getMangled("transitionTo - Transitioning to", {

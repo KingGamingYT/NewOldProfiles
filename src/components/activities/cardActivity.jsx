@@ -1,4 +1,4 @@
-import { ActivityButtons, ActivityCardClasses, GameProfileCheck } from '@modules/common';
+import { ActivityButtons, ActivityCardClasses, ContentInventoryEntryByActivity, GameProfileCheck } from '@modules/common';
 import { ApplicationStore } from '@modules/stores';
 import { ActivityHeader } from './common/ActivityHeader';
 import { ConsoleImageAsset, FallbackAsset, GameIconAsset, RichImageAsset } from './common/ActivityAssets';
@@ -7,6 +7,7 @@ import { FlexInfo } from './common/FlexInfo';
 export function ActivityCard({user, activity, check}) {
     const application = ApplicationStore.getApplication(activity?.application_id);
     const useGameProfile = GameProfileCheck({trackEntryPointImpression: false, applicationId: application?.id});
+    const inventoryEntry = ContentInventoryEntryByActivity({activity: activity, user: user});
 
     return (
         <div className="activityProfile activity" id={`${activity.created_at}-${activity.type}`} key={`${activity.created_at}-${activity.type}`}>
@@ -61,7 +62,7 @@ export function ActivityCard({user, activity, check}) {
                         )
                     }
                 </div>
-                <FlexInfo className="contentImagesProfile content" style={{ display: "grid", flex: "1", marginBottom: "3px" }} activity={activity} check={check} type="PLAYING" />
+                <FlexInfo className="contentImagesProfile content" style={{ display: "grid", flex: "1", marginBottom: "3px" }} activity={activity} inventoryEntry={inventoryEntry} check={check} type="PLAYING" />
                 <div className="buttonsWrapper actionsProfile">
                     <ActivityButtons user={user} activity={activity} />
                 </div>

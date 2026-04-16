@@ -61,7 +61,8 @@ export default class NewOldProfiles {
         Patcher.after(ProfileModalEntrypoint, "A", (that, [props], res) => {
             const button = Utils.findInTree(res, (tree) => tree && Object.hasOwn(tree, 'parentComponent'), { walkable: ['props', 'children'] })
             const layoutContainer = button.children[0].props.children.props;
-            layoutContainer.children[0] = undefined;
+            useEffect(() => {layoutContainer.children[1].props.children[0]?.props?.children[0]?.props?.onClose()}, []);
+            layoutContainer.children[0].props.children[0] = undefined;
         })
     }
     stop() {

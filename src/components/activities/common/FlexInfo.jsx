@@ -24,8 +24,9 @@ function Header({ activity, channel, check }) {
     )
 }
 
-function ActivityType({ type, filterCheck, activity, voice, channel, stream }) {
+function ActivityType({ type, filterCheck, activity, inventoryEntry, voice, channel, stream }) {
     const guildChannel = useStateFromStores([ GuildStore ], () => GuildStore.getGuild(channel?.guild_id));
+    //console.log(inventoryEntry);
     switch (type) {
         case "PLAYING": return (
             <>
@@ -90,13 +91,13 @@ function ActivityType({ type, filterCheck, activity, voice, channel, stream }) {
 }
 
 export function FlexInfo(props) {
-    const { className, style, activity, voice, stream, channel, check, type } = props
+    const { className, style, activity, inventoryEntry, voice, stream, channel, check, type } = props
     const filterCheck = activityCheck({ activities: [activity] });
 
     return (
         <div className={className} style={style}>
             <Header activity={activity} channel={channel} check={check} />
-            <ActivityType filterCheck={filterCheck} activity={activity} voice={voice} stream={stream} channel={channel} type={type} />
+            <ActivityType filterCheck={filterCheck} activity={activity} inventoryEntry={inventoryEntry} voice={voice} stream={stream} channel={channel} type={type} />
         </div>
     )
 }

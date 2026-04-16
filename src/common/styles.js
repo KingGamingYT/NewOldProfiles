@@ -10,7 +10,8 @@ const styles = Object.assign(
         fullscreenOnMobile: Webpack.getByKeys('focusLock', 'fullscreenOnMobile').fullscreenOnMobile,
         clickableImage: Webpack.getByKeys('gameState', 'clickableImage').clickableImage,
         bannerButton: Webpack.getByKeys('bannerButton').bannerButton,
-        layoutContainer: Webpack.getByKeys('layoutContainer', 'profileAppConnections').layoutContainer
+        layoutContainer: Webpack.getByKeys('layoutContainer', 'profileAppConnections').layoutContainer,
+        editingPanelExpanded: Webpack.getByKeys('layoutContainer', 'profileAppConnections').editingPanelExpanded
     },
     Object.getOwnPropertyDescriptors(Webpack.getByKeys('container', 'bar', 'progress')),
     Object.getOwnPropertyDescriptors(Webpack.getModule(x=>x.container && x.badge && Object.keys(x).length === 2)),
@@ -29,8 +30,17 @@ let CSS = webpackify(
     }
 
     .layoutContainer {
-        width: max-content;
+        width: max-content !important;
         max-width: unset;
+    }
+
+    .editingPanelExpanded .user-profile-modal-v2 {
+        border-top-left-radius: 0px !important;
+        border-bottom-left-radius: 0px !important;
+    }
+
+    .editingPanelExpanded:has(.disable-profile-themes) > #profile-modal-editing-panel {
+        border-radius: 5px 0 0 5px !important;
     }
 
     .outer.user-profile-modal-v2, .outer.user-profile-modal {
