@@ -58,7 +58,7 @@ export const [
     { filter: /* @__PURE__ */ Webpack.Filters.byKeys('anchor', 'anchorUnderlineOnHover') },
     { filter: /* @__PURE__ */ Webpack.Filters.byKeys("fetchApplication") },
     { filter: /* @__PURE__ */ Webpack.Filters.byKeys("getGuildIconURL") },
-    { filter: /* @__PURE__ */ Webpack.Filters.byKeys('onOpenProfile', 'avatar') },
+    { filter: /* @__PURE__ */ Webpack.Filters.byStrings('onOpenProfile', 'avatar') },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('STREAMING', 'isVROnline') },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('translateSurrogatesToInlineEmoji') },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('MODAL_V2', 'discriminatorClass') },
