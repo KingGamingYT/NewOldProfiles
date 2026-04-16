@@ -45,6 +45,7 @@ const [
 	AnchorClasses,
 	FetchApplications,
 	IconUtils,
+	Avatar$1,
 	AvatarFetch,
 	EmojiRenderer,
 	MutualFriendRenderer,
@@ -91,6 +92,7 @@ const [
 	{ filter: betterdiscord.Webpack.Filters.byKeys("anchor", "anchorUnderlineOnHover") },
 	{ filter: betterdiscord.Webpack.Filters.byKeys("fetchApplication") },
 	{ filter: betterdiscord.Webpack.Filters.byKeys("getGuildIconURL") },
+	{ filter: betterdiscord.Webpack.Filters.byKeys("onOpenProfile", "avatar") },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("STREAMING", "isVROnline") },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("translateSurrogatesToInlineEmoji") },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("MODAL_V2", "discriminatorClass") },
@@ -600,7 +602,7 @@ function DiscordTag({ user, displayProfile, tagName, displayName }) {
 }
 function HeaderInnerBuilder({ user, currentUser, displayProfile, tagName, displayName }) {
 	const relationship = RelationshipStore.getRelationshipType(user.id);
-	return BdApi.React.createElement("header", { className: "header" }, BdApi.React.createElement(AvatarFetch, { className: "avatar", user, themeType: "POPOUT" }), BdApi.React.createElement("div", { className: "headerInfo" }, BdApi.React.createElement(DiscordTag, { user, displayProfile, tagName, displayName }), user.primaryGuild?.tag && betterdiscord.Data.load("showGuildTag") ? BdApi.React.createElement("div", { className: "badgeSection", style: { display: "flex", flexWrap: "wrap", alignItems: "center" } }, BdApi.React.createElement(ClanTagBuilder, { user }), displayProfile._userProfile.badges && displayProfile._userProfile.badges.length !== 0 && BdApi.React.createElement("div", { className: "divider", style: { margin: "0 5px 0 5px" } }), BdApi.React.createElement(BadgesBuilder, { badges: displayProfile._userProfile.badges, style: { display: "contents" }, id: user.id })) : BdApi.React.createElement(BadgesBuilder, { badges: displayProfile._userProfile.badges, style: { display: "flex", flexWrap: "wrap" }, id: user.id })), BdApi.React.createElement("div", { className: "profileButtons" }, BdApi.React.createElement(HeaderButtonBuilder, { currentUser, relationshipType: relationship, user })));
+	return BdApi.React.createElement("header", { className: "header" }, BdApi.React.createElement(Avatar, { className: "avatar", user, themeType: "POPOUT" }), BdApi.React.createElement("div", { className: "headerInfo" }, BdApi.React.createElement(DiscordTag, { user, displayProfile, tagName, displayName }), user.primaryGuild?.tag && betterdiscord.Data.load("showGuildTag") ? BdApi.React.createElement("div", { className: "badgeSection", style: { display: "flex", flexWrap: "wrap", alignItems: "center" } }, BdApi.React.createElement(ClanTagBuilder, { user }), displayProfile._userProfile.badges && displayProfile._userProfile.badges.length !== 0 && BdApi.React.createElement("div", { className: "divider", style: { margin: "0 5px 0 5px" } }), BdApi.React.createElement(BadgesBuilder, { badges: displayProfile._userProfile.badges, style: { display: "contents" }, id: user.id })) : BdApi.React.createElement(BadgesBuilder, { badges: displayProfile._userProfile.badges, style: { display: "flex", flexWrap: "wrap" }, id: user.id })), BdApi.React.createElement("div", { className: "profileButtons" }, BdApi.React.createElement(HeaderButtonBuilder, { currentUser, relationshipType: relationship, user })));
 }
 
 // components/builders/tabbar/tabBar.jsx
