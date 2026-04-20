@@ -1,6 +1,6 @@
 import { Data, Patcher, DOM, Utils, Components } from "betterdiscord";
 import { entireProfileModal, FormSwitch, ProfileFetch, ProfileModalEntrypoint } from "@modules/common";
-import { UserProfileStore } from '@modules/stores';
+import { UserProfileStore, UserStore } from '@modules/stores';
 import { settings } from "@common/settings";
 import { createElement, useState, useRef, useEffect } from "react";
 import { locale } from "@common/locale";
@@ -17,11 +17,12 @@ function Starter({props, res}) {
         ],
         ignore: []
     };
+    console.log(props)
     const data = Utils.findInTree(props, (tree) => tree && Object.hasOwn(tree, 'initialSection'), options)
-    const user = data.user;
-    const currentUser = data.currentUser;
-    const displayProfile = data.displayProfile;
-    const [tab, setTab] = useState(locale.Sections[data.initialSection] || tabs.ABOUT);
+    const user = data?.user ?? props.user;
+    const currentUser = data?.currentUser ?? UserStore.getCurrentUser();
+    const displayProfile = data?.displayProfile ?? props.displayProfile;
+    const [tab, setTab] = useState(locale.Sections[data?.initialSection] || tabs.ABOUT);
     const ref = useRef(null);
 
     if (Data.load('disableProfileThemes')) {
@@ -39,7 +40,7 @@ function Starter({props, res}) {
         createElement('div', {className: "inner", "data-user-id": user.id, "data-is-self": user.id === currentUser.id }, 
             [
                 createElement(headerBuilder, {props, user, currentUser, displayProfile, tab, setTab, ref}),
-                createElement(bodyBuilder, {data, user, displayProfile, tab, ref})
+                createElement(bodyBuilder, {data, user, currentUser, displayProfile, tab, ref})
             ]
         )
     ]

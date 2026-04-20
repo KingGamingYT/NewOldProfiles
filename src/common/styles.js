@@ -11,7 +11,8 @@ const styles = Object.assign(
         clickableImage: Webpack.getByKeys('gameState', 'clickableImage').clickableImage,
         bannerButton: Webpack.getByKeys('bannerButton').bannerButton,
         layoutContainer: Webpack.getByKeys('layoutContainer', 'profileAppConnections').layoutContainer,
-        editingPanelExpanded: Webpack.getByKeys('layoutContainer', 'profileAppConnections').editingPanelExpanded
+        editingPanelExpanded: Webpack.getByKeys('layoutContainer', 'profileAppConnections').editingPanelExpanded,
+        small: Webpack.getByKeys('small', 'root').small
     },
     Object.getOwnPropertyDescriptors(Webpack.getByKeys('container', 'bar', 'progress')),
     Object.getOwnPropertyDescriptors(Webpack.getModule(x=>x.container && x.badge && Object.keys(x).length === 2)),
@@ -32,6 +33,10 @@ let CSS = webpackify(
     .layoutContainer {
         width: max-content !important;
         max-width: unset;
+    }
+
+    .small:has(.user-profile-modal-v2) {
+        width: unset;
     }
 
     .editingPanelExpanded .user-profile-modal-v2 {
@@ -780,14 +785,8 @@ let CSS = webpackify(
         bottom: -2px;
         right: -4px; 
     }
-    .activityProfile .assets .assetsLargeImage path {
-        transform: scale(3.65) !important;
-    }
     .activityProfile .assets svg.assetsSmallImage {
         border-radius: unset !important;
-    }   
-    .activityProfile .assets .assetsSmallImage path {
-        transform: scale(1.3) !important;
     }
     .activityProfile .activityProfileContainerStream .streamPreviewImage {
         max-height: 90px;

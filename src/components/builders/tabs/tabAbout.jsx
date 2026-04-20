@@ -4,7 +4,7 @@ import { PronounsBuilder, BioBuilder, RoleBuilder, MemberDateBuilder, NoteBuilde
 import { StreamerModeView } from './common/streamerModeView';
 import { Scroller } from './common/scroller';
 
-export function AboutTab({ data, user, displayProfile }) {
+export function AboutTab({ data, user, currentUser, displayProfile }) {
     const connections = displayProfile._userProfile.connectedAccounts;
     if (StreamerModeStore.hidePersonalInformation) {
         return (
@@ -20,7 +20,7 @@ export function AboutTab({ data, user, displayProfile }) {
             <RoleBuilder user={user} data={data} displayProfile={displayProfile} />
             <MemberDateBuilder data={data} user={user} />
             <NoteBuilder user={user} />
-            {Data.load('boardTab') && user.id === data.currentUser.id && <BoardButtonBuilder user={user} />}
+            {Data.load('boardTab') && user.id === currentUser.id && <BoardButtonBuilder user={user} />}
             <ConnectionCards user={user} connections={connections} />
             <div aria-hidden={true} style={{ pointerEvents: "none", minHeight: "0px", minWidth: "1px", flex: "0 0 auto", height: "8px" }}></div>
         </Scroller>
