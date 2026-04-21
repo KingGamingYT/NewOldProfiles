@@ -1549,7 +1549,6 @@ function Starter({ props, res }) {
 		],
 		ignore: []
 	};
-	console.log(props);
 	const data = betterdiscord.Utils.findInTree(props, (tree) => tree && Object.hasOwn(tree, "initialSection"), options);
 	const user = data?.user ?? props.user;
 	const currentUser = data?.currentUser ?? UserStore.getCurrentUser();
