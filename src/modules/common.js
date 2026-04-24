@@ -25,7 +25,6 @@ export const [
     VoiceList, 
     VoiceIcon, 
     TagGuildRenderer, 
-    RoleRenderer,
     RolePermissionCheck,
     RoleUpdater, 
     BotTagRenderer, 
@@ -71,7 +70,6 @@ export const [
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('users', 'channel', 'themeType') },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('maxUsers', 'guildId', 'getNickname') },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('channel', 'isGuildStageVoice', 'isDM', '.CONNECT') },
-    { filter: /* @__PURE__ */ Webpack.Filters.byStrings('guildId', 'name', 'setPopoutRef', 'onClose', 'fetchGuildProfile') },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('roles', 'guild', 'canRemoveAnyRoles', 'map(e'), searchExports: true },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('.ADMINISTRATOR', '.MANAGE_MESSAGES') },
     { filter: /* @__PURE__ */ x=>x.updateMemberRoles },
@@ -117,4 +115,5 @@ export const MessageButtons = Webpack.getMangled('.zROXEV', {
 export const FriendButton = Webpack.getMangled('SEND_FRIEND_REQUEST,icon', {
     AddFriend: Webpack.Filters.combine(Webpack.Filters.byStrings('{userId:'), Webpack.Filters.not(Webpack.Filters.byStrings('tooltipText')))
 })
-export const TagRenderer = lazy(async () => ({ default: (await Webpack.waitForModule(Webpack.Filters.bySource('tag', 'isCurrentUser', 'widgetType', 'TAG_REMOVED'))).A}))
+export const TagRenderer = lazy(async () => ({ default: (await Webpack.waitForModule(Webpack.Filters.bySource('tag', 'isCurrentUser', 'widgetType', 'TAG_REMOVED'))).A}));
+export const RoleRenderer = lazy(async () => ({ default: (await Webpack.waitForModule(Webpack.Filters.byStrings('roles', 'guild', 'canRemoveAnyRoles', 'map(e'), {searchExports: true} ))}));

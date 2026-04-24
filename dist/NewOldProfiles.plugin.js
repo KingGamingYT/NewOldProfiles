@@ -2,7 +2,7 @@
  * @name NewOldProfiles
  * @author KingGamingYT
  * @description A full, largely accurate restoration of Discord's profile layout used from 2018 to 2021. Features modern additions such as banners, theme colors, and guild tags.
- * @version 1.2.1
+ * @version 1.2.2
  */
 
 /*@cc_on
@@ -59,7 +59,6 @@ const [
 	VoiceList,
 	VoiceIcon,
 	TagGuildRenderer,
-	RoleRenderer,
 	RolePermissionCheck,
 	RoleUpdater,
 	BotTagRenderer,
@@ -105,7 +104,6 @@ const [
 	{ filter: betterdiscord.Webpack.Filters.byStrings("users", "channel", "themeType") },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("maxUsers", "guildId", "getNickname") },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("channel", "isGuildStageVoice", "isDM", ".CONNECT") },
-	{ filter: betterdiscord.Webpack.Filters.byStrings("guildId", "name", "setPopoutRef", "onClose", "fetchGuildProfile") },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("roles", "guild", "canRemoveAnyRoles", "map(e"), searchExports: true },
 	{ filter: betterdiscord.Webpack.Filters.byStrings(".ADMINISTRATOR", ".MANAGE_MESSAGES") },
 	{ filter: (x) => x.updateMemberRoles },
@@ -151,6 +149,7 @@ const FriendButton = betterdiscord.Webpack.getMangled("SEND_FRIEND_REQUEST,icon"
 	AddFriend: betterdiscord.Webpack.Filters.combine(betterdiscord.Webpack.Filters.byStrings("{userId:"), betterdiscord.Webpack.Filters.not(betterdiscord.Webpack.Filters.byStrings("tooltipText")))
 });
 const TagRenderer = react.lazy(async () => ({ default: (await betterdiscord.Webpack.waitForModule(betterdiscord.Webpack.Filters.bySource("tag", "isCurrentUser", "widgetType", "TAG_REMOVED"))).A }));
+const RoleRenderer = react.lazy(async () => ({ default: await betterdiscord.Webpack.waitForModule(betterdiscord.Webpack.Filters.byStrings("roles", "guild", "canRemoveAnyRoles", "map(e"), { searchExports: true }) }));
 
 // modules/stores.js
 const AccessibilityStore = betterdiscord.Webpack.getStore("AccessibilityStore");
@@ -1497,7 +1496,7 @@ function bodyBuilder({ data, user, currentUser, displayProfile, tab, ref }) {
 }
 
 // common/styles.js
-const styles = Object.assign(
+let styles = Object.assign(
 	{
 		outer: betterdiscord.Webpack.getByKeys("outer", "overlay").outer,
 		hasText: betterdiscord.Webpack.getModule((x) => x.primary && x.hasText && !x.hasTrailing).hasText,
@@ -1507,8 +1506,6 @@ const styles = Object.assign(
 		fullscreenOnMobile: betterdiscord.Webpack.getByKeys("focusLock", "fullscreenOnMobile").fullscreenOnMobile,
 		clickableImage: betterdiscord.Webpack.getByKeys("gameState", "clickableImage").clickableImage,
 		bannerButton: betterdiscord.Webpack.getByKeys("bannerButton").bannerButton,
-		layoutContainer: betterdiscord.Webpack.getByKeys("layoutContainer", "profileAppConnections").layoutContainer,
-		editingPanelExpanded: betterdiscord.Webpack.getByKeys("layoutContainer", "profileAppConnections").editingPanelExpanded,
 		small: betterdiscord.Webpack.getByKeys("small", "root").small
 	},
 	Object.getOwnPropertyDescriptors(betterdiscord.Webpack.getByKeys("container", "bar", "progress")),
@@ -1527,7 +1524,14 @@ let profileCSS = webpackify(CSS);
 function addProfileCSS() {
 	betterdiscord.DOM.addStyle("profileCSS", profileCSS);
 	betterdiscord.Utils.forceLoad(betterdiscord.Webpack.getBySource("USER_PROFILE_MODAL_KEY:$", { raw: true }).id).then((r) => {
-		Object.assign(styles, Object.getOwnPropertyDescriptors(betterdiscord.Webpack.getByKeys("background", "content", "safetyTable")));
+		styles = Object.assign(
+			{
+				layoutContainer: betterdiscord.Webpack.getByKeys("layoutContainer", "profileAppConnections").layoutContainer,
+				editingPanelExpanded: betterdiscord.Webpack.getByKeys("layoutContainer", "profileAppConnections").editingPanelExpanded
+			},
+			styles,
+			Object.getOwnPropertyDescriptors(betterdiscord.Webpack.getByKeys("background", "content", "safetyTable"))
+		);
 		profileCSS = webpackify(CSS);
 		betterdiscord.DOM.addStyle("profileCSS", profileCSS);
 	});
@@ -1579,7 +1583,7 @@ function Starter({ props, res }) {
 class NewOldProfiles {
 	constructor(meta) {
 	}
-	start() {
+	async start() {
 		addProfileCSS();
 		betterdiscord.Patcher.after(entireProfileModal.A, "render", (that, [props], res) => {
 			if (!props.themeType?.includes("MODAL")) return;
@@ -1591,7 +1595,7 @@ class NewOldProfiles {
 			}
 			res.props.children = react.createElement(Starter, { props, res });
 		});
-		betterdiscord.Patcher.after(ProfileModalEntrypoint, "A", (that, [props], res) => {
+		betterdiscord.Patcher.after(await betterdiscord.Webpack.waitForModule(betterdiscord.Webpack.Filters.bySource("UserProfileModalV2", "defaultWishlistId")), "A", (that, [props], res) => {
 			const button = betterdiscord.Utils.findInTree(res, (tree) => tree && Object.hasOwn(tree, "parentComponent"), { walkable: ["props", "children"] });
 			const layoutContainer = button.children[0].props.children.props;
 			react.useEffect(() => {

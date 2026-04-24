@@ -1,6 +1,6 @@
 import { Webpack, Utils, DOM } from 'betterdiscord';
 
-const styles = Object.assign(
+let styles = Object.assign(
     {
         outer: Webpack.getByKeys('outer', 'overlay').outer,
         hasText: Webpack.getModule(x=>x.primary && x.hasText && !x.hasTrailing).hasText,
@@ -10,8 +10,6 @@ const styles = Object.assign(
         fullscreenOnMobile: Webpack.getByKeys('focusLock', 'fullscreenOnMobile').fullscreenOnMobile,
         clickableImage: Webpack.getByKeys('gameState', 'clickableImage').clickableImage,
         bannerButton: Webpack.getByKeys('bannerButton').bannerButton,
-        layoutContainer: Webpack.getByKeys('layoutContainer', 'profileAppConnections').layoutContainer,
-        editingPanelExpanded: Webpack.getByKeys('layoutContainer', 'profileAppConnections').editingPanelExpanded,
         small: Webpack.getByKeys('small', 'root').small
     },
     Object.getOwnPropertyDescriptors(Webpack.getByKeys('container', 'bar', 'progress')),
@@ -1177,7 +1175,15 @@ let profileCSS = webpackify(CSS);
 export function addProfileCSS() {
     DOM.addStyle("profileCSS", profileCSS);
     Utils.forceLoad(Webpack.getBySource("USER_PROFILE_MODAL_KEY:$", { raw: true }).id).then((r) => {
-        Object.assign(styles, Object.getOwnPropertyDescriptors(Webpack.getByKeys("background", "content", "safetyTable")));
+        styles = Object.assign(
+            {
+                layoutContainer: Webpack.getByKeys('layoutContainer', 'profileAppConnections').layoutContainer,
+                editingPanelExpanded: Webpack.getByKeys('layoutContainer', 'profileAppConnections').editingPanelExpanded
+            },
+            styles, 
+            Object.getOwnPropertyDescriptors(Webpack.getByKeys("background", "content", "safetyTable")),
+
+        );
         profileCSS = webpackify(CSS);
         DOM.addStyle("profileCSS", profileCSS);
     });

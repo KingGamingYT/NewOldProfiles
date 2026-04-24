@@ -1,4 +1,4 @@
-import { Data, Patcher, DOM, Utils, Components } from "betterdiscord";
+import { Data, Patcher, DOM, Utils, Components, Webpack } from "betterdiscord";
 import { entireProfileModal, FormSwitch, ProfileFetch, ProfileModalEntrypoint } from "@modules/common";
 import { UserProfileStore, UserStore } from '@modules/stores';
 import { settings } from "@common/settings";
@@ -47,7 +47,7 @@ function Starter({props, res}) {
 
 export default class NewOldProfiles {
     constructor(meta){}
-    start() {
+    async start() {
         addProfileCSS();
         Patcher.after(entireProfileModal.A, "render", (that, [props], res) => {
             if (!props.themeType?.includes("MODAL")) return;
@@ -58,7 +58,7 @@ export default class NewOldProfiles {
             }
             res.props.children = createElement(Starter, {props, res})
         })
-        Patcher.after(ProfileModalEntrypoint, "A", (that, [props], res) => {
+        Patcher.after(await Webpack.waitForModule(Webpack.Filters.bySource('UserProfileModalV2', 'defaultWishlistId')), "A", (that, [props], res) => {
             const button = Utils.findInTree(res, (tree) => tree && Object.hasOwn(tree, 'parentComponent'), { walkable: ['props', 'children'] })
             const layoutContainer = button.children[0].props.children.props;
             useEffect(() => {layoutContainer.children[1].props.children[0]?.props?.children[0]?.props?.onClose()}, []);
