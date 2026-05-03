@@ -18,8 +18,6 @@ let styles = Object.assign(
     Object.getOwnPropertyDescriptors(Webpack.getByKeys('lineClamp2Plus')),
     Object.getOwnPropertyDescriptors(Webpack.getByKeys('badgeContainer', 'badgesContainer')),
     Object.getOwnPropertyDescriptors(Webpack.getByKeys('tabularNumbers')),
-    Webpack.getByKeys('icon', 'buttonInner'),
-    Object.getOwnPropertyDescriptors(Webpack.getModule(x=>x.buttonContainer && Object.keys(x).length === 1)),
 );
 
 let CSS = webpackify(
@@ -818,7 +816,7 @@ let CSS = webpackify(
         .botTag {
             background: var(--white);
             > span {
-                color: var(--bg-brand);
+                color: var(--background-brand);
             }
         }
         .profileButtons {
@@ -1181,6 +1179,7 @@ export function addProfileCSS() {
                 editingPanelExpanded: Webpack.getByKeys('layoutContainer', 'profileAppConnections').editingPanelExpanded
             },
             styles, 
+            Object.getOwnPropertyDescriptors(Webpack.getModule(x=>x.buttonContainer && Object.keys(x).length === 1)),
             Object.getOwnPropertyDescriptors(Webpack.getByKeys("background", "content", "safetyTable")),
 
         );

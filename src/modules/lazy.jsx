@@ -1,5 +1,5 @@
 import { Webpack } from 'betterdiscord';
-import { PopUtils, MessageButtons, FriendButton } from '@modules/common';
+import { PopUtils, MessageButtons } from '@modules/common';
 
 let MessageButtonLarge;
 let MessageButtonSmall;
@@ -12,6 +12,8 @@ let NoteRenderer;
 let ConnectionRenderer;
 let BotDataRenderer;
 let Board;
+let RolePermissionCheck;
+let TagRenderer;
 
 function MessageButtonLargeComponent({ autoFocus, onClose, userId }) {
     MessageButtonLarge ??= Webpack.getByStrings("let{userId", ",{variant", '"primary",', { searchExports: true});
@@ -34,9 +36,11 @@ function MoreOverflowButtonComponent({ user }) {
     return <MoreOverflowButton.Zt user={user} />
 }
 function FriendAddButtonComponent({ autoFocus, userId, variant }) {
-    FriendAddButton ??= FriendButton.AddFriend;
+    FriendAddButton ??= Webpack.getMangled('SEND_FRIEND_REQUEST,icon', {
+        AddFriend: Webpack.Filters.combine(Webpack.Filters.byStrings('{userId:'), Webpack.Filters.not(Webpack.Filters.byStrings('tooltipText')))
+    });
 
-    return <FriendAddButton autoFocus={autoFocus} userId={userId} variant={variant} />
+    return <FriendAddButton.AddFriend autoFocus={autoFocus} userId={userId} variant={variant} />
 }
 function EditProfileButtonComponent({ user }) {
     EditProfileButton ??= Webpack.getByStrings('trackUserProfileAction', 'EDIT_PROFILE', { searchExports: true });
@@ -58,15 +62,20 @@ function ConnectionComponent({ connectedAccount, userId }) {
 
     return <ConnectionRenderer className="connectedAccount" connectedAccount={connectedAccount} userId={userId} showMetadata={false} />
 }
-function BotDataComponent({ user }) {
-    BotDataRenderer ??= Webpack.getByStrings('user', 'hasMessageContent', 'hasGuildPresences');
-
-    return <BotDataRenderer user={user} />
-}
 function BoardEditRenderer({ user }) {
     Board ??= Webpack.getByStrings('data-scroller', 'fade:!0,', {searchExports: true});
 
     return <Board user={user} />
+}
+function RolePermissionHook({ guildId }) {
+    RolePermissionCheck ??= Webpack.getByStrings('.ADMINISTRATOR', '.MANAGE_MESSAGES');
+
+    return RolePermissionCheck({guildId});
+}
+function WidgetTagRenderer({ tags, widgetType, className }) {
+    TagRenderer ??= Webpack.getBySource('tag', 'isCurrentUser', 'widgetType', 'TAG_REMOVED', {declarationFilter: x => String(x).includes("isCurrentUser")});
+
+    return <TagRenderer tags={tags} widgetType={widgetType} className={className} />
 }
 
 export {
@@ -79,6 +88,7 @@ export {
     MarkdownComponent,
     NoteComponent,
     ConnectionComponent,
-    BotDataComponent,
     BoardEditRenderer,
+    RolePermissionHook,
+    WidgetTagRenderer
 }

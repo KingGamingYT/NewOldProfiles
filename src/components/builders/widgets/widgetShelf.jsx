@@ -5,7 +5,7 @@ import { TooltipBuilder } from '@components/common/TooltipBuilder';
 import { GameCover } from './common/gameCover';
 import { FallbackCover } from './common/fallbackCover';
 
-export function ShelfWidgetBuilder({ game }) {
+export function ShelfWidgetBuilder({ game, user }) {
     const [loading, setLoading] = useState(() => true);
 
     let imageURL = IconUtils.getGameAssetURL({id: game?.id, hash: game?.coverImage, size: "1024", keepAspectRatio: true});

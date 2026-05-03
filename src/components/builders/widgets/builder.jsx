@@ -15,7 +15,7 @@ function getWidgetIntl(widget) {
     return header;
 }
 
-export function WidgetBuilder({ widget }) {
+export function WidgetBuilder({ widget, user }) {
     const [isLoaded, setIsLoaded] = useState(false);
     const gameIds = Array.isArray(widget.games) ? widget.games.map(game => game.applicationId) : [];
     const games = useStateFromStores([ApplicationStore], () => gameIds.map(id => ApplicationStore.getApplication(id)));
@@ -37,5 +37,5 @@ export function WidgetBuilder({ widget }) {
         })()
     }, [gameIds]);
 
-    return <BoardBuilder widget={widget} header={header} games={games} />
+    return <BoardBuilder widget={widget} header={header} games={games} user={user} />
 }

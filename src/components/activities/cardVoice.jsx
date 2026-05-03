@@ -1,8 +1,9 @@
-import { VoiceBox, CallButtons } from '@modules/common';
+import { CallButtons } from '@modules/common';
 import { ChannelStore, useStateFromStores } from '@modules/stores';
 import { ActivityHeader } from './common/ActivityHeader'; 
 import { FlexInfo } from './common/FlexInfo';
 import { getVoiceParticipants } from '@methods/activities/getVoiceParticipants';
+import { VoiceBox } from './common/VoiceBox';
 
 export function VoiceCard({voice, stream}) {
     const channel = useStateFromStores([ ChannelStore ], () => ChannelStore.getChannel(voice));

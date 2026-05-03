@@ -1,7 +1,7 @@
 import { ContextMenu } from 'betterdiscord'; 
 import { useState, useRef } from 'react';
 import { locale } from '@common/locale';
-import { BlockToasts, ButtonClasses, Popout, PopoutContainer, RelationshipUtils } from '@modules/common';
+import { BlockToasts, ButtonClasses, Popout, RelationshipUtils } from '@modules/common';
 import { TooltipBuilder } from '@components/common/TooltipBuilder';
 
 function BlockedPopout({ userId, close }) {
@@ -21,7 +21,7 @@ export function BlockedPopoutButton({ user }) {
             targetElementRef={refDOM}
             clickTrap={true}
             onRequestClose={() => setShowPopout(false)}
-            renderPopout={() => <PopoutContainer position="right"><BlockedPopout userId={user.id} close={() => setShowPopout(false)} /></PopoutContainer>}
+            renderPopout={() => <BlockedPopout userId={user.id} close={() => setShowPopout(false)} />}
             position="right"
             shouldShow={showPopout}>
             {(props) => <span

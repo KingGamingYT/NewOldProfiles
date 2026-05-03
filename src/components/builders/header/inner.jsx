@@ -41,8 +41,7 @@ function BadgeBuilder({ badge, index, id }) {
 
     return (
         <div className="profileBadgeWrapper" ref={refDOM}>
-            {badge.id.includes('orb_profile_badge') ? <OrbTooltip showSubtext={true} targetElementRef={refDOM}><BadgeInner badge={badge} index={index} id={id} /></OrbTooltip> 
-            : <TooltipBuilder note={badge.description}><div><BadgeInner badge={badge} index={index} id={id}></BadgeInner></div></TooltipBuilder>}
+            <TooltipBuilder note={badge.description}><div><BadgeInner badge={badge} index={index} id={id}></BadgeInner></div></TooltipBuilder>
         </div>
     )
 }

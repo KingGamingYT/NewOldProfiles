@@ -1,8 +1,8 @@
 import { Data, Utils } from 'betterdiscord';
 import { useState } from 'react';
-import { IconUtils, ButtonClasses, ModalRoot, ModalSystem, RoleRenderer, RolePermissionCheck, RoleUpdater, intl } from '@modules/common';
+import { IconUtils, ButtonClasses, ModalRoot, ModalSystem, RoleRenderer, RoleUpdater, intl } from '@modules/common';
 import { GuildMemberStore, GuildRoleStore, GuildStore } from '@modules/stores';
-import { ConnectionComponent, MarkdownComponent, NoteComponent, BoardEditRenderer } from '@modules/lazy';
+import { ConnectionComponent, MarkdownComponent, NoteComponent, BoardEditRenderer, RolePermissionHook } from '@modules/lazy';
 import { locale } from '@common/locale';
 import { FavoriteWidgetBuilder, ShelfWidgetBuilder, CurrentWidgetBuilder } from '@components/builders/widgets/index';
 import { TooltipBuilder } from '@components/common/TooltipBuilder';
@@ -104,7 +104,7 @@ export function RoleBuilder({ user, data }) {
                 roles={memberRoles} 
                 guild={GuildStore.getGuild(data?.guildId)} 
                 className="rolesList" 
-                allowEditing={RolePermissionCheck({guildId: data.guildId}).canRemove}
+                allowEditing={RolePermissionHook({guildId: data.guildId}).canRemove}
             />
         </div>
     )
@@ -150,24 +150,24 @@ export function BoardButtonBuilder({ user }) {
     )
 }
 
-export function BoardBuilder({widget, header, games}) {
+export function BoardBuilder({widget, header, games, user}) {
     return (
         <div className="userInfoSection">
             <SectionHeader>{header}</SectionHeader>
             {widget.type.includes("favorite_games") &&
-                <FavoriteWidgetBuilder widget={widget} game={games[0]} />
+                <FavoriteWidgetBuilder widget={widget} game={games[0]} user={user} />
             }
             {(widget.type.includes("played_games") || widget.type.includes("want_to_play_games")) &&
                 <div className="widgetCoverList">
                     {
-                        widget.games.map((game, index) => <ShelfWidgetBuilder game={games[index]} />)
+                        widget.games.map((game, index) => <ShelfWidgetBuilder game={games[index]} user={user} />)
                     }
                 </div>
             }
             {widget.type.includes("current_games") &&
                 <div className="cardList">
                     {
-                        widget.games.map((game, index) => <CurrentWidgetBuilder widget={widget} game={games[index]} index={index} />)
+                        widget.games.map((game, index) => <CurrentWidgetBuilder widget={widget} game={games[index]} index={index} user={user} />)
                     }
                 </div>
             }

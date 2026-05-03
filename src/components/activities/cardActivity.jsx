@@ -1,17 +1,19 @@
-import { ActivityButtons, ActivityCardClasses, ContentInventoryEntryByActivity, GameProfileCheck } from '@modules/common';
+import { ActivityActions, ActivityCardClasses, ContentInventoryEntryByActivity, GameProfileCheck } from '@modules/common';
 import { ApplicationStore } from '@modules/stores';
 import { ActivityHeader } from './common/ActivityHeader';
 import { ConsoleImageAsset, FallbackAsset, GameIconAsset, RichImageAsset } from './common/ActivityAssets';
 import { FlexInfo } from './common/FlexInfo';
+import { ActivityButtons } from './common/ActivityButtons';
 
 export function ActivityCard({user, activity, check}) {
     const application = ApplicationStore.getApplication(activity?.application_id);
     const useGameProfile = GameProfileCheck({trackEntryPointImpression: false, applicationId: application?.id});
     const inventoryEntry = ContentInventoryEntryByActivity({activity: activity, user: user});
+    const action = ActivityActions({display: "live", user, activity})
 
     return (
         <div className="activityProfile activity" id={`${activity.created_at}-${activity.type}`} key={`${activity.created_at}-${activity.type}`}>
-            <ActivityHeader activity={activity} check={check}/>
+            <ActivityHeader activity={activity} check={check} />
             <div className="bodyNormal" style={{ display: "flex", alignItems: "center", width: "auto" }}>
                 <div className="assets" style={{ position: "relative" }}
                     onMouseOver={(e) => Boolean(useGameProfile) && e.currentTarget.classList.add(`${ActivityCardClasses.clickableImage}`)}
@@ -64,7 +66,7 @@ export function ActivityCard({user, activity, check}) {
                 </div>
                 <FlexInfo className="contentImagesProfile content" style={{ display: "grid", flex: "1", marginBottom: "3px" }} activity={activity} inventoryEntry={inventoryEntry} check={check} type="PLAYING" />
                 <div className="buttonsWrapper actionsProfile">
-                    <ActivityButtons user={user} activity={activity} />
+                    <ActivityButtons user={user} activity={activity} onAction={action} />
                 </div>
             </div>
         </div>

@@ -7,6 +7,7 @@ export const [
     ModalRoot, 
     intl,
     ButtonClasses,
+    ActivityActions,
     ActivityCardClasses,
     AnchorClasses,
     FetchApplications, 
@@ -25,13 +26,11 @@ export const [
     VoiceList, 
     VoiceIcon, 
     TagGuildRenderer, 
-    RolePermissionCheck,
     RoleUpdater, 
     BotTagRenderer, 
     Tooltip,
     OrbTooltip,
     Popout, 
-    PopoutContainer,
     FormSwitch,
     ProfileFetch,
     OpenSpotifyAlbumFromStatus,
@@ -46,13 +45,16 @@ export const [
     Endpoints,
     RestAPI,
     ProfileModalEntrypoint,
-    ContentInventoryEntryByActivity
+    ContentInventoryEntryByActivity,
+    ClampedText,
+    Clamp
 ] = /* @__PURE__ */ Webpack.getBulk(
     { filter: /* @__PURE__ */ Webpack.Filters.bySource('forceShowPremium', 'pendingThemeColors', 'profileThemeClassName') },
     { filter: x => x.openUserProfileModal },
     { filter: x=>x.Modal },
     { filter: x => x.t && x.t.formatToMarkdownString },
     { filter: x=> x.button && x.hasText && !x.hasTrailing },
+    { filter: /* @__PURE__ */ Webpack.Filters.byStrings('display', 'getUserOutbox') },
     { filter: /* @__PURE__ */ Webpack.Filters.byKeys('gameState', 'clickableImage') },
     { filter: /* @__PURE__ */ Webpack.Filters.byKeys('anchor', 'anchorUnderlineOnHover') },
     { filter: /* @__PURE__ */ Webpack.Filters.byKeys("fetchApplication") },
@@ -70,14 +72,12 @@ export const [
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('users', 'channel', 'themeType') },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('maxUsers', 'guildId', 'getNickname') },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('channel', 'isGuildStageVoice', 'isDM', '.CONNECT') },
-    { filter: /* @__PURE__ */ Webpack.Filters.byStrings('roles', 'guild', 'canRemoveAnyRoles', 'map(e'), searchExports: true },
-    { filter: /* @__PURE__ */ Webpack.Filters.byStrings('.ADMINISTRATOR', '.MANAGE_MESSAGES') },
+    { filter: /* @__PURE__ */ Webpack.Filters.byStrings('guildId', 'name', 'setPopoutRef', 'onClose', 'fetchGuildProfile') },
     { filter: /* @__PURE__ */ x=>x.updateMemberRoles },
     { filter: /* @__PURE__ */ Webpack.Filters.bySource("BOT", "invertColor") },
     { filter: /* @__PURE__ */ Webpack.Filters.byPrototypeKeys(("renderTooltip")), searchExports: true  },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('showSubtext', 'caretConfig'), searchExports: true },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings("Unsupported animation config:"), searchExports: true },
-    { filter: /* @__PURE__ */ Webpack.Filters.byStrings('type', 'position', 'data-popout-animating'), searchExports: true },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('"data-toggleable-component":"switch"', 'layout:"horizontal"'), searchExports: true },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings("connectionsRoleId", "USER_PROFILE_FETCH_START"), searchExports: true },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings(".metadata)?void", ".EPISODE?"), searchExports: true },
@@ -92,7 +92,9 @@ export const [
     { filter: /* @__PURE__ */ Webpack.Filters.byKeys("GUILD_EMOJI", "GUILD_EMOJIS"), searchExports: true },
     { filter: x => typeof x === "object" && x.del && x.put, searchExports: true },
     { filter: /* @__PURE__ */ Webpack.Filters.bySource('UserProfileModalV2', 'defaultWishlistId') },
-    { filter: /* @__PURE__ */ Webpack.Filters.byStrings('getMatchingInboxEntry', 'getMatchingOutboxEntry') }
+    { filter: /* @__PURE__ */ Webpack.Filters.byStrings('getMatchingInboxEntry', 'getMatchingOutboxEntry') },
+    { filter: /* @__PURE__ */ Webpack.Filters.byStrings('delay', 'lineClamp') },
+    { filter: /* @__PURE__ */ Webpack.Filters.bySource('always-white', 'lineClamp', 'tabularNumbers') }
 )
 
 export const NavigationUtils = /* @__PURE__ */ Webpack.getMangled("transitionTo - Transitioning to", {
@@ -112,8 +114,4 @@ export const MessageButtons = Webpack.getMangled('.zROXEV', {
     Button: Webpack.Filters.not(Webpack.Filters.byStrings("aria-label")),
     ButtonWithTooltip: Webpack.Filters.byStrings("tooltipText")
 })
-export const FriendButton = Webpack.getMangled('SEND_FRIEND_REQUEST,icon', {
-    AddFriend: Webpack.Filters.combine(Webpack.Filters.byStrings('{userId:'), Webpack.Filters.not(Webpack.Filters.byStrings('tooltipText')))
-})
-export const TagRenderer = lazy(async () => ({ default: (await Webpack.waitForModule(Webpack.Filters.bySource('tag', 'isCurrentUser', 'widgetType', 'TAG_REMOVED'))).A}));
 export const RoleRenderer = lazy(async () => ({ default: (await Webpack.waitForModule(Webpack.Filters.byStrings('roles', 'guild', 'canRemoveAnyRoles', 'map(e'), {searchExports: true} ))}));

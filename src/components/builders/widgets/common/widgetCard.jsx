@@ -1,14 +1,14 @@
 import { Suspense } from 'react';
-import { TagRenderer } from '@modules/common';
+import { WidgetTagRenderer } from '@modules/lazy';
 import { TooltipBuilder } from '@components/common/TooltipBuilder';
 import { GameCover } from './gameCover';
 import { FallbackCover } from './fallbackCover';
 
-function WidgetCardDetails({widget, game, index, type}) {
+function WidgetCardDetails({widget, game, index, type, user}) {
     return (
         <div className="widgetDetails">
             <h3 className="widgetTitle">{game?.name || "Unknown Game"}</h3>
-            { type.includes("CURRENT") && widget.games[index].tags && <Suspense><TagRenderer tags={widget.games[index].tags} widgetType={widget.type} className={"tagListContainer"} /></Suspense>}
+            { type.includes("CURRENT") && widget.games[index].tags && <WidgetTagRenderer tags={widget.games[index].tags} widgetType={widget.type} className={"tagListContainer"} />}
             { type.includes("FAVORITE") && widget.games[0].comment && <div role="group">
                 <svg
                     className="commentIcon"
@@ -28,13 +28,13 @@ function WidgetCardDetails({widget, game, index, type}) {
     )
 }
 
-export function WidgetCard({widget, game, image, imageURL, index, loading, ref, type}) {
+export function WidgetCard({widget, game, user, image, imageURL, index, loading, ref, type}) {
     return (
         <div className="widgetCard" ref={ref}>
             <TooltipBuilder note={game?.name}>
                 {loading ? <FallbackCover game={game} /> : <GameCover game={game} image={image} imageURL={imageURL} />}
             </TooltipBuilder>
-            <WidgetCardDetails widget={widget} game={game} index={index} type={type} />
+            <WidgetCardDetails widget={widget} game={game} user={user} index={index} type={type} />
         </div>
     )
 }

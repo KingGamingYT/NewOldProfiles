@@ -1,6 +1,7 @@
 import { Webpack } from 'betterdiscord';
 
 export const AccessibilityStore = /* @__PURE__ */ Webpack.getStore('AccessibilityStore');
+export const AuthenticationStore = /* @__PURE__ */ Webpack.getStore('AuthenticationStore');
 export const RelationshipStore = /* @__PURE__ */ Webpack.getStore('RelationshipStore');
 export const ActivityStore = /* @__PURE__ */ Webpack.getStore("PresenceStore");
 export const UserStore = /* @__PURE__ */ Webpack.getStore("UserStore");

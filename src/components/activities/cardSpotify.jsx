@@ -1,7 +1,8 @@
-import { SpotifyButtons, OpenSpotifyAlbumFromStatus } from '@modules/common';
+import { OpenSpotifyAlbumFromStatus } from '@modules/common';
 import { RichImageAsset } from './common/ActivityAssets';
 import { ActivityHeader } from './common/ActivityHeader';
 import { FlexInfo } from './common/FlexInfo';
+import { SpotifyButtons } from './common/ActivityButtons';
 
 export function SpotifyCard({user, activities, check}) {
     const _activities = activities.filter(activity => activity && activity.name && activity.name.includes("Spotify"));

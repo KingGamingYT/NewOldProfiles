@@ -3,7 +3,7 @@ import { IconUtils } from '@modules/common';
 import { NewGameStore } from '@modules/stores';
 import { WidgetCard } from './common/widgetCard';
 
-export function CurrentWidgetBuilder({ widget, game, index }) {
+export function CurrentWidgetBuilder({ widget, game, index, user }) {
     const [loading, setLoading] = useState(() => true);
 
     let imageURL = IconUtils.getGameAssetURL({id: game?.id, hash: game?.coverImage, size:"1024", keepAspectRatio: true});
@@ -33,6 +33,6 @@ export function CurrentWidgetBuilder({ widget, game, index }) {
     }, [imageURL]);
 
     return (
-        <WidgetCard widget={widget} game={game} image={image} imageURL={imageURL} index={index} loading={loading} ref={ref} type="CURRENT" />
+        <WidgetCard widget={widget} game={game} user={user} image={image} imageURL={imageURL} index={index} loading={loading} ref={ref} type="CURRENT" />
     )
 }

@@ -27,6 +27,7 @@ export const locale = {
         IN_A_VOICE_CHANNEL: () => getIntlString('grGyaf'),
         IN_CHANNEL: (channel) => getIntlString('Xe4de2', channel),
         INFO: () => getIntlString('HY+vdA'),
+        LISTEN_ALONG: () => getIntlString('eU3inB'),
         LISTENING_TO: (name) => getIntlString('NF5xop', name),
         LIVE_ON: (platform) => getIntlString('Dzgz4u', platform),
         MEMBER_SINCE: () => getIntlString('xcKP1P'),
@@ -36,6 +37,8 @@ export const locale = {
         NO_FRIENDS_IN_COMMON: () => getIntlString('/5p4gx'),
         NO_SERVERS_IN_COMMON: () => getIntlString('zjVh8h'),
         NOTE: () => getIntlString('PbMNh2'),
+        PLAY: () => getIntlString('RscU7I'),
+        PLAY_ON_SPOTIFY: () => getIntlString('rRffNz'),
         PLAYING: () => getIntlString('BMTj28'),
         PLAYING_A_GAME: () => getIntlString('2TbM/G'),
         PLAYING_ON: (platform) => getIntlString('A17aM8', platform),
@@ -53,6 +56,7 @@ export const locale = {
         UNBLOCK: () => getIntlString('Hro40y'),
         USER: () => getIntlString('E466pL'),
         WANT_TO_PLAY: () => getIntlString('bWSQwW'),
+        WATCH: () => getIntlString('I6JG46'),
         WATCHING: (name) => getIntlString('pW3Ip3', name)
     }
 }
