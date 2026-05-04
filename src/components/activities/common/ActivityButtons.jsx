@@ -36,7 +36,9 @@ const SlashCommandIcon = Webpack.getByStrings('7.61c-.25.95.31', {searchExports:
 const GameUtils = Webpack.getByKeys('launch', 'reportUnverifiedGame');
 const ContainerTooltip = Webpack.getByStrings('asContainer', 'keyboardShortcut', {searchExports: true});
 const DoorExitIcon = Webpack.getByStrings('"string"==typeof', '18.5V22a1', {searchExports: true});
-const GameControllerIcon = Webpack.getByStrings('.09v4.91a3.09', {searchExports: true})
+const GameControllerIcon = Webpack.getByStrings('.09v4.91a3.09', {searchExports: true});
+const checkLink = Webpack.getByStrings('.test', '.url))');
+const dividerWrapper = Webpack.getByStrings(';return(0,i.jsx)("div",{className:');
 
 const getTrack = Webpack.getByStrings('USER_ACTIVITY_PLAY', 'spotifyData', {searchExports: true});
 const getTrackSync = Webpack.getByStrings('USER_ACTIVITY_SYNC', 'spotifyData', {searchExports: true});
@@ -103,7 +105,17 @@ function ConsoleButton({platformType, icon, onAction}) {
 
 function WatchStreamButton({activity, onAction}) {
     const {themeType} = themeContext.E();
-    return;
+    const isModalV2 = themeType === "MODAL_V2";
+    const validMediaURL = checkLink(activity);
+    return dividerWrapper(activity) && validMediaURL ? <ManaButtons.PrimaryButtonWithIcon
+        text={locale.Strings.WATCH()}
+        fullWidth={!isModalV2}
+        onClick={(e) => {
+            e.stopPropagation();
+            onAction?.({action: "PRESS_WATCH_BUTTON"}),
+            window.open(validMediaURL)
+        }}
+    /> : null;
 }
 
 function PlayButton({user, activity, onAction, onClose}) {

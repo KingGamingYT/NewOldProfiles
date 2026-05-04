@@ -1,10 +1,12 @@
-import { ActivityButtons } from '@modules/common';
+import { ActivityActions } from '@modules/common';
 import { ActivityHeader } from './common/ActivityHeader';
 import { TwitchImageAsset } from './common/ActivityAssets';
+import { ActivityButtons } from './common/ActivityButtons';
 import { FlexInfo } from './common/FlexInfo'
 
 export function TwitchCard({user, activities}) {
     const activity = activities.filter(activity => activity && activity.name && activity.type === 1)[0];
+    const action = ActivityActions({display: "live", user, activity})
 
     return (
         <div className="activityProfileContainer activityProfileContainerTwitch">
@@ -23,7 +25,7 @@ export function TwitchCard({user, activities}) {
                     </div>
                     <FlexInfo className="contentImagesProfile content" activity={activity} type="TWITCH" />
                     <div className="buttonsWrapper actionsProfile">
-                        <ActivityButtons user={user} activity={activity} />
+                        <ActivityButtons user={user} activity={activity} onAction={action} />
                     </div>
                 </div>
             </div>

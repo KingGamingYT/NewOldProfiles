@@ -895,6 +895,8 @@ const GameUtils = betterdiscord.Webpack.getByKeys("launch", "reportUnverifiedGam
 const ContainerTooltip = betterdiscord.Webpack.getByStrings("asContainer", "keyboardShortcut", { searchExports: true });
 const DoorExitIcon = betterdiscord.Webpack.getByStrings('"string"==typeof', "18.5V22a1", { searchExports: true });
 const GameControllerIcon = betterdiscord.Webpack.getByStrings(".09v4.91a3.09", { searchExports: true });
+const checkLink = betterdiscord.Webpack.getByStrings(".test", ".url))");
+const dividerWrapper = betterdiscord.Webpack.getByStrings(';return(0,i.jsx)("div",{className:');
 const getTrack = betterdiscord.Webpack.getByStrings("USER_ACTIVITY_PLAY", "spotifyData", { searchExports: true });
 const getTrackSync = betterdiscord.Webpack.getByStrings("USER_ACTIVITY_SYNC", "spotifyData", { searchExports: true });
 const hasParty = betterdiscord.Webpack.getByStrings("LISTENING", "SPOTIFY).name", { searchExports: true });
@@ -953,8 +955,20 @@ function ConsoleButton({ platformType, icon, onAction }) {
 	return;
 }
 function WatchStreamButton({ activity, onAction }) {
-	themeContext.E();
-	return;
+	const { themeType } = themeContext.E();
+	const isModalV2 = themeType === "MODAL_V2";
+	const validMediaURL = checkLink(activity);
+	return dividerWrapper(activity) && validMediaURL ? BdApi.React.createElement(
+		ManaButtons.PrimaryButtonWithIcon,
+		{
+			text: locale.Strings.WATCH(),
+			fullWidth: !isModalV2,
+			onClick: (e) => {
+				e.stopPropagation();
+				onAction?.({ action: "PRESS_WATCH_BUTTON" }), window.open(validMediaURL);
+			}
+		}
+	) : null;
 }
 function PlayButton({ user, activity, onAction, onClose }) {
 	const { themeType } = themeContext.E();
@@ -1205,6 +1219,7 @@ function ActivityCard({ user, activity, check }) {
 // components/activities/cardTwitch.jsx
 function TwitchCard({ user, activities }) {
 	const activity = activities.filter((activity2) => activity2 && activity2.name && activity2.type === 1)[0];
+	const action = ActivityActions({ display: "live", user, activity });
 	return BdApi.React.createElement("div", { className: "activityProfileContainer activityProfileContainerTwitch" }, BdApi.React.createElement("div", { className: "activityProfile activity" }, BdApi.React.createElement(ActivityHeader$1, { activity }), BdApi.React.createElement("div", { className: "bodyNormal", style: { display: "flex", alignItems: "center", width: "auto" } }, BdApi.React.createElement("div", { className: "assets", style: { position: "relative" } }, BdApi.React.createElement(
 		TwitchImageAsset,
 		{
@@ -1212,7 +1227,7 @@ function TwitchCard({ user, activities }) {
 			imageId: activity?.assets?.large_image,
 			altText: activity?.assets?.large_text
 		}
-	)), BdApi.React.createElement(FlexInfo, { className: "contentImagesProfile content", activity, type: "TWITCH" }), BdApi.React.createElement("div", { className: "buttonsWrapper actionsProfile" }, BdApi.React.createElement(ActivityButtons$1, { user, activity })))));
+	)), BdApi.React.createElement(FlexInfo, { className: "contentImagesProfile content", activity, type: "TWITCH" }), BdApi.React.createElement("div", { className: "buttonsWrapper actionsProfile" }, BdApi.React.createElement(ActivityButtons, { user, activity, onAction: action })))));
 }
 
 // components/activities/cardSpotify.jsx
