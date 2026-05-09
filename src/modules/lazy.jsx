@@ -14,6 +14,8 @@ let BotDataRenderer;
 let Board;
 let RolePermissionCheck;
 let TagRenderer;
+let MutualFriends;
+let MutualServers;
 
 function MessageButtonLargeComponent({ autoFocus, onClose, userId }) {
     MessageButtonLarge ??= Webpack.getByStrings("let{userId", ",{variant", '"primary",', { searchExports: true});
@@ -77,6 +79,17 @@ function WidgetTagRenderer({ tags, widgetType, className }) {
 
     return <TagRenderer tags={tags} widgetType={widgetType} className={className} />
 }
+function MutualFriendRenderer({user, status, guildId, onSelect}) {
+    MutualFriends ??= Webpack.getByStrings('MODAL_V2', 'discriminatorClass');
+
+    return <MutualFriends user={user} status={status} guildId={guildId} onSelect={onSelect} />
+}
+    
+function MutualServerRenderer({key, user, guild, nick, onSelect}) {
+    MutualServers ??= Webpack.getByStrings('hasAvatarForGuild', 'nick');
+
+    return <MutualServers key={key} user={user} status={status} guild={guild} nick={nick} onSelect={onSelect} />
+}
 
 export {
     MessageButtonLargeComponent,
@@ -90,5 +103,7 @@ export {
     ConnectionComponent,
     BoardEditRenderer,
     RolePermissionHook,
-    WidgetTagRenderer
+    WidgetTagRenderer,
+    MutualFriendRenderer,
+    MutualServerRenderer,
 }

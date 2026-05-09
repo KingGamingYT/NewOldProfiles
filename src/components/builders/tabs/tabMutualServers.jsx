@@ -1,5 +1,6 @@
 import { UserProfileStore } from '@modules/stores';
-import { MutualServerRenderer, NavigationUtils } from '@modules/common';
+import { NavigationUtils } from '@modules/common';
+import { MutualServerRenderer } from '@modules/lazy';
 import { locale } from '@common/locale';
 import { Scroller } from './common/scroller';
 

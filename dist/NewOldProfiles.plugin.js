@@ -2,7 +2,8 @@
  * @name NewOldProfiles
  * @author KingGamingYT
  * @description A full, largely accurate restoration of Discord's profile layout used from 2018 to 2021. Features modern additions such as banners, theme colors, and guild tags.
- * @version 1.2.3
+ * @version 1.2.4
+ * @runAt idle
  */
 
 /*@cc_on
@@ -49,8 +50,6 @@ const [
 	Avatar,
 	AvatarFetch,
 	EmojiRenderer,
-	MutualFriendRenderer,
-	MutualServerRenderer,
 	ActivityTimer,
 	MediaProgressBar,
 	ActivityButtons$1,
@@ -96,8 +95,6 @@ const [
 	{ filter: betterdiscord.Webpack.Filters.byStrings("onOpenProfile", "avatar") },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("STREAMING", "isVROnline") },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("translateSurrogatesToInlineEmoji") },
-	{ filter: betterdiscord.Webpack.Filters.byStrings("MODAL_V2", "discriminatorClass") },
-	{ filter: betterdiscord.Webpack.Filters.byStrings("hasAvatarForGuild", "nick") },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("timestamps", ".TEXT_FEEDBACK_POSITIVE"), searchExports: true },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("start", "end", "duration", "percentage") },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("activity", "USER_PROFILE_ACTIVITY_BUTTONS") },
@@ -169,6 +166,80 @@ const StreamerModeStore = betterdiscord.Webpack.getStore("StreamerModeStore");
 const { useStateFromStores } = betterdiscord.Webpack.getMangled((m) => m.Store, {
 	useStateFromStores: betterdiscord.Webpack.Filters.byStrings("useStateFromStores")
 }, { raw: true });
+
+// modules/lazy.jsx
+let MessageButtonLarge;
+let MessageButtonSmall;
+let FriendsButton;
+let MoreOverflowButton;
+let FriendAddButton;
+let EditProfileButton;
+let MarkdownFormat;
+let NoteRenderer;
+let ConnectionRenderer;
+let Board;
+let RolePermissionCheck;
+let TagRenderer;
+let MutualFriends;
+let MutualServers;
+function MessageButtonLargeComponent({ autoFocus, onClose, userId }) {
+	MessageButtonLarge ??= betterdiscord.Webpack.getByStrings("let{userId", ",{variant", '"primary",', { searchExports: true });
+	return BdApi.React.createElement(MessageButtonLarge, { autoFocus, onClose: () => PopUtils.popAll(), userId });
+}
+function MessageButtonSmallComponent({ onClose, userId, variant }) {
+	MessageButtonSmall ??= betterdiscord.Webpack.getByStrings("userId", "tooltipText:", ",variant", "{text", { searchExports: true });
+	return BdApi.React.createElement(MessageButtonSmall, { onClose: () => PopUtils.popAll(), userId, variant });
+}
+function FriendsButtonComponent({ relationshipType, shouldShowTooltip, type, themeColor, user }) {
+	FriendsButton ??= betterdiscord.Webpack.getByStrings("menuItems", "relationshipType", { searchExports: true });
+	return BdApi.React.createElement(FriendsButton, { relationshipType, shouldShowTooltip, type, themeColor, user });
+}
+function MoreOverflowButtonComponent({ user }) {
+	MoreOverflowButton ??= betterdiscord.Webpack.getBySource("user-profile-overflow-menu", { searchExports: true });
+	return BdApi.React.createElement(MoreOverflowButton.Zt, { user });
+}
+function FriendAddButtonComponent({ autoFocus, userId, variant }) {
+	FriendAddButton ??= betterdiscord.Webpack.getMangled("SEND_FRIEND_REQUEST,icon", {
+		AddFriend: betterdiscord.Webpack.Filters.combine(betterdiscord.Webpack.Filters.byStrings("{userId:"), betterdiscord.Webpack.Filters.not(betterdiscord.Webpack.Filters.byStrings("tooltipText")))
+	});
+	return BdApi.React.createElement(FriendAddButton.AddFriend, { autoFocus, userId, variant });
+}
+function EditProfileButtonComponent({ user }) {
+	EditProfileButton ??= betterdiscord.Webpack.getByStrings("trackUserProfileAction", "EDIT_PROFILE", { searchExports: true });
+	return BdApi.React.createElement(EditProfileButton, { user });
+}
+function MarkdownComponent({ userBio }) {
+	MarkdownFormat ??= betterdiscord.Webpack.getByStrings("userBio", "disableAnimations");
+	return BdApi.React.createElement(MarkdownFormat, { className: "userBio", userBio });
+}
+function NoteComponent({ userId }) {
+	NoteRenderer ??= betterdiscord.Webpack.getByStrings("hidePersonalInformation", "onUpdate", "placeholder");
+	return BdApi.React.createElement(NoteRenderer, { className: "note", userId });
+}
+function ConnectionComponent({ connectedAccount, userId }) {
+	ConnectionRenderer ??= betterdiscord.Webpack.getByStrings("connectedAccount", "connectedAccountOpenIcon", "CONNECTED_ACCOUNT_VIEWED", { searchExports: true });
+	return BdApi.React.createElement(ConnectionRenderer, { className: "connectedAccount", connectedAccount, userId, showMetadata: false });
+}
+function BoardEditRenderer({ user }) {
+	Board ??= betterdiscord.Webpack.getByStrings("data-scroller", "fade:!0,", { searchExports: true });
+	return BdApi.React.createElement(Board, { user });
+}
+function RolePermissionHook({ guildId }) {
+	RolePermissionCheck ??= betterdiscord.Webpack.getByStrings(".ADMINISTRATOR", ".MANAGE_MESSAGES");
+	return RolePermissionCheck({ guildId });
+}
+function WidgetTagRenderer({ tags, widgetType, className }) {
+	TagRenderer ??= betterdiscord.Webpack.getBySource("tag", "isCurrentUser", "widgetType", "TAG_REMOVED", { declarationFilter: (x) => String(x).includes("isCurrentUser") });
+	return BdApi.React.createElement(TagRenderer, { tags, widgetType, className });
+}
+function MutualFriendRenderer({ user, status: status2, guildId, onSelect }) {
+	MutualFriends ??= betterdiscord.Webpack.getByStrings("MODAL_V2", "discriminatorClass");
+	return BdApi.React.createElement(MutualFriends, { user, status: status2, guildId, onSelect });
+}
+function MutualServerRenderer({ key, user, guild, nick, onSelect }) {
+	MutualServers ??= betterdiscord.Webpack.getByStrings("hasAvatarForGuild", "nick");
+	return BdApi.React.createElement(MutualServers, { key, user, status, guild, nick, onSelect });
+}
 
 // common/settings.js
 const settings = {
@@ -337,70 +408,6 @@ function activityCheck({ activities }) {
 		}
 	}
 	return pass;
-}
-
-// modules/lazy.jsx
-let MessageButtonLarge;
-let MessageButtonSmall;
-let FriendsButton;
-let MoreOverflowButton;
-let FriendAddButton;
-let EditProfileButton;
-let MarkdownFormat;
-let NoteRenderer;
-let ConnectionRenderer;
-let Board;
-let RolePermissionCheck;
-let TagRenderer;
-function MessageButtonLargeComponent({ autoFocus, onClose, userId }) {
-	MessageButtonLarge ??= betterdiscord.Webpack.getByStrings("let{userId", ",{variant", '"primary",', { searchExports: true });
-	return BdApi.React.createElement(MessageButtonLarge, { autoFocus, onClose: () => PopUtils.popAll(), userId });
-}
-function MessageButtonSmallComponent({ onClose, userId, variant }) {
-	MessageButtonSmall ??= betterdiscord.Webpack.getByStrings("userId", "tooltipText:", ",variant", "{text", { searchExports: true });
-	return BdApi.React.createElement(MessageButtonSmall, { onClose: () => PopUtils.popAll(), userId, variant });
-}
-function FriendsButtonComponent({ relationshipType, shouldShowTooltip, type, themeColor, user }) {
-	FriendsButton ??= betterdiscord.Webpack.getByStrings("menuItems", "relationshipType", { searchExports: true });
-	return BdApi.React.createElement(FriendsButton, { relationshipType, shouldShowTooltip, type, themeColor, user });
-}
-function MoreOverflowButtonComponent({ user }) {
-	MoreOverflowButton ??= betterdiscord.Webpack.getBySource("user-profile-overflow-menu", { searchExports: true });
-	return BdApi.React.createElement(MoreOverflowButton.Zt, { user });
-}
-function FriendAddButtonComponent({ autoFocus, userId, variant }) {
-	FriendAddButton ??= betterdiscord.Webpack.getMangled("SEND_FRIEND_REQUEST,icon", {
-		AddFriend: betterdiscord.Webpack.Filters.combine(betterdiscord.Webpack.Filters.byStrings("{userId:"), betterdiscord.Webpack.Filters.not(betterdiscord.Webpack.Filters.byStrings("tooltipText")))
-	});
-	return BdApi.React.createElement(FriendAddButton.AddFriend, { autoFocus, userId, variant });
-}
-function EditProfileButtonComponent({ user }) {
-	EditProfileButton ??= betterdiscord.Webpack.getByStrings("trackUserProfileAction", "EDIT_PROFILE", { searchExports: true });
-	return BdApi.React.createElement(EditProfileButton, { user });
-}
-function MarkdownComponent({ userBio }) {
-	MarkdownFormat ??= betterdiscord.Webpack.getByStrings("userBio", "disableAnimations");
-	return BdApi.React.createElement(MarkdownFormat, { className: "userBio", userBio });
-}
-function NoteComponent({ userId }) {
-	NoteRenderer ??= betterdiscord.Webpack.getByStrings("hidePersonalInformation", "onUpdate", "placeholder");
-	return BdApi.React.createElement(NoteRenderer, { className: "note", userId });
-}
-function ConnectionComponent({ connectedAccount, userId }) {
-	ConnectionRenderer ??= betterdiscord.Webpack.getByStrings("connectedAccount", "connectedAccountOpenIcon", "CONNECTED_ACCOUNT_VIEWED", { searchExports: true });
-	return BdApi.React.createElement(ConnectionRenderer, { className: "connectedAccount", connectedAccount, userId, showMetadata: false });
-}
-function BoardEditRenderer({ user }) {
-	Board ??= betterdiscord.Webpack.getByStrings("data-scroller", "fade:!0,", { searchExports: true });
-	return BdApi.React.createElement(Board, { user });
-}
-function RolePermissionHook({ guildId }) {
-	RolePermissionCheck ??= betterdiscord.Webpack.getByStrings(".ADMINISTRATOR", ".MANAGE_MESSAGES");
-	return RolePermissionCheck({ guildId });
-}
-function WidgetTagRenderer({ tags, widgetType, className }) {
-	TagRenderer ??= betterdiscord.Webpack.getBySource("tag", "isCurrentUser", "widgetType", "TAG_REMOVED", { declarationFilter: (x) => String(x).includes("isCurrentUser") });
-	return BdApi.React.createElement(TagRenderer, { tags, widgetType, className });
 }
 
 // components/common/TooltipBuilder.jsx
@@ -1223,7 +1230,7 @@ function TwitchCard({ user, activities }) {
 	return BdApi.React.createElement("div", { className: "activityProfileContainer activityProfileContainerTwitch" }, BdApi.React.createElement("div", { className: "activityProfile activity" }, BdApi.React.createElement(ActivityHeader$1, { activity }), BdApi.React.createElement("div", { className: "bodyNormal", style: { display: "flex", alignItems: "center", width: "auto" } }, BdApi.React.createElement("div", { className: "assets", style: { position: "relative" } }, BdApi.React.createElement(
 		TwitchImageAsset,
 		{
-			url: activity.name.includes("YouTube") ? `https://i.ytimg.com/vi/${activity?.assets?.large_image.substring(activity?.assets?.large_image.indexOf(":") + 1)}/hqdefault_live.jpg` : `https://static-cdn.jtvnw.net/previews-ttv/live_user_${activity?.assets?.large_image.substring(activity?.assets?.large_image.indexOf(":") + 1)}-162x90.jpg`,
+			url: activity.name.includes("YouTube") ? `https://i.ytimg.com/vi/${activity?.assets?.large_image?.substring(activity?.assets?.large_image?.indexOf(":") + 1)}/hqdefault_live.jpg` : `https://static-cdn.jtvnw.net/previews-ttv/live_user_${activity?.assets?.large_image?.substring(activity?.assets?.large_image?.indexOf(":") + 1)}-162x90.jpg`,
 			imageId: activity?.assets?.large_image,
 			altText: activity?.assets?.large_text
 		}
@@ -1967,6 +1974,17 @@ function Starter({ props, res }) {
 			}
 		})();
 	}, [user.id]);
+	if (tab === 4 && user.id === currentUser.id) {
+		data.onClose(react.useEffect(() => {
+			ModalSystem$1.openModal(
+				(props2) => react.createElement(
+					ModalRoot.Modal,
+					{ ...props2, title: locale.Strings.PROFILE_WIDGETS() },
+					react.createElement(BoardEditRenderer, { user })
+				)
+			);
+		}, []));
+	}
 	return [
 		react.createElement(
 			"div",

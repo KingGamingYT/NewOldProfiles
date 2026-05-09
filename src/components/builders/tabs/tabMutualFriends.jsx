@@ -1,5 +1,6 @@
 import { UserProfileStore } from '@modules/stores';
-import { ModalAccessUtils, MutualFriendRenderer } from '@modules/common';
+import { ModalAccessUtils } from '@modules/common';
+import { MutualFriendRenderer } from '@modules/lazy';
 import { locale } from '@common/locale';
 import { Scroller } from './common/scroller';
 
