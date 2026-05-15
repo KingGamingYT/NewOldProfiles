@@ -90,7 +90,7 @@ export const [
     { filter: /* @__PURE__ */ Webpack.Filters.bySource('UserProfileModalV2', 'defaultWishlistId') },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('getMatchingInboxEntry', 'getMatchingOutboxEntry') },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('delay', 'lineClamp') },
-    { filter: /* @__PURE__ */ Webpack.Filters.bySource('always-white', 'lineClamp', 'tabularNumbers') }
+    { filter: /* @__PURE__ */ Webpack.Filters.bySource('always-white', 'lineClamp', 'tabularNumbers', '?.css') }
 )
 
 export const NavigationUtils = /* @__PURE__ */ Webpack.getMangled("transitionTo - Transitioning to", {

@@ -35,6 +35,10 @@ let CSS = webpackify(
         width: unset;
     }
 
+    aside[id="profile-modal-editing-panel"]:before {
+        display: none;
+    }
+
     .editingPanelExpanded .user-profile-modal-v2 {
         border-top-left-radius: 0px !important;
         border-bottom-left-radius: 0px !important;

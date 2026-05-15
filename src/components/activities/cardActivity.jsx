@@ -66,7 +66,7 @@ export function ActivityCard({user, activity, check}) {
                 </div>
                 <FlexInfo className="contentImagesProfile content" style={{ display: "grid", flex: "1", marginBottom: "3px" }} activity={activity} inventoryEntry={inventoryEntry} check={check} type="PLAYING" />
                 <div className="buttonsWrapper actionsProfile">
-                    <ActivityButtons user={user} activity={activity} onAction={action} />
+                    <ActivityButtons user={user} activity={activity} application={application} onAction={action} />
                 </div>
             </div>
         </div>

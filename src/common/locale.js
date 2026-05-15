@@ -14,6 +14,7 @@ export const locale = {
         BOARD: () => getIntlString('laViwx'),
         BOT: () => getIntlString('AOdOYr'),
         COMPETING_IN: (name) => getIntlString('QQ2wVE', name),
+        CONNECT_ACCOUNT: () => getIntlString('sbdnpw'),
         CREATED_ON: () => getIntlString('A//N4k'),
         CUSTOM_STATUS: () => getIntlString('xalUlT'),
         DATA_ACCESS: () => getIntlString('QzDgMq'),

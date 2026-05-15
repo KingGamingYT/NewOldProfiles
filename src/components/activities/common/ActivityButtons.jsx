@@ -11,7 +11,7 @@ const fetchAuthorization = Webpack.getByStrings('parentId', 'disableFetch', {sea
 const CloudPlayButton = Webpack.getByStrings('"PRESS_CLOUD_PLAY_BUTTON"');
 const isEmbeddedActivity = Webpack.getByStrings(".EMBEDDED", "{return(0,");
 const isSupportedPlatform = Webpack.getByStrings('META_QUEST', 'supported_platforms');
-const CTAButton = Webpack.getByStrings('distributorCTAConfigs', '"noopener,noreferrer"');
+const CTAButton = Webpack.getByStrings('distributorCTAConfigs', 'PLAY_CTA_DISPLAYED');
 const isNonConsole = Webpack.getByStrings('.CUSTOM_STATUS&&(null');
 const isXbox = Webpack.getByStrings('platform===', '.XBOX');
 const isPlayStation = Webpack.getByStrings('platform===', '.PS5');
@@ -31,7 +31,7 @@ const Parser = Webpack.getByKeys('formatPathWithQuery');
 const sanitize = Webpack.getByStrings('sanitizeUrl', 'contextKey', {searchExports: true});
 const ChannelContext = Webpack.getByStrings('.POPOUT', 'onClose', 'contextless');
 const joinProps = Webpack.getByStrings('DispatchApplicationStore', 'embeddedActivity', {searchExports: true});
-const getPlayableGame = Webpack.getByStrings('data', 'getOfficialGame' , 'null:null', {searchExports: true});
+const getPlayableGame = Webpack.getByStrings('data', 'getOfficialGame' , ':null!', {searchExports: true});
 const SlashCommandIcon = Webpack.getByStrings('7.61c-.25.95.31', {searchExports: true});
 const GameUtils = Webpack.getByKeys('launch', 'reportUnverifiedGame');
 const ContainerTooltip = Webpack.getByStrings('asContainer', 'keyboardShortcut', {searchExports: true});
@@ -39,6 +39,7 @@ const DoorExitIcon = Webpack.getByStrings('"string"==typeof', '18.5V22a1', {sear
 const GameControllerIcon = Webpack.getByStrings('.09v4.91a3.09', {searchExports: true});
 const checkLink = Webpack.getByStrings('.test', '.url))');
 const dividerWrapper = Webpack.getByStrings(';return(0,i.jsx)("div",{className:');
+const ControllerLinkIcon = Webpack.getByStrings('2.4l.57-.58a.74.74', '14.99a3.17');
 
 const getTrack = Webpack.getByStrings('USER_ACTIVITY_PLAY', 'spotifyData', {searchExports: true});
 const getTrackSync = Webpack.getByStrings('USER_ACTIVITY_SYNC', 'spotifyData', {searchExports: true});
@@ -96,7 +97,18 @@ function CustomButton({user, activity, onAction}) {
 }
 
 function ConnectAccountButton({startAuthorization, onAction}) {
-    return;
+    const {themeType} = themeContext.E();
+    const isModalV2 = themeType === "MODAL_V2";
+    return <ManaButtons.PrimaryButtonWithIcon 
+        icon={() => <ControllerLinkIcon color="currentColor" />}
+        text={locale.Strings.CONNECT_ACCOUNT()}
+        fullWidth={!isModalV2}
+        onClick={(e) => {
+            e.stopPropagation();
+            onAction?.({action: "PRESS_CONNECT_ACCOUNT_BUTTON"});
+            startAuthorization({})
+        }}
+    />
 }
 
 function ConsoleButton({platformType, icon, onAction}) {

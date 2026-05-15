@@ -15,6 +15,11 @@ export const settings = {
             note: "Disable a user's custom nitro profile colors.",
             initial: false,
         },
+        disableRichBadges: {
+            name: "Disable changing badge visuals",
+            note: "Disable making badges white to match the rest of the profile header when a rich presence is active.",
+            initial: false
+        },
         boardTab: {
             name: "Board Tab",
             note: `If a user has game widgets, a "Board" tab will appear on the user profile. To edit your own widgets, press the button found under the "Profile Widgets" category on your profile.`,
@@ -37,6 +42,7 @@ export const settings = {
         showGuildTag: true,
         disableDiscrim: false,
         disableProfileThemes: false,
+        disableRichBadges: false,
         boardTab: false,
         showRoles: true,
         serverBio: true,

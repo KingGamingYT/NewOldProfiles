@@ -30,7 +30,7 @@ function BadgeInner({ badge, index, id }) {
                         })())
                 }>
                 <div
-                    className={Utils.className((activities.length !== 0 || voice || stream) && "richBadge", "profileBadge", `profileBadge${badge.id.replaceAll(/(?:^|_)(\w)/g, (_, m) => m.toUpperCase())}`)}
+                    className={Utils.className(((activities.length !== 0 || voice || stream) && !Data.load('disableRichBadges')) && "richBadge", "profileBadge", `profileBadge${badge.id.replaceAll(/(?:^|_)(\w)/g, (_, m) => m.toUpperCase())}`)}
                 />
             </a>
     )
