@@ -1,4 +1,3 @@
-import { Suspense } from 'react';
 import { WidgetTagRenderer } from '@modules/lazy';
 import { TooltipBuilder } from '@components/common/TooltipBuilder';
 import { GameCover } from './gameCover';

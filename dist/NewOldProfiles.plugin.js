@@ -2,7 +2,7 @@
  * @name NewOldProfiles
  * @author KingGamingYT
  * @description A full, largely accurate restoration of Discord's profile layout used from 2018 to 2021. Features modern additions such as banners, theme colors, and guild tags.
- * @version 1.2.5
+ * @version 1.2.6
  * @runAt idle
  */
 
@@ -1048,7 +1048,7 @@ function ActivityButtons({ user, activity, onAction, onClose, application, conta
 	const isSelf = useStateFromStores([AuthenticationStore], () => AuthenticationStore.getId() === user.id);
 	const hasConfig = activityAuth(application);
 	const idCheck = activityIdCheck.o(activity?.application_id ?? application?.id);
-	const ctaButtons = getCTA("user_profile_activity_buttons", activity?.application_id);
+	const ctaButtons = getCTA(activity?.application_id);
 	const { fetched, canStartAuthorization, hasAlreadyLinked, startAuthorization } = fetchAuthorization(application);
 	const isModal = themeType === "MODAL" || themeType === "MODAL_V2";
 	const isPopout = themeType === "POPOUT";
@@ -2033,7 +2033,7 @@ class NewOldProfiles {
 			}
 			res.props.children = react.createElement(Starter, { props, res });
 		});
-		betterdiscord.Patcher.after(await betterdiscord.Webpack.waitForModule(betterdiscord.Webpack.Filters.bySource("UserProfileModalV2", "defaultWishlistId")), "A", (that, [props], res) => {
+		betterdiscord.Patcher.after(await betterdiscord.Webpack.waitForModule(betterdiscord.Webpack.Filters.bySource("initialGuildId", '"retrying"')), "A", (that, [props], res) => {
 			const button = betterdiscord.Utils.findInTree(res, (tree) => tree && Object.hasOwn(tree, "parentComponent"), { walkable: ["props", "children"] });
 			const layoutContainer = button.children[0].props.children.props;
 			react.useEffect(() => {

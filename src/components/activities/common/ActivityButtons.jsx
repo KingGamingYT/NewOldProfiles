@@ -180,7 +180,7 @@ export function ActivityButtons({user, activity, onAction, onClose, application,
     const isSelf = useStateFromStores([AuthenticationStore], () => AuthenticationStore.getId() === user.id);
     const hasConfig = activityAuth(application);
     const idCheck = activityIdCheck.o(activity?.application_id ?? application?.id);
-    const ctaButtons = getCTA("user_profile_activity_buttons", activity?.application_id);
+    const ctaButtons = getCTA(activity?.application_id);
     const {fetched, canStartAuthorization, hasAlreadyLinked, startAuthorization} = fetchAuthorization(application);
     const isModal = themeType === "MODAL" || themeType === "MODAL_V2";
     const isPopout = themeType === "POPOUT";
