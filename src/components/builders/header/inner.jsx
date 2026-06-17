@@ -1,7 +1,7 @@
 import { Data, Utils } from 'betterdiscord';
 import { useState, useRef } from 'react';
 import { AccessibilityStore, ActivityStore, RelationshipStore, StreamStore, StreamerModeStore, VoiceStateStore, useStateFromStores } from '@modules/stores';
-import { AnchorClasses, Avatar, AvatarFetch, BotTagRenderer, DisplayNameStyleConfigurator, NavigationUtils, OrbTooltip, OpenUserSettings, Popout, PopUtils, TagGuildRenderer } from '@modules/common';
+import { AnchorClasses, Avatar, AvatarFetch, BotAddButton, BotTagRenderer, DisplayNameStyleConfigurator, NavigationUtils, OrbTooltip, OpenUserSettings, Popout, PopUtils, TagGuildRenderer } from '@modules/common';
 import { EditProfileButtonComponent, FriendAddButtonComponent, FriendsButtonComponent, MessageButtonLargeComponent, MessageButtonSmallComponent, MoreOverflowButtonComponent } from '@modules/lazy'
 import { TooltipBuilder } from '@components/common/TooltipBuilder';
 import { AcceptButton, BlockedPopoutButton, IgnoreButton } from './customButtons';
@@ -112,6 +112,7 @@ function HeaderButtonBuilder({ currentUser, relationshipType, user }) {
     if (user.bot) {
         return (
             <>
+                <BotAddButton user={user} />
                 <MessageButtonLargeComponent autoFocus={true} onClose={() => PopUtils.popAll()} userId={user.id} />
                 <MoreOverflowButtonComponent user={user} />
             </>

@@ -30,21 +30,28 @@ let CSS = webpackify(
         max-width: unset;
     }
 
+    .layoutContainer.editingPanelEnabled {
+        grid-template-columns: unset;
+    }
+
     .small:has(.user-profile-modal-v2) {
         width: unset;
+    }
+
+    aside[id="profile-modal-editing-panel"] {
+        margin-right: 40px;
     }
 
     aside[id="profile-modal-editing-panel"]:before {
         display: none;
     }
 
-    .editingPanelExpanded .user-profile-modal-v2 {
-        border-top-left-radius: 0px !important;
-        border-bottom-left-radius: 0px !important;
+    .editingPanelExpanded:has(.disable-profile-themes) > #profile-modal-editing-panel {
+        border-radius: 5px !important;
     }
 
-    .editingPanelExpanded:has(.disable-profile-themes) > #profile-modal-editing-panel {
-        border-radius: 5px 0 0 5px !important;
+    .outer.user-profile-modal-v2 {
+        align-self: center;
     }
 
     .outer.user-profile-modal-v2, .outer.user-profile-modal {
