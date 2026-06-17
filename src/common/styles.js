@@ -431,6 +431,12 @@ let CSS = webpackify(
     .userInfoSection .note textarea:focus {
         background-color: var(--background-tertiary, var(--background-base-lowest)) !important;
     }
+    .userInfoSection .memberSince {
+        user-select: text;
+    }
+    .userInfoSection .userPronouns {
+        user-select: text;
+    }
     .connectedAccounts {
         display: flex;
         justify-content: space-between;

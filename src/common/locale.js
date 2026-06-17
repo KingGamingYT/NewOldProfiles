@@ -43,6 +43,7 @@ export const locale = {
         PLAYING: () => getIntlString('BMTj28'),
         PLAYING_A_GAME: () => getIntlString('2TbM/G'),
         PLAYING_ON: (platform) => getIntlString('A17aM8', platform),
+        PRIVATE_PROFILE_WARNING: (username) => getIntlString('P8ij6Z', username),
         PROFILE_WIDGETS: () => getIntlString('Jzj9q4'),
         PRONOUNS: () => getIntlString('1w6drw'),
         ROLE: () => getIntlString('XPGZXP'),

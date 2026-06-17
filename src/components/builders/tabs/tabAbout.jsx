@@ -1,6 +1,6 @@
 import { Data } from 'betterdiscord';
 import { StreamerModeStore } from '@modules/stores';
-import { PronounsBuilder, BioBuilder, RoleBuilder, MemberDateBuilder, NoteBuilder, BoardButtonBuilder, ConnectionCards } from './common/infoSections';
+import { PronounsBuilder, BioBuilder, RoleBuilder, MemberDateBuilder, NoteBuilder, BoardButtonBuilder, ConnectionCards, PrivateProfileNotice } from './common/infoSections';
 import { StreamerModeView } from './common/streamerModeView';
 import { Scroller } from './common/scroller';
 
@@ -15,6 +15,7 @@ export function AboutTab({ data, user, currentUser, displayProfile }) {
     }
     return (
         <Scroller type="INFO" padding={12}>
+            {displayProfile?.private && <PrivateProfileNotice username={user.globalName || user.username} />}
             {displayProfile?.pronouns && <PronounsBuilder displayProfile={displayProfile} />}
             <BioBuilder displayProfile={displayProfile} />
             <RoleBuilder user={user} data={data} displayProfile={displayProfile} />

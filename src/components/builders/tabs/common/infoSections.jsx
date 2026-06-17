@@ -1,6 +1,6 @@
 import { Data, Utils } from 'betterdiscord';
 import { useState } from 'react';
-import { IconUtils, ButtonClasses, ModalRoot, ModalSystem, RoleRenderer, RoleUpdater, intl } from '@modules/common';
+import { IconUtils, ButtonClasses, ModalRoot, ModalSystem, RoleRenderer, RoleUpdater, Card, intl } from '@modules/common';
 import { GuildMemberStore, GuildRoleStore, GuildStore } from '@modules/stores';
 import { ConnectionComponent, MarkdownComponent, NoteComponent, BoardEditRenderer, RolePermissionHook } from '@modules/lazy';
 import { locale } from '@common/locale';
@@ -182,6 +182,16 @@ export function ConnectionCards({ user, connections }) {
             <div className="connectedAccounts">
                 {connections.map(connection => <ConnectionComponent connectedAccount={connection} userId={user.id} />)}
             </div>
+        </div>
+    )
+}
+
+export function PrivateProfileNotice({ username }) {
+    return (
+        <div className="userInfoSection">
+            <Card messageType="info" key="info">
+                {locale.Strings.PRIVATE_PROFILE_WARNING({username})}
+            </Card>
         </div>
     )
 }

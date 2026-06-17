@@ -45,7 +45,8 @@ export const [
     ProfileModalEntrypoint,
     ContentInventoryEntryByActivity,
     ClampedText,
-    Clamp
+    Clamp,
+    Card
 ] = /* @__PURE__ */ Webpack.getBulk(
     { filter: /* @__PURE__ */ Webpack.Filters.bySource('forceShowPremium', 'pendingThemeColors', 'profileThemeClassName') },
     { filter: x => x.openUserProfileModal },
@@ -90,7 +91,8 @@ export const [
     { filter: /* @__PURE__ */ Webpack.Filters.bySource('UserProfileModalV2', 'defaultWishlistId') },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('getMatchingInboxEntry', 'getMatchingOutboxEntry') },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('delay', 'lineClamp') },
-    { filter: /* @__PURE__ */ Webpack.Filters.bySource('always-white', 'lineClamp', 'tabularNumbers', '?.css') }
+    { filter: /* @__PURE__ */ Webpack.Filters.bySource('always-white', 'lineClamp', 'tabularNumbers', '?.css') },
+    { filter: /* @__PURE__ */ Webpack.Filters.byStrings('warn', 'preview', 'messageType'), searchExports: true }
 )
 
 export const NavigationUtils = /* @__PURE__ */ Webpack.getMangled("transitionTo - Transitioning to", {
