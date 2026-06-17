@@ -75,7 +75,7 @@ export const [
     { filter: /* @__PURE__ */ Webpack.Filters.byPrototypeKeys(("renderTooltip")), searchExports: true  },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('showSubtext', 'caretConfig'), searchExports: true },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings("Unsupported animation config:"), searchExports: true },
-    { filter: /* @__PURE__ */ Webpack.Filters.byStrings('"data-toggleable-component":"switch"', 'layout:"horizontal"'), searchExports: true },
+    { filter: /* @__PURE__ */ Webpack.Filters.byStrings('hasIcon', 'switchIconsEnabled'), searchExports: true },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings("connectionsRoleId", "USER_PROFILE_FETCH_START"), searchExports: true },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings(".metadata)?void", ".EPISODE?"), searchExports: true },
     { filter: x => x.openGameProfileModal },

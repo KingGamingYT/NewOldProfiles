@@ -110,7 +110,7 @@ const [
 	{ filter: betterdiscord.Webpack.Filters.byPrototypeKeys("renderTooltip"), searchExports: true },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("showSubtext", "caretConfig"), searchExports: true },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("Unsupported animation config:"), searchExports: true },
-	{ filter: betterdiscord.Webpack.Filters.byStrings('"data-toggleable-component":"switch"', 'layout:"horizontal"'), searchExports: true },
+	{ filter: betterdiscord.Webpack.Filters.byStrings("hasIcon", "switchIconsEnabled"), searchExports: true },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("connectionsRoleId", "USER_PROFILE_FETCH_START"), searchExports: true },
 	{ filter: betterdiscord.Webpack.Filters.byStrings(".metadata)?void", ".EPISODE?"), searchExports: true },
 	{ filter: (x) => x.openGameProfileModal },
