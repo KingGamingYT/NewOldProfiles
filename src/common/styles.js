@@ -13,7 +13,6 @@ let styles = Object.assign(
         small: Webpack.getByKeys('small', 'root').small
     },
     Object.getOwnPropertyDescriptors(Webpack.getByKeys('container', 'bar', 'progress')),
-    Object.getOwnPropertyDescriptors(Webpack.getModule(x=>x.container && x.badge && Object.keys(x).length === 2)),
     Object.getOwnPropertyDescriptors(Webpack.getByKeys('colorPrimary', 'grow')),
     Object.getOwnPropertyDescriptors(Webpack.getByKeys('lineClamp2Plus')),
     Object.getOwnPropertyDescriptors(Webpack.getByKeys('badgeContainer', 'badgesContainer')),

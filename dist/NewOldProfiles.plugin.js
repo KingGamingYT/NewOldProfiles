@@ -2,7 +2,7 @@
  * @name NewOldProfiles
  * @author KingGamingYT
  * @description A full, largely accurate restoration of Discord's profile layout used from 2018 to 2021. Features modern additions such as banners, theme colors, and guild tags.
- * @version 1.2.6
+ * @version 1.2.7
  * @runAt idle
  */
 
@@ -1937,7 +1937,6 @@ let styles = Object.assign(
 		small: betterdiscord.Webpack.getByKeys("small", "root").small
 	},
 	Object.getOwnPropertyDescriptors(betterdiscord.Webpack.getByKeys("container", "bar", "progress")),
-	Object.getOwnPropertyDescriptors(betterdiscord.Webpack.getModule((x) => x.container && x.badge && Object.keys(x).length === 2)),
 	Object.getOwnPropertyDescriptors(betterdiscord.Webpack.getByKeys("colorPrimary", "grow")),
 	Object.getOwnPropertyDescriptors(betterdiscord.Webpack.getByKeys("lineClamp2Plus")),
 	Object.getOwnPropertyDescriptors(betterdiscord.Webpack.getByKeys("badgeContainer", "badgesContainer")),
