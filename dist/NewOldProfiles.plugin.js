@@ -55,7 +55,6 @@ const [
 	ActivityButtons$1,
 	SpotifyButtons$1,
 	CallButtons,
-	BotAddButton,
 	VoiceList,
 	VoiceIcon,
 	TagGuildRenderer,
@@ -101,7 +100,6 @@ const [
 	{ filter: betterdiscord.Webpack.Filters.byStrings("activity", "USER_PROFILE_ACTIVITY_BUTTONS") },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("activity", "PRESS_PLAY_ON_SPOTIFY_BUTTON") },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("PRESS_JOIN_CALL_BUTTON") },
-	{ filter: betterdiscord.Webpack.Filters.byStrings('"user-bot-profile-add-app"') },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("maxUsers", "guildId", "getNickname") },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("channel", "isGuildStageVoice", "isDM", ".CONNECT") },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("guildId", "name", "setPopoutRef", "onClose", "fetchGuildProfile") },
@@ -176,6 +174,7 @@ let FriendsButton;
 let MoreOverflowButton;
 let FriendAddButton;
 let EditProfileButton;
+let BotAddButton;
 let MarkdownFormat;
 let NoteRenderer;
 let ConnectionRenderer;
@@ -197,8 +196,10 @@ function FriendsButtonComponent({ relationshipType, shouldShowTooltip, type, the
 	return BdApi.React.createElement(FriendsButton, { relationshipType, shouldShowTooltip, type, themeColor, user });
 }
 function MoreOverflowButtonComponent({ user }) {
-	MoreOverflowButton ??= betterdiscord.Webpack.getBySource("user-profile-overflow-menu", { searchExports: true });
-	return BdApi.React.createElement(MoreOverflowButton.Zt, { user });
+	MoreOverflowButton ??= betterdiscord.Webpack.getMangled("user-profile-overflow-menu", {
+		Button: betterdiscord.Webpack.Filters.byStrings("popoutTargetRef")
+	});
+	return BdApi.React.createElement(MoreOverflowButton.Button, { user });
 }
 function FriendAddButtonComponent({ autoFocus, userId, variant }) {
 	FriendAddButton ??= betterdiscord.Webpack.getMangled("SEND_FRIEND_REQUEST,icon", {
@@ -209,6 +210,10 @@ function FriendAddButtonComponent({ autoFocus, userId, variant }) {
 function EditProfileButtonComponent({ user }) {
 	EditProfileButton ??= betterdiscord.Webpack.getByStrings("trackUserProfileAction", "EDIT_PROFILE", { searchExports: true });
 	return BdApi.React.createElement(EditProfileButton, { user });
+}
+function BotAddButtonComponent({ user }) {
+	BotAddButton ??= betterdiscord.Webpack.getByStrings('"user-bot-profile-add-app"');
+	return BdApi.React.createElement(BotAddButton, { user });
 }
 function MarkdownComponent({ userBio }) {
 	MarkdownFormat ??= betterdiscord.Webpack.getByStrings("userBio", "disableAnimations");
@@ -590,7 +595,7 @@ function HeaderButtonBuilder({ currentUser, relationshipType, user }) {
 		return BdApi.React.createElement(BdApi.React.Fragment, null, BdApi.React.createElement(EditProfileButtonComponent, { user }), BdApi.React.createElement(MoreOverflowButtonComponent, { user }));
 	}
 	if (user.bot) {
-		return BdApi.React.createElement(BdApi.React.Fragment, null, BdApi.React.createElement(BotAddButton, { user }), BdApi.React.createElement(MessageButtonLargeComponent, { autoFocus: true, onClose: () => PopUtils.popAll(), userId: user.id }), BdApi.React.createElement(MoreOverflowButtonComponent, { user }));
+		return BdApi.React.createElement(BdApi.React.Fragment, null, BdApi.React.createElement(MessageButtonLargeComponent, { autoFocus: true, onClose: () => PopUtils.popAll(), userId: user.id }), BdApi.React.createElement(BotAddButtonComponent, { user }), BdApi.React.createElement(MoreOverflowButtonComponent, { user }));
 	}
 	switch (relationshipType) {
 		case 0:

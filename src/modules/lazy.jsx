@@ -7,6 +7,7 @@ let FriendsButton;
 let MoreOverflowButton;
 let FriendAddButton;
 let EditProfileButton;
+let BotAddButton;
 let MarkdownFormat;
 let NoteRenderer;
 let ConnectionRenderer;
@@ -33,9 +34,11 @@ function FriendsButtonComponent({ relationshipType, shouldShowTooltip, type, the
     return <FriendsButton relationshipType={relationshipType} shouldShowTooltip={shouldShowTooltip} type={type} themeColor={themeColor} user={user} />
 }
 function MoreOverflowButtonComponent({ user }) {
-    MoreOverflowButton ??= Webpack.getBySource('user-profile-overflow-menu', { searchExports: true });
+    MoreOverflowButton ??= Webpack.getMangled('user-profile-overflow-menu', {
+        Button: Webpack.Filters.byStrings('popoutTargetRef')
+    });
 
-    return <MoreOverflowButton.Zt user={user} />
+    return <MoreOverflowButton.Button user={user} />
 }
 function FriendAddButtonComponent({ autoFocus, userId, variant }) {
     FriendAddButton ??= Webpack.getMangled('SEND_FRIEND_REQUEST,icon', {
@@ -48,6 +51,11 @@ function EditProfileButtonComponent({ user }) {
     EditProfileButton ??= Webpack.getByStrings('trackUserProfileAction', 'EDIT_PROFILE', { searchExports: true });
 
     return <EditProfileButton user={user} />
+}
+function BotAddButtonComponent({ user }) {
+    BotAddButton ??= Webpack.getByStrings('"user-bot-profile-add-app"');
+
+    return <BotAddButton user={user} />
 }
 function MarkdownComponent({ userBio }) {
     MarkdownFormat ??= Webpack.getByStrings('userBio', 'disableAnimations');
@@ -98,6 +106,7 @@ export {
     MoreOverflowButtonComponent,
     FriendAddButtonComponent,
     EditProfileButtonComponent,
+    BotAddButtonComponent,
     MarkdownComponent,
     NoteComponent,
     ConnectionComponent,
