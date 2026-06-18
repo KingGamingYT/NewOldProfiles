@@ -18,7 +18,7 @@ function Banner({url}) {
     )
 }
 
-export function headerBuilder({ user, currentUser, displayProfile, tab, setTab, ref }) {
+export function headerBuilder({ data, user, currentUser, displayProfile, tab, setTab, ref }) {
     const tagName = user.username;
     const displayName = user.globalName;
     const activities = useStateFromStores([ActivityStore], () => ActivityStore.getActivities(user.id));
@@ -48,6 +48,7 @@ export function headerBuilder({ user, currentUser, displayProfile, tab, setTab, 
                             activities={activities}
                         />
                         <ActivityCardWrapper
+                            data={data}
                             user={user}
                             voice={voice && voice}
                             stream={stream && stream}
@@ -89,6 +90,7 @@ export function headerBuilder({ user, currentUser, displayProfile, tab, setTab, 
                             activities={activities}
                         />
                         <ActivityCardWrapper
+                            data={data}
                             user={user}
                             voice={voice && voice}
                             stream={stream && stream}
@@ -126,6 +128,7 @@ export function headerBuilder({ user, currentUser, displayProfile, tab, setTab, 
                     />
                     <div className="activityCardsContainer" style={{ overflow: "hidden auto", display: "flex", flexDirection: "column" }}>
                         <ActivityCardWrapper
+                            data={data}
                             user={user}
                             voice={voice && voice}
                             stream={ stream && stream}
@@ -163,6 +166,7 @@ export function headerBuilder({ user, currentUser, displayProfile, tab, setTab, 
                     />
                     <div className="activityCardsContainer" style={{ overflow: "hidden auto", display: "flex", flexDirection: "column" }}>
                         <ActivityCardWrapper
+                            data={data}
                             user={user}
                             activities={activities}
                             voice={voice}

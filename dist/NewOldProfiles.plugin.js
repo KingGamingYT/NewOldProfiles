@@ -710,10 +710,10 @@ function TabBarBuilder({ user, displayProfile, currentUser, tab, setTab, ref }) 
 }
 
 // components/activities/cardActivityWrapper.jsx
-function ActivityCardWrapper({ user, activities, voice, stream }) {
+function ActivityCardWrapper({ data, user, activities, voice, stream }) {
 	const _activities = activities.filter((activity) => activity && [0, 2, 3, 5].includes(activity?.type) && activity?.type !== 4 && activity.name && !activity.name.includes("Spotify"));
 	const filterCheck = activityCheck({ activities: _activities });
-	return BdApi.React.createElement("div", { className: "activityProfileContainer activityProfileContainerNormal" }, !stream ? BdApi.React.createElement(VoiceCard, { voice, stream }) : BdApi.React.createElement(StreamCard, { user, voice }), _activities.map((activity) => BdApi.React.createElement(ActivityCard, { user, activity, check: filterCheck })));
+	return BdApi.React.createElement("div", { className: "activityProfileContainer activityProfileContainerNormal" }, !stream ? BdApi.React.createElement(VoiceCard, { data, voice, stream }) : BdApi.React.createElement(StreamCard, { user, voice }), _activities.map((activity) => BdApi.React.createElement(ActivityCard, { user, activity, check: filterCheck })));
 }
 
 // methods/activities/headers.js
@@ -1345,10 +1345,10 @@ function VoiceBox({ users, channel, themeType }) {
 }
 
 // components/activities/cardVoice.jsx
-function VoiceCard({ voice, stream }) {
+function VoiceCard({ data, voice, stream }) {
 	const channel = useStateFromStores([ChannelStore], () => ChannelStore.getChannel(voice));
 	if (stream || !channel) return;
-	return BdApi.React.createElement("div", { className: "activityProfile activity" }, BdApi.React.createElement("div", { className: "activityProfileContainerVoice" }, BdApi.React.createElement(ActivityHeader$1, { voice }), BdApi.React.createElement("div", { className: "bodyNormal", style: { display: "flex", alignItems: "center", width: "auto" } }, BdApi.React.createElement(VoiceBox, { users: getVoiceParticipants({ voice }), channel, themeType: "MODAL" }), BdApi.React.createElement(FlexInfo, { className: "contentImagesProfile content", channel, type: "VOICE" }), BdApi.React.createElement("div", { className: "buttonsWrapper actionsProfile" }, BdApi.React.createElement(CallButtons, { channel })))));
+	return BdApi.React.createElement("div", { className: "activityProfile activity" }, BdApi.React.createElement("div", { className: "activityProfileContainerVoice" }, BdApi.React.createElement(ActivityHeader$1, { voice }), BdApi.React.createElement("div", { className: "bodyNormal", style: { display: "flex", alignItems: "center", width: "auto" } }, BdApi.React.createElement(VoiceBox, { users: getVoiceParticipants({ voice }), channel, themeType: "MODAL" }), BdApi.React.createElement(FlexInfo, { className: "contentImagesProfile content", channel, type: "VOICE" }), BdApi.React.createElement("div", { className: "buttonsWrapper actionsProfile" }, BdApi.React.createElement(CallButtons, { channel, onClose: () => data.onClose() })))));
 }
 
 // components/activities/cardStream.jsx
@@ -1400,7 +1400,7 @@ function Banner({ url }) {
 		}
 	);
 }
-function headerBuilder({ user, currentUser, displayProfile, tab, setTab, ref }) {
+function headerBuilder({ data, user, currentUser, displayProfile, tab, setTab, ref }) {
 	const tagName = user.username;
 	const displayName = user.globalName;
 	const activities = useStateFromStores([ActivityStore], () => ActivityStore.getActivities(user.id));
@@ -1432,6 +1432,7 @@ function headerBuilder({ user, currentUser, displayProfile, tab, setTab, ref }) 
 		), BdApi.React.createElement(
 			ActivityCardWrapper,
 			{
+				data,
 				user,
 				voice: voice && voice,
 				stream: stream && stream,
@@ -1474,6 +1475,7 @@ function headerBuilder({ user, currentUser, displayProfile, tab, setTab, ref }) 
 		), BdApi.React.createElement(
 			ActivityCardWrapper,
 			{
+				data,
 				user,
 				voice: voice && voice,
 				stream: stream && stream,
@@ -1510,6 +1512,7 @@ function headerBuilder({ user, currentUser, displayProfile, tab, setTab, ref }) 
 		), BdApi.React.createElement("div", { className: "activityCardsContainer", style: { overflow: "hidden auto", display: "flex", flexDirection: "column" } }, BdApi.React.createElement(
 			ActivityCardWrapper,
 			{
+				data,
 				user,
 				voice: voice && voice,
 				stream: stream && stream,
@@ -1546,6 +1549,7 @@ function headerBuilder({ user, currentUser, displayProfile, tab, setTab, ref }) 
 		), BdApi.React.createElement("div", { className: "activityCardsContainer", style: { overflow: "hidden auto", display: "flex", flexDirection: "column" } }, BdApi.React.createElement(
 			ActivityCardWrapper,
 			{
+				data,
 				user,
 				activities,
 				voice,
@@ -2022,7 +2026,7 @@ function Starter({ props, res }) {
 			"div",
 			{ className: "inner", "data-user-id": user.id, "data-is-self": user.id === currentUser.id },
 			[
-				react.createElement(headerBuilder, { props, user, currentUser, displayProfile, tab, setTab, ref }),
+				react.createElement(headerBuilder, { data, user, currentUser, displayProfile, tab, setTab, ref }),
 				react.createElement(bodyBuilder, { data, user, currentUser, displayProfile, tab, ref })
 			]
 		)

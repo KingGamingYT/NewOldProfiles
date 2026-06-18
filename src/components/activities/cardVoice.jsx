@@ -5,7 +5,7 @@ import { FlexInfo } from './common/FlexInfo';
 import { getVoiceParticipants } from '@methods/activities/getVoiceParticipants';
 import { VoiceBox } from './common/VoiceBox';
 
-export function VoiceCard({voice, stream}) {
+export function VoiceCard({data, voice, stream}) {
     const channel = useStateFromStores([ ChannelStore ], () => ChannelStore.getChannel(voice));
 
     if (stream || !channel) return;
@@ -17,7 +17,7 @@ export function VoiceCard({voice, stream}) {
                     <VoiceBox users={getVoiceParticipants({voice})} channel={channel} themeType="MODAL" />
                     <FlexInfo className="contentImagesProfile content" channel={channel} type="VOICE" />
                     <div className="buttonsWrapper actionsProfile">
-                        <CallButtons channel={channel} />
+                        <CallButtons channel={channel} onClose={() => data.onClose()} />
                     </div>
                 </div>
             </div>
