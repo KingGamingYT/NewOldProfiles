@@ -1,6 +1,8 @@
 # NewOldProfiles
 A full, largely accurate restoration of Discord's profile "modal" layout used from 2018 to 2021. Features modern additions such as banners, theme colors, and guild tags.
 
+**Note:** This plugin will always display a user's "global" profile. This means no server nicknames, server-specific pfps, decorations, colors, etc will be displayed. The only exceptions to this are the options to show the user's roles in the current server and the user's custom bio in that server, which are available as options in the plugin's settings.
+
 ## Screenshots
 ### _Standard_
 <img width="1200" height="833" alt="Discord_i8uJ4XGiNL" src="https://github.com/user-attachments/assets/530ce559-30b1-403d-b338-355c7afc5b4e" />
