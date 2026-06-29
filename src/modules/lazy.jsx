@@ -83,7 +83,7 @@ function RolePermissionHook({ guildId }) {
     return RolePermissionCheck({guildId});
 }
 function WidgetTagRenderer({ tags, widgetType, className }) {
-    TagRenderer ??= Webpack.getBySource('tag', 'isCurrentUser', 'widgetType', 'TAG_REMOVED', {declarationFilter: x => String(x).includes("isCurrentUser")});
+    TagRenderer ??= Webpack.getBySource('"EXPAND_GAME_TAGS"', {declarationFilter: x => String(x).includes('"EXPAND_GAME_TAGS"')});
 
     return <TagRenderer tags={tags} widgetType={widgetType} className={className} />
 }

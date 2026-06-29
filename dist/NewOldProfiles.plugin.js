@@ -2,7 +2,7 @@
  * @name NewOldProfiles
  * @author KingGamingYT
  * @description A full, largely accurate restoration of Discord's profile layout used from 2018 to 2021. Features modern additions such as banners, theme colors, and guild tags.
- * @version 1.2.9
+ * @version 1.3.0
  * @runAt idle
  */
 
@@ -236,7 +236,7 @@ function RolePermissionHook({ guildId }) {
 	return RolePermissionCheck({ guildId });
 }
 function WidgetTagRenderer({ tags, widgetType, className }) {
-	TagRenderer ??= betterdiscord.Webpack.getBySource("tag", "isCurrentUser", "widgetType", "TAG_REMOVED", { declarationFilter: (x) => String(x).includes("isCurrentUser") });
+	TagRenderer ??= betterdiscord.Webpack.getBySource('"EXPAND_GAME_TAGS"', { declarationFilter: (x) => String(x).includes('"EXPAND_GAME_TAGS"') });
 	return BdApi.React.createElement(TagRenderer, { tags, widgetType, className });
 }
 function MutualFriendRenderer({ user, status: status2, guildId, onSelect }) {
@@ -327,6 +327,7 @@ const locale = {
 		ACCEPT: () => getIntlString("MMlhsr"),
 		BOARD: () => getIntlString("laViwx"),
 		BOT: () => getIntlString("AOdOYr"),
+		BY_ARTISTS: ({ artistsHook, artists }) => getIntlString("uU9le8", { artistsHook, artists }),
 		COMPETING_IN: (name) => getIntlString("QQ2wVE", name),
 		CONNECT_ACCOUNT: () => getIntlString("sbdnpw"),
 		CREATED_ON: () => getIntlString("A//N4k"),
@@ -352,6 +353,7 @@ const locale = {
 		NO_FRIENDS_IN_COMMON: () => getIntlString("/5p4gx"),
 		NO_SERVERS_IN_COMMON: () => getIntlString("zjVh8h"),
 		NOTE: () => getIntlString("PbMNh2"),
+		ON_ALBUM: ({ albumHook, album }) => getIntlString("vOLBEy", { albumHook, album }),
 		PLAY: () => getIntlString("RscU7I"),
 		PLAY_ON_SPOTIFY: () => getIntlString("rRffNz"),
 		PLAYING: () => getIntlString("BMTj28"),
@@ -860,7 +862,7 @@ function ActivityType({ type, filterCheck, activity, inventoryEntry, voice, chan
 		case "TWITCH":
 			return BdApi.React.createElement(BdApi.React.Fragment, null, activity.state && BdApi.React.createElement("div", { className: "state textRow ellipsis" }, `${locale.Strings.PLAYING()} ${activity.state}`));
 		case "SPOTIFY":
-			return BdApi.React.createElement(BdApi.React.Fragment, null, activity.state && BdApi.React.createElement("div", { className: "details textRow ellipsis" }, `by ${activity.state}`), activity.assets?.large_text && BdApi.React.createElement("div", { className: "state textRow ellipsis" }, `on ${activity.assets?.large_text}`), activity?.timestamps?.end ? BdApi.React.createElement("div", { className: "mediaProgressBarContainer" }, BdApi.React.createElement(MediaProgressBar, { start: activity?.timestamps?.start, end: activity?.timestamps?.end })) : BdApi.React.createElement(ActivityTimer, { activity }));
+			return BdApi.React.createElement(BdApi.React.Fragment, null, activity.state && BdApi.React.createElement("div", { className: "details textRow ellipsis" }, locale.Strings.BY_ARTISTS({ artists: activity.state, artistsHook: () => activity.state })), activity.assets?.large_text && BdApi.React.createElement("div", { className: "state textRow ellipsis" }, locale.Strings.ON_ALBUM({ album: activity.assets?.large_text, albumHook: () => activity.assets?.large_text })), activity?.timestamps?.end ? BdApi.React.createElement("div", { className: "mediaProgressBarContainer" }, BdApi.React.createElement(MediaProgressBar, { start: activity?.timestamps?.start, end: activity?.timestamps?.end })) : BdApi.React.createElement(ActivityTimer, { activity }));
 		case "VOICE":
 			return BdApi.React.createElement(BdApi.React.Fragment, null, guildChannel?.name && BdApi.React.createElement("div", { className: "state textRow ellipsis" }, locale.Strings.IN_CHANNEL({ channelName: guildChannel?.name })));
 		case "STREAM":
@@ -1623,7 +1625,7 @@ function FallbackCover(game) {
 
 // components/builders/widgets/common/widgetCard.jsx
 function WidgetCardDetails({ widget, game, index, type, user }) {
-	return BdApi.React.createElement("div", { className: "widgetDetails" }, BdApi.React.createElement("h3", { className: "widgetTitle" }, game?.name || "Unknown Game"), type.includes("CURRENT") && widget.games[index].tags && BdApi.React.createElement(WidgetTagRenderer, { tags: widget.games[index].tags, widgetType: widget.type, className: "tagListContainer" }), type.includes("FAVORITE") && widget.games[0].comment && BdApi.React.createElement("div", { role: "group" }, BdApi.React.createElement(
+	return BdApi.React.createElement("div", { className: "widgetDetails" }, BdApi.React.createElement("h3", { className: "widgetTitle" }, game?.name || "Unknown Game"), type.includes("FAVORITE") && widget.games[index].comment && BdApi.React.createElement("div", { role: "group" }, BdApi.React.createElement(
 		"svg",
 		{
 			className: "commentIcon",
@@ -1640,7 +1642,7 @@ function WidgetCardDetails({ widget, game, index, type, user }) {
 				d: "M2.35 19.44A4.75 4.75 0 0 0 6.07 21c1.43 0 2.58-.43 3.44-1.3.9-.9 1.35-2.06 1.35-3.5 0-1.43-.43-2.58-1.3-3.45a4.63 4.63 0 0 0-3.5-1.34c.6-1.6 1.99-3.1 4.16-4.49a.8.8 0 0 0 .1-1.3l-2.68-2.2a.76.76 0 0 0-.98 0C2.89 6.78 1 10.64 1 15.02c0 1.9.45 3.38 1.35 4.42ZM14.16 19.44A4.75 4.75 0 0 0 17.88 21c1.43 0 2.58-.43 3.45-1.3.9-.9 1.34-2.06 1.34-3.5 0-1.43-.43-2.58-1.3-3.45a4.63 4.63 0 0 0-3.5-1.34c.6-1.6 1.99-3.1 4.16-4.49a.8.8 0 0 0 .1-1.3l-2.68-2.2a.76.76 0 0 0-.98 0c-3.77 3.36-5.66 7.22-5.66 11.6 0 1.9.45 3.38 1.35 4.42Z"
 			}
 		)
-	), BdApi.React.createElement("div", { className: "widgetTitle widgetSubtitle", style: { color: "var(--text-tertiary, var(--text-muted))", fontWeight: 400 } }, widget.games[0].comment)));
+	), BdApi.React.createElement("div", { className: "widgetTitle widgetSubtitle", style: { color: "var(--text-tertiary, var(--text-muted))", fontWeight: 400 } }, widget.games[0].comment)), type && widget.games[index].tags && BdApi.React.createElement(WidgetTagRenderer, { tags: widget.games[index].tags, widgetType: widget.type, className: "tagListContainer" }));
 }
 function WidgetCard({ widget, game, user, image, imageURL, index, loading, ref, type }) {
 	return BdApi.React.createElement("div", { className: "widgetCard", ref }, BdApi.React.createElement(TooltipBuilder, { note: game?.name }, loading ? BdApi.React.createElement(FallbackCover, { game }) : BdApi.React.createElement(GameCover, { game, image, imageURL })), BdApi.React.createElement(WidgetCardDetails, { widget, game, user, index, type }));
@@ -1668,7 +1670,7 @@ function FavoriteWidgetBuilder({ widget, game, user }) {
 			delete image.onload;
 		};
 	}, [imageURL]);
-	return BdApi.React.createElement(WidgetCard, { widget, game, user, image, imageURL, loading, ref, type: "FAVORITE" });
+	return BdApi.React.createElement(WidgetCard, { widget, game, user, image, imageURL, index: 0, loading, ref, type: "FAVORITE" });
 }
 
 // components/builders/widgets/widgetShelf.jsx

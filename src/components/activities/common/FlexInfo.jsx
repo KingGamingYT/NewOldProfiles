@@ -56,8 +56,8 @@ function ActivityType({ type, filterCheck, activity, inventoryEntry, voice, chan
         )
         case "SPOTIFY": return (
             <>
-                {activity.state && <div className="details textRow ellipsis">{`by ${activity.state}`}</div>}
-                {activity.assets?.large_text && <div className="state textRow ellipsis">{`on ${activity.assets?.large_text}`}</div>}
+                {activity.state && <div className="details textRow ellipsis">{locale.Strings.BY_ARTISTS({artists: activity.state, artistsHook: () => activity.state})}</div>}
+                {activity.assets?.large_text && <div className="state textRow ellipsis">{locale.Strings.ON_ALBUM({album: activity.assets?.large_text, albumHook: () => activity.assets?.large_text})}</div>}
                 {
                     activity?.timestamps?.end ? <div className="mediaProgressBarContainer">
                         <MediaProgressBar start={activity?.timestamps?.start} end={activity?.timestamps?.end} />

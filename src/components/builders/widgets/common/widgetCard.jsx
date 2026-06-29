@@ -7,8 +7,7 @@ function WidgetCardDetails({widget, game, index, type, user}) {
     return (
         <div className="widgetDetails">
             <h3 className="widgetTitle">{game?.name || "Unknown Game"}</h3>
-            { type.includes("CURRENT") && widget.games[index].tags && <WidgetTagRenderer tags={widget.games[index].tags} widgetType={widget.type} className={"tagListContainer"} />}
-            { type.includes("FAVORITE") && widget.games[0].comment && <div role="group">
+            {type.includes("FAVORITE") && widget.games[index].comment && <div role="group">
                 <svg
                     className="commentIcon"
                     role="img"
@@ -23,6 +22,7 @@ function WidgetCardDetails({widget, game, index, type, user}) {
                 </svg>
                 <div className="widgetTitle widgetSubtitle" style={{ color: "var(--text-tertiary, var(--text-muted))", fontWeight: 400 }}>{widget.games[0].comment}</div>
             </div>}
+            {type && widget.games[index].tags && <WidgetTagRenderer tags={widget.games[index].tags} widgetType={widget.type} className={"tagListContainer"} />}
         </div>
     )
 }

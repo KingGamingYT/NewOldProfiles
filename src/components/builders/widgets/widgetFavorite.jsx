@@ -33,6 +33,6 @@ export function FavoriteWidgetBuilder({ widget, game, user }) {
     }, [imageURL]);
 
     return (
-        <WidgetCard widget={widget} game={game} user={user} image={image} imageURL={imageURL} loading={loading} ref={ref} type="FAVORITE" />
+        <WidgetCard widget={widget} game={game} user={user} image={image} imageURL={imageURL} index={0} loading={loading} ref={ref} type="FAVORITE" />
     )
 }
