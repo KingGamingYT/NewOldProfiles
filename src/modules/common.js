@@ -4,30 +4,30 @@ import { lazy } from "react";
 export const [
     entireProfileModal,
     ModalAccessUtils,
-    ModalRoot, 
+    ModalRoot,
     intl,
     ButtonClasses,
     ActivityActions,
     ActivityCardClasses,
     AnchorClasses,
-    FetchApplications, 
-    IconUtils, 
+    FetchApplications,
+    IconUtils,
     Avatar,
-    AvatarFetch, 
-    EmojiRenderer, 
-    ActivityTimer, 
-    MediaProgressBar, 
-    ActivityButtons, 
-    SpotifyButtons, 
-    CallButtons, 
-    VoiceList, 
-    VoiceIcon, 
-    TagGuildRenderer, 
-    RoleUpdater, 
-    BotTagRenderer, 
+    AvatarFetch,
+    EmojiRenderer,
+    ActivityTimer,
+    MediaProgressBar,
+    ActivityButtons$1,
+    SpotifyButtons$1,
+    CallButtons,
+    VoiceList,
+    VoiceIcon,
+    TagGuildRenderer,
+    RoleUpdater,
+    BotTagRenderer,
     Tooltip,
     OrbTooltip,
-    Popout, 
+    Popout,
     FormSwitch,
     ProfileFetch,
     OpenSpotifyAlbumFromStatus,
@@ -70,7 +70,7 @@ export const [
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('guildId', 'name', 'setPopoutRef', 'onClose', 'fetchGuildProfile') },
     { filter: /* @__PURE__ */ x=>x.updateMemberRoles },
     { filter: /* @__PURE__ */ Webpack.Filters.bySource("BOT", "invertColor") },
-    { filter: /* @__PURE__ */ Webpack.Filters.byPrototypeKeys(("renderTooltip")), searchExports: true  },
+    { filter: /* @__PURE__ */ Webpack.Filters.byPrototypeKeys(("renderTooltip")), searchExports: true },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('showSubtext', 'caretConfig'), searchExports: true },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings("Unsupported animation config:"), searchExports: true },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('hasIcon', 'switchIconsEnabled'), searchExports: true },
@@ -91,23 +91,26 @@ export const [
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('delay', 'lineClamp') },
     { filter: /* @__PURE__ */ Webpack.Filters.bySource('always-white', 'lineClamp', 'tabularNumbers', '?.css') },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('warn', 'preview', 'messageType'), searchExports: true }
-)
+);
 
 export const NavigationUtils = /* @__PURE__ */ Webpack.getMangled("transitionTo - Transitioning to", {
-    transitionTo: /* @__PURE__ */ Webpack.Filters.byStrings("transitionTo - Transitioning to "),
-    replace: /* @__PURE__ */ Webpack.Filters.byStrings("Replacing route with"),
-    goBack: /* @__PURE__ */ Webpack.Filters.byStrings(".goBack()"),
-    goForward: /* @__PURE__ */ Webpack.Filters.byStrings(".goForward()"),
-    transitionToGuild: /* @__PURE__ */ Webpack.Filters.byStrings("transitionToGuild - Transitioning to")
+  transitionTo: /* @__PURE__ */ Webpack.Filters.byStrings("transitionTo - Transitioning to "),
+  replace: /* @__PURE__ */ Webpack.Filters.byStrings("Replacing route with"),
+  goBack: /* @__PURE__ */ Webpack.Filters.byStrings(".goBack()"),
+  goForward: /* @__PURE__ */ Webpack.Filters.byStrings(".goForward()"),
+  transitionToGuild: /* @__PURE__ */ Webpack.Filters.byStrings("transitionToGuild - Transitioning to")
 });
-export const ModalSystem = Webpack.getMangled(".modalKey?", {
-    openModalLazy: Webpack.Filters.byStrings(".modalKey?"),
-    openModal: Webpack.Filters.byStrings(",instant:"),
-    closeModal: Webpack.Filters.byStrings(".onCloseCallback()"),
-    closeAllModals: Webpack.Filters.byStrings(".getState();for")
+
+export const ModalSystem$1 = /* @__PURE__ */ Webpack.getMangled(".modalKey?", {
+  openModalLazy: /* @__PURE__ */ Webpack.Filters.byStrings(".modalKey?"),
+  openModal: /* @__PURE__ */ Webpack.Filters.byStrings(",instant:"),
+  closeModal: /* @__PURE__ */ Webpack.Filters.byStrings(".onCloseCallback()"),
+  closeAllModals: /* @__PURE__ */ Webpack.Filters.byStrings(".getState();for")
 });
-export const MessageButtons = Webpack.getMangled('.zROXEV', {
-    Button: Webpack.Filters.not(Webpack.Filters.byStrings("aria-label")),
-    ButtonWithTooltip: Webpack.Filters.byStrings("tooltipText")
-})
+
+Webpack.getMangled(".zROXEV", {
+  Button: /* @__PURE__ */ Webpack.Filters.not(Webpack.Filters.byStrings("aria-label")),
+  ButtonWithTooltip: /* @__PURE__ */ Webpack.Filters.byStrings("tooltipText")
+});
+
 export const RoleRenderer = lazy(async () => ({ default: (await Webpack.waitForModule(Webpack.Filters.byStrings('roles', 'guild', 'canRemoveAnyRoles', 'map(e'), {searchExports: true} ))}));
