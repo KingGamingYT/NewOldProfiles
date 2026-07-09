@@ -666,6 +666,7 @@ let CSS = webpackify(
             &> div {
                 display: grid;
                 grid-template-areas: "progressbar progressbar" "lefttext righttext";
+                gap: 4px;
             }
             .bar {
                 background-color: rgba(79,84,92,.16);
@@ -673,7 +674,8 @@ let CSS = webpackify(
                 grid-area: progressbar;
             }
             [data-text-variant="text-xs\/normal"] {
-                color: var(--white) !important;
+                color: hsla(0, 0%, 100%, .8) !important;
+                font-size: 12px !important;
                 grid-area: lefttext;
             }
             [data-text-variant="text-xs\/normal"]:last-child {

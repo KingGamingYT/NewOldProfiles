@@ -1,7 +1,7 @@
 import { Utils } from 'betterdiscord';
 import { useState, useEffect } from 'react';
 import { locale } from '@common/locale';
-import { RestAPI, Dispatcher, Endpoints } from '@modules/common';
+import { RestAPI, Dispatcher, Endpoints, CustomWidgetCard } from '@modules/common';
 import { ApplicationStore, useStateFromStores } from '@modules/stores'; 
 import { BoardBuilder } from '@components/builders/tabs/common/infoSections';
 
@@ -23,7 +23,7 @@ export function WidgetBuilder({ widget, user }) {
 
     useEffect(() => {
         (async () => {
-            if (isLoaded) return;
+            if (isLoaded || !gameIds.length) return;
             const urlSearch = new URLSearchParams(gameIds.map(x => ["application_ids", x])).toString();
             const applicationPublic = await RestAPI.get({ url: Endpoints.APPLICATIONS_PUBLIC, query: urlSearch });
 
@@ -37,5 +37,8 @@ export function WidgetBuilder({ widget, user }) {
         })()
     }, [gameIds]);
 
-    return <BoardBuilder widget={widget} header={header} games={games} user={user} />
+    return widget.type === "application" ? <div className="userInfoSection">
+        <CustomWidgetCard index={0} user={user} widget={widget} key={`application-${widget.applicationId}`} /> 
+    </div>
+    : <BoardBuilder widget={widget} header={header} games={games} user={user} />
 }
