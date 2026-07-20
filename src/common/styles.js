@@ -135,6 +135,9 @@ let CSS = webpackify(
         max-width: 80px;
         overflow: hidden;
     }
+    .inner .clanTagContainer:only-child {
+        margin-top: 4px;
+    }
     .inner .clanTag {
         align-items: center;
         background: rgba(0,0,0,0.2);

@@ -1,11 +1,12 @@
 import { Data } from 'betterdiscord';
-import { StreamerModeStore } from '@modules/stores';
-import { PronounsBuilder, BioBuilder, RoleBuilder, MemberDateBuilder, NoteBuilder, BoardButtonBuilder, ConnectionCards, PrivateProfileNotice } from './common/infoSections';
+import { RelationshipStore, StreamerModeStore } from '@modules/stores';
+import { PronounsBuilder, BioBuilder, RoleBuilder, MemberDateBuilder, FriendsSince, NoteBuilder, BoardButtonBuilder, ConnectionCards, PrivateProfileNotice, FailedToLoadProfileNotice } from './common/infoSections';
 import { StreamerModeView } from './common/streamerModeView';
 import { Scroller } from './common/scroller';
 
 export function AboutTab({ data, user, currentUser, displayProfile }) {
     const connections = displayProfile._userProfile.connectedAccounts;
+    const relationship = RelationshipStore.getRelationshipType(user.id);
     if (StreamerModeStore.hidePersonalInformation) {
         return (
             <Scroller type="INFO">
@@ -15,11 +16,13 @@ export function AboutTab({ data, user, currentUser, displayProfile }) {
     }
     return (
         <Scroller type="INFO" padding={12}>
+            {displayProfile._userProfile?.fetchError && <FailedToLoadProfileNotice />}
             {displayProfile?.private && <PrivateProfileNotice username={user.globalName || user.username} />}
             {displayProfile?.pronouns && <PronounsBuilder displayProfile={displayProfile} />}
             <BioBuilder displayProfile={displayProfile} />
             <RoleBuilder user={user} data={data} displayProfile={displayProfile} />
             <MemberDateBuilder data={data} user={user} />
+            {[1, 4].includes(relationship) && <FriendsSince user={user} />}
             <NoteBuilder user={user} />
             {Data.load('boardTab') && user.id === currentUser.id && <BoardButtonBuilder user={user} />}
             <ConnectionCards user={user} connections={connections} />

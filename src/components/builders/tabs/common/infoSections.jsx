@@ -1,7 +1,7 @@
 import { Data, Utils } from 'betterdiscord';
 import { useState } from 'react';
 import { IconUtils, ButtonClasses, ModalRoot, ModalSystem, RoleRenderer, RoleUpdater, Card, intl } from '@modules/common';
-import { GuildMemberStore, GuildRoleStore, GuildStore } from '@modules/stores';
+import { GuildMemberStore, GuildRoleStore, GuildStore, RelationshipStore } from '@modules/stores';
 import { ConnectionComponent, MarkdownComponent, NoteComponent, BoardEditRenderer, RolePermissionHook } from '@modules/lazy';
 import { locale } from '@common/locale';
 import { FavoriteWidgetBuilder, ShelfWidgetBuilder, CurrentWidgetBuilder } from '@components/builders/widgets/index';
@@ -132,6 +132,23 @@ export function MemberDateBuilder({ data, user }) {
     )
 }
 
+export function FriendsSince({ user }) {
+    const friendSinceDate = RelationshipStore.getSince(user.id);
+
+    return (
+        <div className="userInfoSection">
+            <SectionHeader>{locale.Strings.FRIENDS_SINCE()}</SectionHeader>
+            <div 
+                className="friendsSince" 
+                style={{ color: "var(--text-default)" }}>
+                    {
+                        intl.intl.data.formatDate(new Date(friendSinceDate), {dateStyle: "medium"})
+                    }
+            </div>
+        </div>
+    )
+}
+
 export function NoteBuilder({ user }) {
     return (
         <div className="userInfoSection">
@@ -191,6 +208,16 @@ export function PrivateProfileNotice({ username }) {
         <div className="userInfoSection">
             <Card messageType="info" key="info">
                 {locale.Strings.PRIVATE_PROFILE_WARNING({username})}
+            </Card>
+        </div>
+    )
+}
+
+export function FailedToLoadProfileNotice({}) {
+    return (
+        <div className="userInfoSection">
+            <Card messageType="warn" key="warn">
+                {locale.Strings.USER_PROFILE_LOAD_ERROR()}
             </Card>
         </div>
     )

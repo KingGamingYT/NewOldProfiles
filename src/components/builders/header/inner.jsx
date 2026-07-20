@@ -184,6 +184,7 @@ function DiscordTag({ user, displayProfile, tagName, displayName }) {
 
 export function HeaderInnerBuilder({ user, currentUser, displayProfile, tagName, displayName }) {
     const relationship = RelationshipStore.getRelationshipType(user.id);
+    const badges = displayProfile._userProfile.badges;
 
     return (
         <header className="header">
@@ -194,8 +195,12 @@ export function HeaderInnerBuilder({ user, currentUser, displayProfile, tagName,
                     user.primaryGuild?.tag && Data.load('showGuildTag') ? 
                     <div className="badgeSection" style={{ display: "flex", flexWrap: "wrap", alignItems: "center" }}>
                         <ClanTagBuilder user={user} />
-                        {displayProfile._userProfile.badges && displayProfile._userProfile.badges.length !== 0 && <div className="divider" style={{ margin: "0 5px 0 5px" }} />}
-                        <BadgesBuilder badges={displayProfile._userProfile.badges} style={{ display: "contents" }} id={user.id} />
+                        {badges && badges.length !== 0 && 
+                            <>
+                                <div className="divider" style={{ margin: "0 5px 0 5px" }} />
+                                <BadgesBuilder badges={displayProfile._userProfile.badges} style={{ display: "contents" }} id={user.id} />
+                            </>
+                        }
                     </div>
                     : <BadgesBuilder badges={displayProfile._userProfile.badges} style={{ display: "flex", flexWrap: "wrap" }} id={user.id} />
                 }
