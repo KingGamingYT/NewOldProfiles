@@ -185,7 +185,7 @@ function DiscordTag({ user, displayProfile, tagName, displayName }) {
 export function HeaderInnerBuilder({ user, currentUser, displayProfile, tagName, displayName }) {
     const relationship = RelationshipStore.getRelationshipType(user.id);
     const badges = displayProfile._userProfile.badges;
-    const Timezone = Plugins.get("Timezones")?.instance?.getTimezoneComp({user});
+    const Timezone = Plugins.get("Timezones")?.instance?.getTimezoneComp?.({user});
 
     return (
         <header className="header">
