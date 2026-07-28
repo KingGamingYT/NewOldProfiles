@@ -1187,6 +1187,12 @@ let CSS = webpackify(
     .settingsContainer > div {
         padding-bottom: 10px;
     }
+
+    /* Timezones Plugin */
+    .tz-banner {
+        left: 85% !important;
+        right: 10px;
+    }
     `
 )
 let profileCSS = webpackify(CSS);

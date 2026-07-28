@@ -1,4 +1,4 @@
-import { Data, Utils } from 'betterdiscord';
+import { Data, Plugins, Utils } from 'betterdiscord';
 import { useState, useRef } from 'react';
 import { AccessibilityStore, ActivityStore, RelationshipStore, StreamStore, StreamerModeStore, VoiceStateStore, useStateFromStores } from '@modules/stores';
 import { AnchorClasses, Avatar, AvatarFetch, BotTagRenderer, DisplayNameStyleConfigurator, NavigationUtils, OrbTooltip, OpenUserSettings, Popout, PopUtils, TagGuildRenderer } from '@modules/common';
@@ -185,6 +185,7 @@ function DiscordTag({ user, displayProfile, tagName, displayName }) {
 export function HeaderInnerBuilder({ user, currentUser, displayProfile, tagName, displayName }) {
     const relationship = RelationshipStore.getRelationshipType(user.id);
     const badges = displayProfile._userProfile.badges;
+    const Timezone = Plugins.get("Timezones")?.instance?.getTimezoneComp({user});
 
     return (
         <header className="header">
@@ -208,6 +209,7 @@ export function HeaderInnerBuilder({ user, currentUser, displayProfile, tagName,
             <div className="profileButtons">
                 <HeaderButtonBuilder currentUser={currentUser} relationshipType={relationship} user={user} />
             </div>
+            {Plugins.get("Timezones") && Plugins.isEnabled("Timezones") && Timezone}
         </header>
     )
 }
