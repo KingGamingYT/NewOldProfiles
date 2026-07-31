@@ -1,4 +1,4 @@
-import { Data, Patcher, DOM, Utils, Components, Webpack } from "betterdiscord";
+import { Data, Patcher, DOM, Utils, ReactUtils, Components, Webpack } from "betterdiscord";
 import { entireProfileModal, FormSwitch, ModalSystem, ModalRoot, ProfileFetch, ProfileModalEntrypoint } from "@modules/common";
 import { UserProfileStore, UserStore } from '@modules/stores';
 import { BoardEditRenderer } from "@modules/lazy";
@@ -60,6 +60,7 @@ function Starter({props, res}) {
 export default class NewOldProfiles {
     constructor(meta){}
     async start() {
+        const patcher = ReactUtils.createNodePatcher();
         addProfileCSS();
         Patcher.after(entireProfileModal.A, "render", (that, [props], res) => {
             if (!props.themeType?.includes("MODAL")) return;
@@ -70,11 +71,13 @@ export default class NewOldProfiles {
             }
             res.props.children = createElement(Starter, {props, res})
         })
-        Patcher.after(await Webpack.waitForModule(Webpack.Filters.bySource('initialGuildId', '"retrying"')), "A", (that, [props], res) => {
-            const button = Utils.findInTree(res, (tree) => tree && Object.hasOwn(tree, 'parentComponent'), { walkable: ['props', 'children'] })
-            const layoutContainer = button.children[0].props.children.props;
-            useEffect(() => {layoutContainer.children[1].props.children[0]?.props?.children[0]?.props?.onClose()}, []);
-            layoutContainer.children[0].props.children[0] = undefined;
+        Patcher.after(await Webpack.waitForModule(Webpack.Filters.bySource('originGuildId', '"retrying"')), "A", (that, [props], res) => {
+            patcher.patch(res.props.children, (props, res) => {
+                const button = Utils.findInTree(res, (tree) => tree && Object.hasOwn(tree, 'parentComponent'), { walkable: ['props', 'children'] });
+                const layoutContainer = button.children[0].props.children.props;
+                useEffect(() => {layoutContainer.children[1].props.children[0]?.props?.children[0]?.props?.onClose()}, []);
+                layoutContainer.children[0].props.children[0] = undefined;
+            })
         })
     }
     stop() {

@@ -1189,7 +1189,7 @@ let CSS = webpackify(
     }
 
     /* Timezones Plugin */
-    .tz-banner {
+    .inner .tz-banner {
         left: 85% !important;
         right: 10px;
     }

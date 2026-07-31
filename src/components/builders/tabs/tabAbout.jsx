@@ -22,7 +22,7 @@ export function AboutTab({ data, user, currentUser, displayProfile }) {
             <BioBuilder displayProfile={displayProfile} />
             <RoleBuilder user={user} data={data} displayProfile={displayProfile} />
             <MemberDateBuilder data={data} user={user} />
-            {[1, 4].includes(relationship) && <FriendsSince user={user} />}
+            {relationship === 1 && <FriendsSince user={user} />}
             <NoteBuilder user={user} />
             {Data.load('boardTab') && user.id === currentUser.id && <BoardButtonBuilder user={user} />}
             <ConnectionCards user={user} connections={connections} />
