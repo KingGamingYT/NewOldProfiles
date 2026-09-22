@@ -1,10 +1,11 @@
 import { Data, Plugins, Utils } from 'betterdiscord';
 import { useState, useRef } from 'react';
 import { AccessibilityStore, ActivityStore, RelationshipStore, StreamStore, StreamerModeStore, VoiceStateStore, useStateFromStores } from '@modules/stores';
-import { AnchorClasses, Avatar, AvatarFetch, BotTagRenderer, DisplayNameStyleConfigurator, NavigationUtils, OrbTooltip, OpenUserSettings, Popout, PopUtils, TagGuildRenderer } from '@modules/common';
-import { EditProfileButtonComponent, FriendAddButtonComponent, FriendsButtonComponent, MessageButtonLargeComponent, MessageButtonSmallComponent, MoreOverflowButtonComponent, BotAddButtonComponent } from '@modules/lazy'
+import { AnchorClasses, Avatar, BotTagRenderer, DisplayNameStyleConfigurator, NavigationUtils, OpenUserSettings, Popout, PopUtils, TagGuildRenderer } from '@modules/common';
+import { FriendAddButtonComponent, FriendsButtonComponent, MessageButtonLargeComponent, MessageButtonSmallComponent, MoreOverflowButtonComponent, BotAddButtonComponent } from '@modules/lazy'
 import { TooltipBuilder } from '@components/common/TooltipBuilder';
 import { AcceptButton, BlockedPopoutButton, IgnoreButton } from './customButtons';
+import { EditProfileButton } from '@components/editing/editProfileButton';
 
 function BadgeInner({ badge, index, id }) {
     const activities = useStateFromStores([ActivityStore], () => ActivityStore.getActivities(id)).filter(activity => activity && !([4, 6].includes(activity?.type)));
@@ -32,6 +33,7 @@ function BadgeInner({ badge, index, id }) {
                 <div
                     className={Utils.className(((activities.length !== 0 || voice || stream) && !Data.load('disableRichBadges')) && "richBadge", "profileBadge", `profileBadge${badge.id.replaceAll(/(?:^|_)(\w)/g, (_, m) => m.toUpperCase())}`)}
                     style={{backgroundImage: (badge.iconSrc && `url(${badge.iconSrc})`) ?? undefined}}
+                    icon={badge.icon && badge.icon}
                 />
             </a>
     )
@@ -105,7 +107,7 @@ function HeaderButtonBuilder({ currentUser, relationshipType, user }) {
     if (user.id === currentUser.id) {
         return (
             <>
-                <EditProfileButtonComponent user={user} />
+                <EditProfileButton />
                 <MoreOverflowButtonComponent user={user} />
             </>
         )
@@ -190,7 +192,7 @@ export function HeaderInnerBuilder({ user, currentUser, displayProfile, tagName,
 
     return (
         <header className="header">
-            <Avatar className="avatar" user={user} themeType={"POPOUT"} />
+            <Avatar className="avatar" user={user} displayProfile={displayProfile} avatarSize={"SIZE_80"} />
             <div className="headerInfo">
                 <DiscordTag user={user} displayProfile={displayProfile} tagName={tagName} displayName={displayName} />
                 {

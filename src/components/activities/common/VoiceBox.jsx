@@ -1,5 +1,5 @@
 import { Webpack } from "betterdiscord";
-import { Clamp, ClampedText } from "@modules/common";
+import { Text, ClampedText } from "@modules/common";
 import { TooltipBuilder } from '@components/common/TooltipBuilder';
 
 const BoxClasses = Webpack.getByKeys("overflowCount", "circle");
@@ -68,9 +68,9 @@ export function VoiceBox({users, channel, themeType}) {
                 return (
                     !user ? null : <div className={BoxClasses.circle} style={pos}>{
                         (isOverflown && index === (overflowCount >= 10 ? 3 : 1)) ? <div className={BoxClasses.overflowCount}>
-                            <Clamp.E variant={"text-xxs/semibold"} lineClamp={1}>
+                            <Text variant={"text-xxs/semibold"} lineClamp={1}>
                                 <ClampedText>{overflowCount > 99 ? ">99" : `+${overflowCount}`}</ClampedText>
-                            </Clamp.E>
+                            </Text>
                         </div> : <TooltipBuilder note={user.globalName || user.username}>
                             <img className={BoxClasses.avatar} src={user.getAvatarURL(channel.guild_id, "SIZE_80")} alt=""></img>
                         </TooltipBuilder>

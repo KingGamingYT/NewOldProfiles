@@ -1,17 +1,15 @@
 import { Webpack } from 'betterdiscord';
-import { PopUtils, MessageButtons } from '@modules/common';
+import { PopUtils } from '@modules/common';
 
 let MessageButtonLarge;
 let MessageButtonSmall;
 let FriendsButton;
 let MoreOverflowButton;
 let FriendAddButton;
-let EditProfileButton;
 let BotAddButton;
 let MarkdownFormat;
 let NoteRenderer;
 let ConnectionRenderer;
-let BotDataRenderer;
 let Board;
 let RolePermissionCheck;
 let TagRenderer;
@@ -46,11 +44,6 @@ function FriendAddButtonComponent({ autoFocus, userId, variant }) {
     });
 
     return <FriendAddButton.AddFriend autoFocus={autoFocus} userId={userId} variant={variant} />
-}
-function EditProfileButtonComponent({ user }) {
-    EditProfileButton ??= Webpack.getByStrings('trackUserProfileAction', 'EDIT_PROFILE', { searchExports: true });
-
-    return <EditProfileButton user={user} />
 }
 function BotAddButtonComponent({ user }) {
     BotAddButton ??= Webpack.getByStrings('"user-bot-profile-add-app"');
@@ -105,7 +98,6 @@ export {
     FriendsButtonComponent,
     MoreOverflowButtonComponent,
     FriendAddButtonComponent,
-    EditProfileButtonComponent,
     BotAddButtonComponent,
     MarkdownComponent,
     NoteComponent,

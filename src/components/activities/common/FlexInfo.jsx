@@ -33,10 +33,10 @@ function ActivityType({ type, filterCheck, activity, inventoryEntry, voice, chan
                 {!(filterCheck?.listening || filterCheck?.watching) && <div className="details textRow ellipsis">{activity.details}</div>}
                 <div className="state textRow ellipsis">{
                     activity?.state && activity?.party && activity?.party?.size ?
-                        `${activity.state} (${activity.party.size[0]} of ${activity.party.size[1]})`
+                        activity.party.size[1] !== 0 ? `${activity.state} (${activity.party.size[0]} of ${activity.party.size[1]})` : `${activity.state} (${activity.party.size[0]})`
                         :
                         activity?.party && activity?.party?.size ?
-                            `Party: (${activity.party.size[0]} of ${activity.party.size[1]})`
+                            activity.party.size[1] !== 0 ? `Party: (${activity.party.size[0]} of ${activity.party.size[1]})` : `Party: (${activity.party.size[0]})`
                             :
                             activity.state
                 }

@@ -10,6 +10,7 @@ export const NewGameStore = /* @__PURE__ */ Webpack.getStore("NewGameStore");
 export const GuildStore = /* @__PURE__ */ Webpack.getStore("GuildStore");
 export const StreamStore = /* @__PURE__ */ Webpack.getStore('ApplicationStreamingStore');
 export const UserProfileStore = /* @__PURE__ */ Webpack.getStore('UserProfileStore');
+export const UserProfileSettingsStore = /* @__PURE__ */ Webpack.getStore('UserProfileSettingsStore');
 export const ApplicationStore = /* @__PURE__ */ Webpack.getStore('ApplicationStore');
 export const ApplicationStreamPreviewStore = /* @__PURE__ */ Webpack.getStore('ApplicationStreamPreviewStore');
 export const VoiceStateStore = /* @__PURE__ */ Webpack.getStore('VoiceStateStore');

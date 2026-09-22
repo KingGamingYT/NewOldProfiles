@@ -1,6 +1,6 @@
 import { Data, Patcher, DOM, Utils, ReactUtils, Components, Webpack } from "betterdiscord";
-import { entireProfileModal, FormSwitch, ModalSystem, ModalRoot, ProfileFetch, ProfileModalEntrypoint } from "@modules/common";
-import { UserProfileStore, UserStore } from '@modules/stores';
+import { entireProfileModal, FormSwitch, ModalSystem, ModalRoot, ProfileFetch, LayerSurfaceModule } from "@modules/common";
+import { UserProfileStore, UserProfileSettingsStore, UserStore, useStateFromStores } from '@modules/stores';
 import { BoardEditRenderer } from "@modules/lazy";
 import { settings } from "@common/settings";
 import { createElement, useState, useRef, useEffect } from "react";
@@ -8,6 +8,7 @@ import { locale } from "@common/locale";
 import { tabs } from "@common/tabs";
 import { headerBuilder } from '@components/builders/header/builder';
 import { bodyBuilder } from '@components/builders/bodyBase';
+import { ProfileEditingModal } from "@components/editing/editProfileModal";
 import { addProfileCSS } from "@common/styles";
 
 function Starter({props, res}) {
@@ -69,8 +70,8 @@ export default class NewOldProfiles {
             if (!Utils.findInTree(props, (tree) => { return tree && Object.hasOwn(tree, 'currentUser'), { walkable: ['props', 'children'] }})) {
                 return res.props.children;
             }
-            res.props.children = createElement(Starter, {props, res})
-        })
+            res.props.children = createElement(Starter, {props, res})      
+        });
         Patcher.after(await Webpack.waitForModule(Webpack.Filters.bySource('originGuildId', '"retrying"')), "A", (that, [props], res) => {
             patcher.patch(res.props.children, (props, res) => {
                 const button = Utils.findInTree(res, (tree) => tree && Object.hasOwn(tree, 'parentComponent'), { walkable: ['props', 'children'] });
@@ -78,7 +79,19 @@ export default class NewOldProfiles {
                 useEffect(() => {layoutContainer.children[1].props.children[0]?.props?.children[0]?.props?.onClose()}, []);
                 layoutContainer.children[0].props.children[0] = undefined;
             })
-        })
+        });
+        Patcher.after(LayerSurfaceModule, "LayerSurface", (that, [props], res) => {
+            const shouldShowNotice = useStateFromStores([ UserProfileSettingsStore ], () => UserProfileSettingsStore.showNotice());
+            const modals = ModalSystem.useModalsStore.getState();
+            const topModal = modals.default[modals.default.length - 1];
+            const isEditingModalOpen = topModal?.key?.startsWith("EDIT_USER_PROFILE_MODAL_KEY");
+            !shouldShowNotice && isEditingModalOpen ? props.onClick = undefined : props.onClick = () => ModalSystem.closeModal(topModal.key);
+        });
+        Patcher.after(await Webpack.getBySource('"EDIT_PROFILE"', '.OVERLAY'), "A", (that, [props], res) => {
+            const shouldShowNotice = useStateFromStores([UserProfileSettingsStore], () => UserProfileSettingsStore.showNotice());
+            const currentUser = useStateFromStores([UserStore], () => UserStore.getCurrentUser());
+            res.props.onClick = () => ModalSystem.openModal((props) => createElement(ProfileEditingModal, {...props}), {modalKey: `EDIT_USER_PROFILE_MODAL_KEY:${currentUser.id}:`, dismissable: !shouldShowNotice});
+        });
     }
     stop() {
         Patcher.unpatchAll("NewOldProfiles");

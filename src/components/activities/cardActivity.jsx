@@ -37,7 +37,7 @@ export function ActivityCard({user, activity, check}) {
                         )
                     }
                     {
-                        activity?.platform?.includes('ps5') && (
+                        activity?.platform?.includes('ps5') && !activity?.assets && !activity?.assets.large_image (
                             <ConsoleImageAsset url={`https://media.discordapp.net/external${activity.assets.small_image.substring(activity.assets.small_image.indexOf('/'))}`} platform="PLAYSTATION" />
                         )
                     }

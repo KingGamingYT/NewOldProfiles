@@ -17,7 +17,7 @@ function CustomActivityContent({activity, activities}) {
         <div 
             className="customStatusContent">
             { _emoji.map(_ => <EmojiRenderer emoji={activity.emoji}/>) }
-            <div className="customStatusText">{activity.state}</div>
+            <span className="customStatusText">{activity.state}</span>
         </div>
     )
 }

@@ -17,7 +17,7 @@ function getWidgetIntl(widget) {
 
 export function WidgetBuilder({ widget, user }) {
     const [isLoaded, setIsLoaded] = useState(false);
-    const gameIds = Array.isArray(widget.games) ? widget.games.map(game => game.applicationId) : [];
+    const gameIds = Array.isArray(widget.games) ? widget.games.map(game => game.gameId) : [];
     const games = useStateFromStores([ApplicationStore], () => gameIds.map(id => ApplicationStore.getApplication(id)));
     const header = getWidgetIntl(widget);
 
@@ -38,7 +38,7 @@ export function WidgetBuilder({ widget, user }) {
     }, [gameIds]);
 
     return widget.type === "application" ? <div className="userInfoSection">
-        <CustomWidgetCard index={0} user={user} widget={widget} key={`application-${widget.applicationId}`} /> 
+        <CustomWidgetCard index={0} user={user} widget={widget} key={`application-${widget.gameId}`} /> 
     </div>
     : <BoardBuilder widget={widget} header={header} games={games} user={user} />
 }

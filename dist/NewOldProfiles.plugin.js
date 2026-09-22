@@ -2,7 +2,7 @@
  * @name NewOldProfiles
  * @author KingGamingYT
  * @description A full, largely accurate restoration of Discord's profile layout used from 2018 to 2021. Features modern additions such as banners, theme colors, and guild tags.
- * @version 1.3.4
+ * @version 1.3.5
  * @runAt idle
  */
 
@@ -48,7 +48,9 @@ const [
 	FetchApplications,
 	IconUtils,
 	Avatar,
+	AvatarDecorationButton,
 	AvatarFetch,
+	AvatarButton,
 	EmojiRenderer,
 	ActivityTimer,
 	MediaProgressBar,
@@ -56,12 +58,10 @@ const [
 	SpotifyButtons$1,
 	CallButtons,
 	VoiceList,
-	VoiceIcon,
 	TagGuildRenderer,
 	RoleUpdater,
 	BotTagRenderer,
 	Tooltip,
-	OrbTooltip,
 	Popout,
 	FormSwitch,
 	ProfileFetch,
@@ -79,9 +79,12 @@ const [
 	ProfileModalEntrypoint,
 	ContentInventoryEntryByActivity,
 	ClampedText,
-	Clamp,
+	Text,
 	Card,
-	CustomWidgetCard
+	CustomWidgetCard,
+	SelectedChannelActionCreators,
+	OpenStream,
+	NameplateButton
 ] = betterdiscord.Webpack.getBulk(
 	{ filter: betterdiscord.Webpack.Filters.bySource("forceShowPremium", "pendingThemeColors", "profileThemeClassName") },
 	{ filter: (x) => x.openUserProfileModal },
@@ -93,8 +96,10 @@ const [
 	{ filter: betterdiscord.Webpack.Filters.byKeys("anchor", "anchorUnderlineOnHover") },
 	{ filter: betterdiscord.Webpack.Filters.byKeys("fetchApplication") },
 	{ filter: betterdiscord.Webpack.Filters.byKeys("getGuildIconURL") },
-	{ filter: betterdiscord.Webpack.Filters.byStrings("onOpenProfile", "avatar") },
+	{ filter: betterdiscord.Webpack.Filters.byStrings("imageClassName", "A.AVATAR") },
+	{ filter: betterdiscord.Webpack.Filters.byStrings("pendingAvatarDecoration", "disabled") },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("STREAMING", "isVROnline") },
+	{ filter: betterdiscord.Webpack.Filters.byStrings("currentProfileAvatarHash") },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("translateSurrogatesToInlineEmoji") },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("timestamps", ".TEXT_FEEDBACK_POSITIVE"), searchExports: true },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("start", "end", "duration", "percentage") },
@@ -102,12 +107,10 @@ const [
 	{ filter: betterdiscord.Webpack.Filters.byStrings("activity", "PRESS_PLAY_ON_SPOTIFY_BUTTON") },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("PRESS_JOIN_CALL_BUTTON") },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("maxUsers", "guildId", "getNickname") },
-	{ filter: betterdiscord.Webpack.Filters.byStrings("channel", "isGuildStageVoice", "isDM", ".CONNECT") },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("guildId", "name", "setPopoutRef", "onClose", "fetchGuildProfile") },
 	{ filter: (x) => x.updateMemberRoles },
 	{ filter: betterdiscord.Webpack.Filters.bySource("BOT", "invertColor") },
 	{ filter: betterdiscord.Webpack.Filters.byPrototypeKeys("renderTooltip"), searchExports: true },
-	{ filter: betterdiscord.Webpack.Filters.byStrings("showSubtext", "caretConfig"), searchExports: true },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("Unsupported animation config:"), searchExports: true },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("hasIcon", "switchIconsEnabled"), searchExports: true },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("connectionsRoleId", "USER_PROFILE_FETCH_START"), searchExports: true },
@@ -125,10 +128,100 @@ const [
 	{ filter: betterdiscord.Webpack.Filters.bySource("UserProfileModalV2", "defaultWishlistId") },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("getMatchingInboxEntry", "getMatchingOutboxEntry") },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("delay", "lineClamp") },
-	{ filter: betterdiscord.Webpack.Filters.bySource("currentColor", "]]?.css") },
+	{ filter: (x) => x?.render && x?.render?.toString().includes("tabularNumbers"), searchExports: true },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("warn", "preview", "messageType"), searchExports: true },
-	{ filter: betterdiscord.Webpack.Filters.byStrings("instanceof", "widget"), searchExports: true }
+	{ filter: betterdiscord.Webpack.Filters.byStrings("instanceof", "widget"), searchExports: true },
+	{ filter: (x) => x.selectVoiceChannel, searchExports: true },
+	{ filter: betterdiscord.Webpack.Filters.byStrings("guildId", "getWindowOpen", "CHANNEL_CALL_POPOUT"), searchExports: true },
+	{ filter: betterdiscord.Webpack.Filters.byStrings("pendingNameplate") }
 );
+const [
+	UnsavedNoticeContainer,
+	SaveBar,
+	SliderAnimatedContainer,
+	InvalidUsernameToast,
+	ToastMap,
+	Toast,
+	SetGuildIdentity,
+	SetPendingUserChanges,
+	PencilIcon,
+	OpenDisplayNameStylesModal,
+	LabeledField,
+	TextInput,
+	RichTextArea,
+	Stack,
+	FieldSelect,
+	getAvailablePrimaryGuilds,
+	GuildTag,
+	ClanGuildIcon,
+	GuildBadge,
+	SelectClasses,
+	ModalSystem$1
+] = betterdiscord.Webpack.getBulk(
+	{ filter: betterdiscord.Webpack.Filters.byPrototypeKeys("animateTo"), searchExports: true },
+	{ filter: betterdiscord.Webpack.Filters.byStrings("submitting", "message") },
+	{ filter: betterdiscord.Webpack.Filters.byStrings("childFactory", "component"), searchExports: true },
+	{ filter: betterdiscord.Webpack.Filters.byStrings('"TGg/2k"', "FAILURE"), searchExports: true },
+	{ filter: betterdiscord.Webpack.Filters.byStrings("currentToastMap", "slice(1)"), searchExports: true },
+	{ filter: betterdiscord.Webpack.Filters.byStrings("component", "duration", "appContext"), searchExports: true },
+	{ filter: betterdiscord.Webpack.Filters.byStrings("USER_SET_GUILD_IDENTITY"), searchExports: true },
+	{ filter: betterdiscord.Webpack.Filters.byStrings('"USER_PROFILE_SETTINGS_SET_PENDING_CHANGES"'), searchExports: true },
+	{ filter: betterdiscord.Webpack.Filters.byStrings("0l1.38-1.38a2"), searchExports: true },
+	{ filter: betterdiscord.Webpack.Filters.byStrings("DISPLAY_NAME_STYLES_CLOSED"), searchExports: true },
+	{ filter: betterdiscord.Webpack.Filters.byStrings("labelId", "helperText"), searchExports: true },
+	{ filter: betterdiscord.Webpack.Filters.byStrings('"boolean"', "defaultDirty"), searchExports: true },
+	{ filter: betterdiscord.Webpack.Filters.byStrings("GENERIC_RICH_TEXTAREA", "EmojiIntention.CHAT"), searchExports: true },
+	{ filter: (x) => String(x?.render).includes('"data-full-width"'), searchExports: true },
+	{ filter: betterdiscord.Webpack.Filters.byStrings("?.value??", "maxOptionsVisible"), searchExports: true },
+	{ filter: (
+		betterdiscord.Webpack.Filters.byStrings("getSelfMember", "getGuildsArray")
+	), searchExports: true },
+	{ filter: betterdiscord.Webpack.Filters.byStrings("guildBadge", "__unsupportedReactNodeAsText"), searchExports: true },
+	{ filter: betterdiscord.Webpack.Filters.byStrings("Masks.CLAN_ICON", "getGuildIconURL"), searchExports: true },
+	{ filter: (x) => String(x?.type).includes('"fw2p/x"'), searchExports: true },
+	{ filter: (x) => x.selectPopout },
+	{ filter: (x) => x.useModalsStore }
+);
+const UserProfilePendingChangesActionCreators = betterdiscord.Webpack.getMangled("avatarOriginalMd5", {
+	getUserProfilePatch: betterdiscord.Webpack.Filters.byStrings("PROFILE_EFFECT"),
+	getAccountIdentityPatch: betterdiscord.Webpack.Filters.byStrings("pendingGlobalName"),
+	getGuildMemberProfilePatch: betterdiscord.Webpack.Filters.byStrings("pendingNickname"),
+	getGuildIdentityPatch: betterdiscord.Webpack.Filters.byStrings("pendingPrimaryGuildId")
+});
+const UserProfileSettingsActionCreators1 = betterdiscord.Webpack.getMangled('"USER_PROFILE_SETTINGS_CLOSE"', {
+	saveProfileChanges: betterdiscord.Webpack.Filters.byStrings('"USER_PROFILE_SETTINGS_SUBMIT"'),
+	updateUserPassword: betterdiscord.Webpack.Filters.byStrings('"PASSWORD_UPDATED"'),
+	defaultLogout: betterdiscord.Webpack.Filters.byStrings("DISABLE_ACCOUNT"),
+	init: betterdiscord.Webpack.Filters.byStrings('"USER_PROFILE_SETTINGS_INIT"'),
+	close: betterdiscord.Webpack.Filters.byStrings('"USER_PROFILE_SETTINGS_CLOSE"'),
+	harvestUserData: betterdiscord.Webpack.Filters.byStrings("USER_HARVEST"),
+	clearErrors: betterdiscord.Webpack.Filters.byStrings('"USER_PROFILE_SETTINGS_CLEAR_ERRORS"'),
+	resetPendingAccountChanges: betterdiscord.Webpack.Filters.byStrings('"USER_PROFILE_SETTINGS_RESET_PENDING_ACCOUNT_CHANGES"'),
+	resetPendingChanges: betterdiscord.Webpack.Filters.byStrings('"USER_PROFILE_SETTINGS_RESET_PENDING_CHANGES"'),
+	resetAndCloseForm: betterdiscord.Webpack.Filters.byStrings('"USER_PROFILE_SETTINGS_RESET_AND_CLOSE_FORM"'),
+	resetPendingLegacyUsernameDisabled: betterdiscord.Webpack.Filters.byStrings('"USER_PROFILE_SETTINGS_RESET_PENDING_LEGACY_USERNAME_DISABLED"'),
+	resetPendingPrimaryGuildChanges: betterdiscord.Webpack.Filters.byStrings('"USER_PROFILE_SETTINGS_RESET_PENDING_PRIMARY_GUILD_CHANGES"')
+});
+const UserProfileSettingsActionCreators2 = betterdiscord.Webpack.getMangled('"USER_PROFILE_UPDATE_START"', {
+	updateProfileSettings: betterdiscord.Webpack.Filters.byStrings('"USER_PROFILE_UPDATE_START"'),
+	pinBadgesOnClient: betterdiscord.Webpack.Filters.byStrings('"USER_PROFILE_PIN_BADGES_ON_CLIENT"'),
+	resetPendingProfileChanges: betterdiscord.Webpack.Filters.byStrings('"USER_PROFILE_SETTINGS_RESET_PENDING_PROFILE_CHANGES"'),
+	resetTryItOutChanges: betterdiscord.Webpack.Filters.byStrings('"USER_PROFILE_SETTINGS_RESET_TRY_IT_OUT_CHANGES"'),
+	setTryItOutAvatar: betterdiscord.Webpack.Filters.byStrings('"USER_PROFILE_SETTINGS_SET_TRY_IT_OUT_AVATAR"'),
+	setTryItOutAvatarDecoration: betterdiscord.Webpack.Filters.byStrings('"USER_PROFILE_SETTINGS_SET_TRY_IT_OUT_AVATAR_DECORATION"'),
+	setTryItOutBanner: betterdiscord.Webpack.Filters.byStrings('"USER_PROFILE_SETTINGS_SET_TRY_IT_OUT_BANNER"'),
+	setTryItOutThemeColors: betterdiscord.Webpack.Filters.byStrings('"USER_PROFILE_SETTINGS_SET_TRY_IT_OUT_THEME_COLORS"'),
+	setTryItOutDisplayNameStyles: betterdiscord.Webpack.Filters.byStrings('"USER_PROFILE_SETTINGS_SET_TRY_IT_OUT_DISPLAY_NAME_STYLES"'),
+	setTryItOutPresent: betterdiscord.Webpack.Filters.byStrings('"USER_PROFILE_SETTINGS_SET_TRY_IT_OUT_PRESET"'),
+	shake: betterdiscord.Webpack.Filters.byStrings("SHAKE_PROFILE_MODAL")
+});
+const UserProfileSettingsActionCreators = Object.assign(UserProfileSettingsActionCreators1, UserProfileSettingsActionCreators2);
+const EditableTileProfileButtons = betterdiscord.Webpack.getMangled('"UserProfileModalV2EditableDisplayName"', {
+	ThemeButton: betterdiscord.Webpack.Filters.byStrings("currentProfileThemeColors", "disabled"),
+	BannerButton: betterdiscord.Webpack.Filters.byStrings("pendingBanner", "accessibleValue"),
+	EffectButton: betterdiscord.Webpack.Filters.byStrings("pendingProfileEffect", "variant"),
+	FrameButton: betterdiscord.Webpack.Filters.byStrings("pendingProfileFrame", "userValue")
+}, { mapDeclarations: true });
 const NavigationUtils = betterdiscord.Webpack.getMangled("transitionTo - Transitioning to", {
 	transitionTo: betterdiscord.Webpack.Filters.byStrings("transitionTo - Transitioning to "),
 	replace: betterdiscord.Webpack.Filters.byStrings("Replacing route with"),
@@ -136,17 +229,36 @@ const NavigationUtils = betterdiscord.Webpack.getMangled("transitionTo - Transit
 	goForward: betterdiscord.Webpack.Filters.byStrings(".goForward()"),
 	transitionToGuild: betterdiscord.Webpack.Filters.byStrings("transitionToGuild - Transitioning to")
 });
-const ModalSystem$1 = betterdiscord.Webpack.getMangled(".modalKey?", {
-	openModalLazy: betterdiscord.Webpack.Filters.byStrings(".modalKey?"),
-	openModal: betterdiscord.Webpack.Filters.byStrings(",instant:"),
-	closeModal: betterdiscord.Webpack.Filters.byStrings(".onCloseCallback()"),
-	closeAllModals: betterdiscord.Webpack.Filters.byStrings(".getState();for")
-});
 betterdiscord.Webpack.getMangled(".zROXEV", {
 	Button: betterdiscord.Webpack.Filters.not(betterdiscord.Webpack.Filters.byStrings("aria-label")),
 	ButtonWithTooltip: betterdiscord.Webpack.Filters.byStrings("tooltipText")
 });
+const ManaButtons = betterdiscord.Webpack.getMangled(betterdiscord.Webpack.Filters.bySource("SPINNING_CIRCLE", "__unsupportedReactNodeAsText", "tooltipAlign", '"sm","aria-label"'), {
+	PrimaryButtonWithIcon: (x) => String(x).includes('"sm",.'),
+	PrimaryButtonLazy: (x) => String(x).includes("loading"),
+	IconOnlyButton: (x) => String(x).includes("targetElementRef")
+});
+const LaunchableGameUtils = betterdiscord.Webpack.getMangled(betterdiscord.Webpack.Filters.bySource("ConnectedAppsStore", "isLaunchableLoading"), {
+	useApplicationLaunchState: betterdiscord.Webpack.Filters.byStrings("isLaunchableLoading"),
+	useLaunchableGameId: betterdiscord.Webpack.Filters.byStrings("data", "getOfficialGame"),
+	useLaunchableApplicationId: betterdiscord.Webpack.Filters.byStrings("data", "getOfficialGame", "getGameByApplication")
+});
+const LayerSurfaceModule = betterdiscord.Webpack.getMangled(betterdiscord.Webpack.Filters.bySource('"scrim":"empty"'), {
+	LayerSurface: betterdiscord.Webpack.Filters.byStrings('"scrim":"empty"')
+});
 const RoleRenderer = react.lazy(async () => ({ default: await betterdiscord.Webpack.waitForModule(betterdiscord.Webpack.Filters.byStrings("roles", "guild", "canRemoveAnyRoles", "map(e"), { searchExports: true }) }));
+const VoiceIcon = betterdiscord.Webpack.getByStrings("channel", "isGuildStageVoice", "isDM", ".CONNECT");
+const settingsModuleId = betterdiscord.Webpack.getModule(betterdiscord.Webpack.Filters.bySource('"allowGameFriendDmsInDiscord"'), { raw: true }).id;
+const matches = [...betterdiscord.Webpack.modules[settingsModuleId].toString().matchAll(/(\w+)\s?=\s?.\("(\w+)",\s?"(\w+)/g)];
+const settingsModule = BdApi.Webpack.getById(settingsModuleId, { raw: true }).declarations;
+const Settings = {};
+matches.forEach((x) => {
+	const delc = x[1], _ = x[2], key = x[3];
+	Settings[_] = {
+		...Settings[_],
+		[key]: settingsModule[delc]
+	};
+});
 
 // ./modules/stores.js
 const AccessibilityStore = betterdiscord.Webpack.getStore("AccessibilityStore");
@@ -159,6 +271,7 @@ const NewGameStore = betterdiscord.Webpack.getStore("NewGameStore");
 const GuildStore = betterdiscord.Webpack.getStore("GuildStore");
 const StreamStore = betterdiscord.Webpack.getStore("ApplicationStreamingStore");
 const UserProfileStore = betterdiscord.Webpack.getStore("UserProfileStore");
+const UserProfileSettingsStore = betterdiscord.Webpack.getStore("UserProfileSettingsStore");
 const ApplicationStore = betterdiscord.Webpack.getStore("ApplicationStore");
 const ApplicationStreamPreviewStore = betterdiscord.Webpack.getStore("ApplicationStreamPreviewStore");
 const VoiceStateStore = betterdiscord.Webpack.getStore("VoiceStateStore");
@@ -175,7 +288,6 @@ let MessageButtonSmall;
 let FriendsButton;
 let MoreOverflowButton;
 let FriendAddButton;
-let EditProfileButton;
 let BotAddButton;
 let MarkdownFormat;
 let NoteRenderer;
@@ -208,10 +320,6 @@ function FriendAddButtonComponent({ autoFocus, userId, variant }) {
 		AddFriend: betterdiscord.Webpack.Filters.combine(betterdiscord.Webpack.Filters.byStrings("{userId:"), betterdiscord.Webpack.Filters.not(betterdiscord.Webpack.Filters.byStrings("tooltipText")))
 	});
 	return BdApi.React.createElement(FriendAddButton.AddFriend, { autoFocus, userId, variant });
-}
-function EditProfileButtonComponent({ user }) {
-	EditProfileButton ??= betterdiscord.Webpack.getByStrings("trackUserProfileAction", "EDIT_PROFILE", { searchExports: true });
-	return BdApi.React.createElement(EditProfileButton, { user });
 }
 function BotAddButtonComponent({ user }) {
 	BotAddButton ??= betterdiscord.Webpack.getByStrings('"user-bot-profile-add-app"');
@@ -327,6 +435,9 @@ const locale = {
 	Strings: {
 		ABOUT_ME: () => getIntlString("61W33d"),
 		ACCEPT: () => getIntlString("MMlhsr"),
+		ADD_YOUR_PRONOUNS: () => getIntlString("NPEUUu"),
+		AVATAR_AND_DECORATION: () => getIntlString("50Nwpc"),
+		BIO: () => getIntlString("ZzAR2Y"),
 		BOARD: () => getIntlString("laViwx"),
 		BOT: () => getIntlString("AOdOYr"),
 		BY_ARTISTS: ({ artistsHook, artists }) => getIntlString("uU9le8", { artistsHook, artists }),
@@ -336,7 +447,11 @@ const locale = {
 		CUSTOM_STATUS: () => getIntlString("xalUlT"),
 		DATA_ACCESS: () => getIntlString("QzDgMq"),
 		DIRECT_MESSAGE: () => getIntlString("jN2DfZ"),
+		DISPLAY_NAME: () => getIntlString("9AjdkD"),
 		EDIT: () => getIntlString("bt75uw"),
+		EDIT_DISPLAY_NAME_STYLE: () => getIntlString("Wkg/CF"),
+		EDIT_PROFILE: () => getIntlString("s5vZlQ"),
+		EDIT_PROFILE_GENERIC_ERROR: () => getIntlString("84MExs"),
 		FAVORITE_GAME: () => getIntlString("sUQar8"),
 		FRIENDS_SINCE: () => getIntlString("wlTO8v"),
 		GAME_ICON_FOR: (game) => getIntlString("nh+jWk", game),
@@ -363,17 +478,21 @@ const locale = {
 		PLAYING_A_GAME: () => getIntlString("2TbM/G"),
 		PLAYING_ON: (platform) => getIntlString("A17aM8", platform),
 		PRIVATE_PROFILE_WARNING: (username) => getIntlString("P8ij6Z", username),
+		PROFILE_EFFECT_AND_FRAME: () => getIntlString("Vfbar/"),
 		PROFILE_WIDGETS: () => getIntlString("Jzj9q4"),
 		PRONOUNS: () => getIntlString("1w6drw"),
 		ROLE: () => getIntlString("XPGZXP"),
 		ROLES: () => getIntlString("2SZsWX"),
 		SEND_FRIEND_REQUEST: () => getIntlString("gc9aSx"),
 		SEND_MESSAGE: () => getIntlString("YzpScd"),
+		SERVER_TAG: () => getIntlString("2QmKZ2"),
 		STREAM: () => getIntlString("5AyH/p"),
-		STREAMING: (name) => getIntlString("4CQq9Q", name),
+		STREAMING: () => getIntlString("KDdjou"),
+		STREAMING_ACTIVITY: (name) => getIntlString("4CQq9Q", name),
 		STREAMER_MODE_ENABLED: () => getIntlString("Br1ls3"),
 		STREAMING_GAME_IN: (game, server) => `${getIntlString("4CQq9Q", game)} ${getIntlString("5YBAcS", server)}`,
 		STREAMING_TO: (server) => getIntlString("sddlGK", server),
+		THEME_AND_BANNER: () => getIntlString("Zenogr"),
 		UNBLOCK: () => getIntlString("Hro40y"),
 		USER: () => getIntlString("E466pL"),
 		USER_PROFILE_LOAD_ERROR: () => getIntlString("L9wE7H"),
@@ -497,6 +616,263 @@ function IgnoreButton({ user }) {
 	);
 }
 
+// ./components/editing/editProfilePanel.jsx
+function EditingCategoryHeader({ variant, children }) {
+	return BdApi.React.createElement(Text, { tag: "legend", variant: variant ?? "heading-xl/normal" }, children);
+}
+function ServerTagSelect({ availablePrimaryGuilds, pendingPrimaryGuildId, onChange }) {
+	const guildDetails = react.useMemo(() => new Map(availablePrimaryGuilds.map((guild) => [guild.id, guild])), [availablePrimaryGuilds]);
+	const currentPrimaryGuildId = useStateFromStores([UserStore], () => UserStore.getCurrentUser()?.primaryGuild)?.guildId;
+	let pendingGuildId = pendingPrimaryGuildId ? pendingPrimaryGuildId : currentPrimaryGuildId;
+	const guildTags = react.useMemo(() => availablePrimaryGuilds.reduce((tags, guild) => (guild.profile?.tag != null && tags.push({
+		label: guild.name,
+		value: guild.id
+	}), tags), []), [availablePrimaryGuilds]);
+	const getGuildTag = react.useCallback((option) => {
+		if (option == null) return null;
+		const guild = guildDetails.get(option.value);
+		if (guild == null) return null;
+		const guildTag = guild.profile?.tag;
+		return guildTag == null ? null : BdApi.React.createElement(
+			GuildTag,
+			{
+				guildTag,
+				guildBadge: guild.profile?.badge,
+				guildId: guild.id,
+				guildName: option.label,
+				guildIcon: guild.icon,
+				guildIconSize: 32
+			}
+		);
+	}, [guildDetails]);
+	const handleLeading = react.useCallback((option) => {
+		if (option == null) return null;
+		const guild = guildDetails.get(option.value);
+		return guild == null || guild.profile?.tag == null ? null : BdApi.React.createElement(
+			ClanGuildIcon,
+			{
+				guildId: guild.id,
+				guildName: guild.name,
+				guildIcon: guild.icon,
+				iconSize: 32,
+				animate: false
+			}
+		);
+	}, [guildDetails]);
+	const handleTrailing = react.useCallback((option) => {
+		if (option == null) return null;
+		const guild = guildDetails.get(option.value);
+		if (guild == null) return null;
+		const guildTag = guild.profile?.tag;
+		return guildTag == null ? null : BdApi.React.createElement(
+			GuildBadge,
+			{
+				guildId: guild.id,
+				guildTag,
+				guildBadge: guild.profile?.badge,
+				badgeSize: "SIZE_16",
+				textColor: "interactive-text-default",
+				textVariant: "text-sm/semibold"
+			}
+		);
+	}, [guildDetails]);
+	const handleOption = react.useCallback((options) => {
+		const option = options[0];
+		return option == null ? null : BdApi.React.createElement(BdApi.React.Fragment, null, getGuildTag(option));
+	}, [getGuildTag]);
+	const handleSelect = react.useCallback((option) => {
+		onChange?.(option);
+	}, [onChange]);
+	const isSelected = react.useCallback((option) => option === pendingGuildId, [pendingGuildId]);
+	const handleSerialization = react.useCallback((option) => option, []);
+	const handleClear = react.useCallback(() => {
+		onSelect?.(null);
+	}, [onChange]);
+	react.useRef(null);
+	return BdApi.React.createElement(
+		FieldSelect,
+		{
+			className: SelectClasses.select,
+			optionClassName: SelectClasses.selectPopout,
+			isSelected,
+			options: guildTags,
+			select: handleSelect,
+			renderLeading: handleLeading,
+			renderTrailing: handleTrailing,
+			renderOptionValue: handleOption,
+			serialize: handleSerialization,
+			clear: handleClear,
+			clearable: pendingGuildId != null,
+			maxVisibleItems: 8,
+			dataMigrationPending: true
+		}
+	);
+}
+function ProfileEditingPanel({ user }) {
+	const userProfile = useStateFromStores([UserProfileStore], () => UserProfileStore.getUserProfile(user.id));
+	const {
+		pendingGlobalName,
+		pendingBanner,
+		pendingBio,
+		pendingPronouns,
+		pendingAccentColor,
+		pendingThemeColors,
+		pendingLegacyUsernameDisabled,
+		pendingPrimaryGuildId,
+		errors
+	} = useStateFromStores([UserProfileSettingsStore], () => {
+		const pendingChanges = UserProfileSettingsStore.getPendingChanges();
+		const errors2 = UserProfileSettingsStore.getErrors();
+		return {
+			...pendingChanges,
+			errors: errors2
+		};
+	});
+	const availablePrimaryGuilds = getAvailablePrimaryGuilds();
+	return BdApi.React.createElement(BdApi.React.Fragment, null, BdApi.React.createElement("div", { className: "editingSectionDecoration" }, BdApi.React.createElement("div", null, BdApi.React.createElement(EditingCategoryHeader, { variant: "text-md/medium" }, locale.Strings.AVATAR_AND_DECORATION()), BdApi.React.createElement("div", { className: "editingSectionContainer", style: { gap: "var(--space-8)" } }, BdApi.React.createElement("div", { className: "editingSectionInnerContainer" }, BdApi.React.createElement(AvatarButton, { user }), BdApi.React.createElement(AvatarDecorationButton, { user })), BdApi.React.createElement(NameplateButton, { user }))), BdApi.React.createElement("div", null, BdApi.React.createElement(EditingCategoryHeader, { variant: "text-md/medium" }, locale.Strings.THEME_AND_BANNER()), BdApi.React.createElement("div", { className: "editingSectionContainer" }, BdApi.React.createElement("div", { className: "editingSectionInnerContainer" }, BdApi.React.createElement(EditableTileProfileButtons.ThemeButton, { user }), BdApi.React.createElement(EditableTileProfileButtons.BannerButton, { userId: user.id })))), BdApi.React.createElement("div", null, BdApi.React.createElement(EditingCategoryHeader, { variant: "text-md/medium" }, locale.Strings.PROFILE_EFFECT_AND_FRAME()), BdApi.React.createElement("div", { className: "editingSectionContainer" }, BdApi.React.createElement("div", { className: "editingSectionInnerContainer" }, BdApi.React.createElement(EditableTileProfileButtons.EffectButton, { user, variant: "square" }), BdApi.React.createElement(EditableTileProfileButtons.FrameButton, { user }))))), BdApi.React.createElement(EditingCategoryHeader, null, locale.Strings.ABOUT_ME()), BdApi.React.createElement("div", { className: "editingSectionContainer" }, BdApi.React.createElement(LabeledField, { layout: "horizontal", label: locale.Strings.DISPLAY_NAME() }, BdApi.React.createElement("div", { className: "editingSectionDisplayNameContainer" }, BdApi.React.createElement(
+		TextInput,
+		{
+			value: pendingGlobalName ?? user.globalName,
+			placeholder: user.username,
+			maxLength: 32,
+			onChange: (change) => SetPendingUserChanges({
+				globalName: change
+			})
+		}
+	), BdApi.React.createElement(
+		ManaButtons.IconOnlyButton,
+		{
+			icon: () => BdApi.React.createElement(PencilIcon, { color: "currentColor" }),
+			variant: "primary",
+			tooltipText: locale.Strings.EDIT_DISPLAY_NAME_STYLE(),
+			ariaLabel: locale.Strings.EDIT_DISPLAY_NAME_STYLE(),
+			fullWidth: true,
+			onClick: () => OpenDisplayNameStylesModal({ analyticsLocation: null })
+		}
+	))), availablePrimaryGuilds.length > 0 && BdApi.React.createElement(LabeledField, { layout: "horizontal", role: "guild-tag", label: locale.Strings.SERVER_TAG() }, BdApi.React.createElement(
+		ServerTagSelect,
+		{
+			availablePrimaryGuilds,
+			pendingPrimaryGuildId,
+			onChange: (change) => SetPendingUserChanges({
+				primaryGuildId: change
+			})
+		}
+	)), BdApi.React.createElement(LabeledField, { layout: "horizontal", label: locale.Strings.PRONOUNS() }, BdApi.React.createElement(
+		TextInput,
+		{
+			value: pendingPronouns ?? userProfile.pronouns,
+			placeholder: locale.Strings.ADD_YOUR_PRONOUNS(),
+			maxLength: 40,
+			onChange: (change) => SetPendingUserChanges({
+				pronouns: change
+			})
+		}
+	)), BdApi.React.createElement(LabeledField, { layout: "horizontal", role: "bio", label: locale.Strings.BIO() }, BdApi.React.createElement(
+		RichTextArea,
+		{
+			value: pendingBio ?? userProfile.bio,
+			maxLength: 190,
+			onChange: (change) => SetPendingUserChanges({
+				bio: change
+			})
+		}
+	))));
+}
+
+// ./components/editing/editProfileModal.jsx
+function UpdateSettingsErrorToast() {
+	return BdApi.React.createElement(ToastMap, null, Toast(locale.Strings.EDIT_PROFILE_GENERIC_ERROR(), "failure"));
+}
+function UserProfilePendingChangesBar() {
+	const { canSubmit, errors } = useStateFromStores([UserProfileSettingsStore], () => ({
+		canSubmit: UserProfileSettingsStore.canSubmit(),
+		errors: UserProfileSettingsStore.getErrors()
+	}));
+	const [submitting, setSubmitting] = react.useState(false);
+	const errorMessage = react.useMemo(() => Object.keys(errors ?? {}).length > 0 ? locale.Strings.EDIT_PROFILE_GENERIC_ERROR() : null, [errors]);
+	const handleSubmit = react.useCallback(async () => {
+		setSubmitting(true);
+		const pendingChanges = UserProfileSettingsStore.getPendingChanges();
+		const pendingUserIdentityChanges = UserProfilePendingChangesActionCreators.getAccountIdentityPatch(pendingChanges);
+		const pendingUserProfileChanges = UserProfilePendingChangesActionCreators.getUserProfilePatch(pendingChanges);
+		const pendingGuildIdentityChanges = UserProfilePendingChangesActionCreators.getGuildIdentityPatch(pendingChanges);
+		let isUpdated = false;
+		if (Object.keys(pendingUserIdentityChanges).length > 0) {
+			const updatedUserIdentity = await UserProfileSettingsActionCreators.saveProfileChanges(pendingUserIdentityChanges);
+			if (isUpdated = isUpdated && (updatedUserIdentity?.ok ?? false), updatedUserIdentity?.ok) {
+				updatedUserIdentity.body;
+				UserProfileSettingsActionCreators.clearErrors();
+			} else {
+				updatedUserIdentity?.body?.username != null && betterdiscord.ReactUtils.wrapInHooks(InvalidUsernameToast)();
+			}
+		}
+		if (Object.keys(pendingUserProfileChanges).length > 0) {
+			const { bannerOriginalMd5, ...rest } = pendingUserProfileChanges;
+			const updatedProfileSettings = await UserProfileSettingsActionCreators.updateProfileSettings(rest, void 0, bannerOriginalMd5);
+			isUpdated = isUpdated && (updatedProfileSettings?.ok ?? false);
+			updatedProfileSettings?.ok ? UserProfileSettingsActionCreators.resetPendingProfileChanges() : betterdiscord.ReactUtils.wrapInHooks(UpdateSettingsErrorToast)();
+		}
+		if (pendingChanges.pendingLegacyUsernameDisabled !== void 0) {
+			try {
+				await Settings.privacy.hideLegacyUsername.updateSetting(pendingChanges.pendingLegacyUsername);
+				UserProfileSettingsActionCreators.resetPendingLegacyUsernameDisabled();
+			} catch {
+				betterdiscord.ReactUtils.wrapInHooks(UpdateSettingsErrorToast)();
+				isUpdated = false;
+			}
+		}
+		if (Object.keys(pendingGuildIdentityChanges).length > 0) {
+			const { primaryGuildId } = pendingGuildIdentityChanges;
+			if (primaryGuildId !== void 0) {
+				const updatedGuildIdentity = await SetGuildIdentity(primaryGuildId, primaryGuildId !== null);
+				isUpdated = isUpdated && (updatedGuildIdentity?.ok ?? false);
+				updatedGuildIdentity?.ok ? UserProfileSettingsActionCreators.resetPendingPrimaryGuildChanges() : betterdiscord.ReactUtils.wrapInHooks(UpdateSettingsErrorToast)();
+			}
+		}
+		isUpdated && UserProfileSettingsActionCreators.clearErrors();
+		setSubmitting(false);
+	}, []);
+	const handleReset = react.useCallback(() => {
+		UserProfileSettingsActionCreators.resetPendingChanges();
+	}, []);
+	return BdApi.React.createElement(
+		SaveBar,
+		{
+			submitting,
+			onSave: handleSubmit,
+			onReset: handleReset,
+			disabled: !canSubmit,
+			errorMessage: errorMessage ?? void 0
+		}
+	);
+}
+function UnsavedContentNotice() {
+	const shouldShowNotice = useStateFromStores([UserProfileSettingsStore], () => UserProfileSettingsStore.showNotice());
+	return BdApi.React.createElement(SliderAnimatedContainer, { component: "div" }, shouldShowNotice ? BdApi.React.createElement(UnsavedNoticeContainer, { className: "editingSectionUnsavedChangesBar" }, BdApi.React.createElement(UserProfilePendingChangesBar, null)) : null);
+}
+function ProfileEditingModal(props) {
+	const [isDismissable, setDismissable] = react.useState(props.dismissable);
+	const user = useStateFromStores([UserStore], () => UserStore.getCurrentUser());
+	const shouldShowNotice = useStateFromStores([UserProfileSettingsStore], () => UserProfileSettingsStore.showNotice());
+	isDismissable && shouldShowNotice ? props.dismissable = false : props.dismissable = true;
+	return BdApi.React.createElement(BdApi.React.Fragment, null, BdApi.React.createElement(ModalRoot.Modal, { ...props, title: locale.Strings.EDIT_PROFILE(), size: "lg" }, BdApi.React.createElement(ProfileEditingPanel, { user })), BdApi.React.createElement(UnsavedContentNotice, null));
+}
+
+// ./components/editing/editProfileButton.jsx
+function EditProfileButton() {
+	const shouldShowNotice = useStateFromStores([UserProfileSettingsStore], () => UserProfileSettingsStore.showNotice());
+	const currentUser = useStateFromStores([UserStore], () => UserStore.getCurrentUser());
+	return BdApi.React.createElement(
+		"button",
+		{
+			className: `${ButtonClasses.button} ${ButtonClasses.sm} ${ButtonClasses.primary} ${ButtonClasses.hasText}`,
+			onClick: () => ModalSystem$1.openModal((props) => BdApi.React.createElement(ProfileEditingModal, { ...props }), { modalKey: `EDIT_USER_PROFILE_MODAL_KEY:${currentUser.id}:`, dismissable: !shouldShowNotice })
+		},
+		BdApi.React.createElement("div", { className: `${ButtonClasses.buttonChildrenWrapper}` }, BdApi.React.createElement("div", { className: `${ButtonClasses.buttonChildren}`, style: { fontSize: "14px", fontWeight: 500 } }, locale.Strings.EDIT_PROFILE()))
+	);
+}
+
 // ./components/builders/header/inner.jsx
 function BadgeInner({ badge, index, id }) {
 	const activities = useStateFromStores([ActivityStore], () => ActivityStore.getActivities(id)).filter((activity) => activity && ![4, 6].includes(activity?.type));
@@ -526,7 +902,8 @@ function BadgeInner({ badge, index, id }) {
 			"div",
 			{
 				className: betterdiscord.Utils.className((activities.length !== 0 || voice || stream) && !betterdiscord.Data.load("disableRichBadges") && "richBadge", "profileBadge", `profileBadge${badge.id.replaceAll(/(?:^|_)(\w)/g, (_, m) => m.toUpperCase())}`),
-				style: { backgroundImage: (badge.iconSrc && `url(${badge.iconSrc})`) ?? void 0 }
+				style: { backgroundImage: (badge.iconSrc && `url(${badge.iconSrc})`) ?? void 0 },
+				icon: badge.icon && badge.icon
 			}
 		)
 	);
@@ -599,7 +976,7 @@ function ClanTagBuilder({ user }) {
 }
 function HeaderButtonBuilder({ currentUser, relationshipType, user }) {
 	if (user.id === currentUser.id) {
-		return BdApi.React.createElement(BdApi.React.Fragment, null, BdApi.React.createElement(EditProfileButtonComponent, { user }), BdApi.React.createElement(MoreOverflowButtonComponent, { user }));
+		return BdApi.React.createElement(BdApi.React.Fragment, null, BdApi.React.createElement(EditProfileButton, null), BdApi.React.createElement(MoreOverflowButtonComponent, { user }));
 	}
 	if (user.bot) {
 		return BdApi.React.createElement(BdApi.React.Fragment, null, BdApi.React.createElement(MessageButtonLargeComponent, { autoFocus: true, onClose: () => PopUtils.popAll(), userId: user.id }), BdApi.React.createElement(BotAddButtonComponent, { user }), BdApi.React.createElement(MoreOverflowButtonComponent, { user }));
@@ -642,7 +1019,7 @@ function HeaderInnerBuilder({ user, currentUser, displayProfile, tagName, displa
 	const relationship = RelationshipStore.getRelationshipType(user.id);
 	const badges = displayProfile._userProfile.badges;
 	const Timezone = betterdiscord.Plugins.get("Timezones")?.instance?.getTimezoneComp?.({ user });
-	return BdApi.React.createElement("header", { className: "header" }, BdApi.React.createElement(Avatar, { className: "avatar", user, themeType: "POPOUT" }), BdApi.React.createElement("div", { className: "headerInfo" }, BdApi.React.createElement(DiscordTag, { user, displayProfile, tagName, displayName }), user.primaryGuild?.tag && betterdiscord.Data.load("showGuildTag") ? BdApi.React.createElement("div", { className: "badgeSection", style: { display: "flex", flexWrap: "wrap", alignItems: "center" } }, BdApi.React.createElement(ClanTagBuilder, { user }), badges && badges.length !== 0 && BdApi.React.createElement(BdApi.React.Fragment, null, BdApi.React.createElement("div", { className: "divider", style: { margin: "0 5px 0 5px" } }), BdApi.React.createElement(BadgesBuilder, { badges: displayProfile._userProfile.badges, style: { display: "contents" }, id: user.id }))) : BdApi.React.createElement(BadgesBuilder, { badges: displayProfile._userProfile.badges, style: { display: "flex", flexWrap: "wrap" }, id: user.id })), BdApi.React.createElement("div", { className: "profileButtons" }, BdApi.React.createElement(HeaderButtonBuilder, { currentUser, relationshipType: relationship, user })), betterdiscord.Plugins.get("Timezones") && betterdiscord.Plugins.isEnabled("Timezones") && Timezone);
+	return BdApi.React.createElement("header", { className: "header" }, BdApi.React.createElement(Avatar, { className: "avatar", user, displayProfile, avatarSize: "SIZE_80" }), BdApi.React.createElement("div", { className: "headerInfo" }, BdApi.React.createElement(DiscordTag, { user, displayProfile, tagName, displayName }), user.primaryGuild?.tag && betterdiscord.Data.load("showGuildTag") ? BdApi.React.createElement("div", { className: "badgeSection", style: { display: "flex", flexWrap: "wrap", alignItems: "center" } }, BdApi.React.createElement(ClanTagBuilder, { user }), badges && badges.length !== 0 && BdApi.React.createElement(BdApi.React.Fragment, null, BdApi.React.createElement("div", { className: "divider", style: { margin: "0 5px 0 5px" } }), BdApi.React.createElement(BadgesBuilder, { badges: displayProfile._userProfile.badges, style: { display: "contents" }, id: user.id }))) : BdApi.React.createElement(BadgesBuilder, { badges: displayProfile._userProfile.badges, style: { display: "flex", flexWrap: "wrap" }, id: user.id })), BdApi.React.createElement("div", { className: "profileButtons" }, BdApi.React.createElement(HeaderButtonBuilder, { currentUser, relationshipType: relationship, user })), betterdiscord.Plugins.get("Timezones") && betterdiscord.Plugins.isEnabled("Timezones") && Timezone);
 }
 
 // ./components/builders/tabbar/tabBar.jsx
@@ -728,7 +1105,7 @@ function ActivityCardWrapper({ data, user, activities, voice, stream }) {
 // ./methods/activities/headers.js
 const headers = {
 	0: locale.Strings.PLAYING_A_GAME(),
-	1: locale.Strings.STREAMING({ name: "" }),
+	1: locale.Strings.STREAMING_ACTIVITY({ name: "" }),
 	2: locale.Strings.LISTENING_TO({ name: "" }),
 	3: locale.Strings.WATCHING({ name: "" }),
 	5: locale.Strings.COMPETING_IN({ name: "" })
@@ -865,7 +1242,7 @@ function ActivityType({ type, filterCheck, activity, inventoryEntry, voice, chan
 	const guildChannel = useStateFromStores([GuildStore], () => GuildStore.getGuild(channel?.guild_id));
 	switch (type) {
 		case "PLAYING":
-			return BdApi.React.createElement(BdApi.React.Fragment, null, !(filterCheck?.listening || filterCheck?.watching) && BdApi.React.createElement("div", { className: "details textRow ellipsis" }, activity.details), BdApi.React.createElement("div", { className: "state textRow ellipsis" }, activity?.state && activity?.party && activity?.party?.size ? `${activity.state} (${activity.party.size[0]} of ${activity.party.size[1]})` : activity?.party && activity?.party?.size ? `Party: (${activity.party.size[0]} of ${activity.party.size[1]})` : activity.state), activity?.timestamps?.end ? BdApi.React.createElement("div", { className: "mediaProgressBarContainer" }, BdApi.React.createElement(MediaProgressBar, { start: activity?.timestamps?.start || activity?.created_at, end: activity?.timestamps?.end })) : BdApi.React.createElement(ActivityTimer, { activity }));
+			return BdApi.React.createElement(BdApi.React.Fragment, null, !(filterCheck?.listening || filterCheck?.watching) && BdApi.React.createElement("div", { className: "details textRow ellipsis" }, activity.details), BdApi.React.createElement("div", { className: "state textRow ellipsis" }, activity?.state && activity?.party && activity?.party?.size ? activity.party.size[1] !== 0 ? `${activity.state} (${activity.party.size[0]} of ${activity.party.size[1]})` : `${activity.state} (${activity.party.size[0]})` : activity?.party && activity?.party?.size ? activity.party.size[1] !== 0 ? `Party: (${activity.party.size[0]} of ${activity.party.size[1]})` : `Party: (${activity.party.size[0]})` : activity.state), activity?.timestamps?.end ? BdApi.React.createElement("div", { className: "mediaProgressBarContainer" }, BdApi.React.createElement(MediaProgressBar, { start: activity?.timestamps?.start || activity?.created_at, end: activity?.timestamps?.end })) : BdApi.React.createElement(ActivityTimer, { activity }));
 		case "TWITCH":
 			return BdApi.React.createElement(BdApi.React.Fragment, null, activity.state && BdApi.React.createElement("div", { className: "state textRow ellipsis" }, `${locale.Strings.PLAYING()} ${activity.state}`));
 		case "SPOTIFY":
@@ -910,17 +1287,11 @@ const isStream = betterdiscord.Webpack.getByStrings("Array.isArray(e)?e.some(");
 const isJoinable = betterdiscord.Webpack.getByStrings("JOIN)&&", "&&!!(0,", { searchExports: true });
 const isInstance = betterdiscord.Webpack.getByStrings(".INSTANCE&&null!=e");
 const isStageChannel = betterdiscord.Webpack.getByStrings("e?.application_id===", "SS", { searchExports: true });
-const ManaButtons = betterdiscord.Webpack.getMangled(betterdiscord.Webpack.Filters.bySource("SPINNING_CIRCLE", "__unsupportedReactNodeAsText", "tooltipAlign", '"sm","aria-label"'), {
-	PrimaryButtonWithIcon: (x) => String(x).includes('"sm",.'),
-	PrimaryButtonLazy: (x) => String(x).includes("loading"),
-	IconOnlyButton: (x) => String(x).includes("targetElementRef")
-});
 const ActivityMetadataUpdate = betterdiscord.Webpack.getByStrings("USER_ACTIVITY_METADATA", "ACTIVITY_METADATA_UPDATE", { searchExports: true });
 const Parser = betterdiscord.Webpack.getByKeys("formatPathWithQuery");
 const sanitize = betterdiscord.Webpack.getByStrings("sanitizeUrl", "contextKey", { searchExports: true });
 const ChannelContext = betterdiscord.Webpack.getByStrings(".POPOUT", "onClose", "contextless");
-const joinProps = betterdiscord.Webpack.getByStrings("DispatchApplicationStore", "embeddedActivity", { searchExports: true });
-const getPlayableGame = betterdiscord.Webpack.getByStrings("data", "getOfficialGame", ":null!", { searchExports: true });
+const joinProps = betterdiscord.Webpack.getByStrings("SUPPORTS_JOIN_URL", "embeddedActivity", { searchExports: true });
 const SlashCommandIcon = betterdiscord.Webpack.getByStrings("7.61c-.25.95.31", { searchExports: true });
 const GameUtils = betterdiscord.Webpack.getByKeys("launch", "reportUnverifiedGame");
 const ContainerTooltip = betterdiscord.Webpack.getByStrings("asContainer", "keyboardShortcut", { searchExports: true });
@@ -1020,7 +1391,7 @@ function PlayButton({ user, activity, onAction, onClose }) {
 	const { themeType } = themeContext.E();
 	const channelContext = ChannelContext({ applicationId: activity?.application_id, onClose });
 	const isJoinable2 = joinProps({ activity, user, onClose });
-	const isPlayable = getPlayableGame(activity?.application_id);
+	const isPlayable = LaunchableGameUtils.useLaunchableApplicationId(activity?.application_id);
 	if (!isJoinable2 && activity && isEmbeddedActivity(activity)) return BdApi.React.createElement(
 		ManaButtons.PrimaryButtonWithIcon,
 		{
@@ -1248,7 +1619,9 @@ function ActivityCard({ user, activity, check }) {
 			}
 		),
 		activity?.platform?.includes("xbox") && BdApi.React.createElement(ConsoleImageAsset, { url: "https://discord.com/assets/d8e257d7526932dcf7f88e8816a49b30.png", platform: "XBOX" }),
-		activity?.platform?.includes("ps5") && BdApi.React.createElement(ConsoleImageAsset, { url: `https://media.discordapp.net/external${activity.assets.small_image.substring(activity.assets.small_image.indexOf("/"))}`, platform: "PLAYSTATION" }),
+		activity?.platform?.includes("ps5") && !activity?.assets && !activity?.assets.large_image(
+			BdApi.React.createElement(ConsoleImageAsset, { url: `https://media.discordapp.net/external${activity.assets.small_image.substring(activity.assets.small_image.indexOf("/"))}`, platform: "PLAYSTATION" })
+		),
 		activity?.application_id && (!activity?.assets || !activity?.assets.large_image) && !activity?.platform?.includes("xbox") && BdApi.React.createElement(GameIconAsset, { url: `https://cdn.discordapp.com/app-icons/${activity.application_id}/${application?.icon}.png`, name: activity.name }),
 		!(user.bot || activity?.assets || activity?.application_id || application?.icon) && BdApi.React.createElement(FallbackAsset, { style: { width: "40px", height: "40px" } }),
 		activity?.assets && activity?.assets?.large_image && activity?.assets?.small_image && BdApi.React.createElement(
@@ -1349,7 +1722,7 @@ function VoiceBox({ users, channel, themeType }) {
 	const overflowCount = users.length - 3;
 	return BdApi.React.createElement("div", { className: BoxClasses.container }, positions[Lodash.clamp(users.length - 1, 0, positions.length - 1)].map((pos, index) => {
 		const user = users[index];
-		return !user ? null : BdApi.React.createElement("div", { className: BoxClasses.circle, style: pos }, isOverflown && index === (overflowCount >= 10 ? 3 : 1) ? BdApi.React.createElement("div", { className: BoxClasses.overflowCount }, BdApi.React.createElement(Clamp.E, { variant: "text-xxs/semibold", lineClamp: 1 }, BdApi.React.createElement(ClampedText, null, overflowCount > 99 ? ">99" : `+${overflowCount}`))) : BdApi.React.createElement(TooltipBuilder, { note: user.globalName || user.username }, BdApi.React.createElement("img", { className: BoxClasses.avatar, src: user.getAvatarURL(channel.guild_id, "SIZE_80"), alt: "" })));
+		return !user ? null : BdApi.React.createElement("div", { className: BoxClasses.circle, style: pos }, isOverflown && index === (overflowCount >= 10 ? 3 : 1) ? BdApi.React.createElement("div", { className: BoxClasses.overflowCount }, BdApi.React.createElement(Text, { variant: "text-xxs/semibold", lineClamp: 1 }, BdApi.React.createElement(ClampedText, null, overflowCount > 99 ? ">99" : `+${overflowCount}`))) : BdApi.React.createElement(TooltipBuilder, { note: user.globalName || user.username }, BdApi.React.createElement("img", { className: BoxClasses.avatar, src: user.getAvatarURL(channel.guild_id, "SIZE_80"), alt: "" })));
 	}));
 }
 
@@ -1365,7 +1738,24 @@ function StreamCard({ user, voice }) {
 	const streams = useStateFromStores([StreamStore], () => StreamStore.getAllApplicationStreamsForChannel(voice));
 	const _streams = streams.filter((streams2) => streams2 && streams2.ownerId == user.id);
 	const channel = useStateFromStores([ChannelStore], () => ChannelStore.getChannel(voice));
-	return _streams.map((stream) => BdApi.React.createElement("div", { className: "activityProfile activity" }, BdApi.React.createElement("div", { className: "activityProfileContainerStream" }, BdApi.React.createElement(ActivityHeader$1, { voice, stream }), BdApi.React.createElement("div", { className: "bodyNormal", style: { display: "flex", alignItems: "center", width: "auto" } }, BdApi.React.createElement(StreamImageAsset, { stream }), BdApi.React.createElement(FlexInfo, { className: "contentImagesProfile content", voice, stream, channel, type: "STREAM" }), BdApi.React.createElement("div", { className: "buttonsWrapper actionsProfile" }, BdApi.React.createElement(CallButtons, { channel }))))));
+	const currentUser = useStateFromStores([UserStore], () => UserStore.getCurrentUser());
+	return _streams.map((stream) => BdApi.React.createElement("div", { className: "activityProfile activity" }, BdApi.React.createElement("div", { className: "activityProfileContainerStream" }, BdApi.React.createElement(ActivityHeader$1, { voice, stream }), BdApi.React.createElement("div", { className: "bodyNormal", style: { display: "flex", alignItems: "center", width: "auto" } }, BdApi.React.createElement(StreamImageAsset, { stream }), BdApi.React.createElement(FlexInfo, { className: "contentImagesProfile content", voice, stream, channel, type: "STREAM" }), BdApi.React.createElement("div", { className: "buttonsWrapper actionsProfile" }, user.id === currentUser.id ? BdApi.React.createElement(
+		ManaButtons.PrimaryButtonWithIcon,
+		{
+			text: locale.Strings.STREAMING(),
+			disabled: true
+		}
+	) : BdApi.React.createElement(
+		ManaButtons.PrimaryButtonWithIcon,
+		{
+			text: locale.Strings.WATCH(),
+			onClick: (e) => {
+				e.stopPropagation();
+				SelectedChannelActionCreators.selectVoiceChannel(stream.channelId);
+				OpenStream(stream);
+			}
+		}
+	))))));
 }
 
 // ./components/activities/cardCustom.jsx
@@ -1386,7 +1776,7 @@ function CustomActivityContent({ activity, activities }) {
 			className: "customStatusContent"
 		},
 		_emoji.map((_) => BdApi.React.createElement(EmojiRenderer, { emoji: activity.emoji })),
-		BdApi.React.createElement("div", { className: "customStatusText" }, activity.state)
+		BdApi.React.createElement("span", { className: "customStatusText" }, activity.state)
 	);
 }
 function CustomCard({ activities }) {
@@ -1865,7 +2255,7 @@ function getWidgetIntl(widget) {
 }
 function WidgetBuilder({ widget, user }) {
 	const [isLoaded, setIsLoaded] = react.useState(false);
-	const gameIds = Array.isArray(widget.games) ? widget.games.map((game) => game.applicationId) : [];
+	const gameIds = Array.isArray(widget.games) ? widget.games.map((game) => game.gameId) : [];
 	const games = useStateFromStores([ApplicationStore], () => gameIds.map((id) => ApplicationStore.getApplication(id)));
 	const header = getWidgetIntl(widget);
 	react.useEffect(() => {
@@ -1881,7 +2271,7 @@ function WidgetBuilder({ widget, user }) {
 			setIsLoaded(true);
 		})();
 	}, [gameIds]);
-	return widget.type === "application" ? BdApi.React.createElement("div", { className: "userInfoSection" }, BdApi.React.createElement(CustomWidgetCard, { index: 0, user, widget, key: `application-${widget.applicationId}` })) : BdApi.React.createElement(BoardBuilder, { widget, header, games, user });
+	return widget.type === "application" ? BdApi.React.createElement("div", { className: "userInfoSection" }, BdApi.React.createElement(CustomWidgetCard, { index: 0, user, widget, key: `application-${widget.gameId}` })) : BdApi.React.createElement(BoardBuilder, { widget, header, games, user });
 }
 
 // ./components/builders/tabs/tabBoard.jsx
@@ -1972,8 +2362,11 @@ let styles = Object.assign(
 		disabledButtonWrapper: betterdiscord.Webpack.getByKeys("disabledButtonWrapper", "sizeSmall").disabledButtonWrapper,
 		fullscreenOnMobile: betterdiscord.Webpack.getByKeys("focusLock", "fullscreenOnMobile").fullscreenOnMobile,
 		clickableImage: betterdiscord.Webpack.getByKeys("gameState", "clickableImage").clickableImage,
-		bannerButton: betterdiscord.Webpack.getByKeys("bannerButton").bannerButton,
-		small: betterdiscord.Webpack.getByKeys("small", "root").small
+		bannerButton: betterdiscord.Webpack.getByKeys("bannerButton", "disabled").bannerButton,
+		small: betterdiscord.Webpack.getByKeys("small", "root").small,
+		unsavedContainer: betterdiscord.Webpack.getByKeys("flexContainer", "shrinkingContainer").container,
+		labelContainer: betterdiscord.Webpack.getByKeys("labelContainer", "control").labelContainer,
+		control: betterdiscord.Webpack.getByKeys("labelContainer", "control").control
 	},
 	Object.getOwnPropertyDescriptors(betterdiscord.Webpack.getByKeys("container", "bar", "progress")),
 	Object.getOwnPropertyDescriptors(betterdiscord.Webpack.getByKeys("colorPrimary", "grow")),
@@ -3144,10 +3537,84 @@ let CSS = webpackify(
 								background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='UTF-8'%3F%3E%3Csvg id='a' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' viewBox='0 0 15.4283 17.9993'%3E%3Cdefs%3E%3Cstyle%3E.c%7Bfill:url(%23b);stroke-width:0px;%7D%3C/style%3E%3ClinearGradient id='b' x1='-325.0387' y1='138.7955' x2='-325.0387' y2='124.7961' gradientTransform='translate(425.621 178.4514) scale(1.2857 -1.2857)' gradientUnits='userSpaceOnUse'%3E%3Cstop offset='0' stop-color='%23fff'/%3E%3Cstop offset='1' stop-color='%23fff' stop-opacity='.5'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath class='c' d='M5.8294,11.1162c-.3896.2559-.7791.4886-1.17.7226l-.0244.0129c-.3253.1941-.648.387-.9823.5991-.7264.459-1.4439.981-2.0546,1.7061-.2242.2669-.4263.5515-.6043.8511-.333.5593-.6043,1.2086-.8049,1.9761-.1157.4371.1633.882.6236.99.459.1106.9244-.1556,1.0389-.594.1037-.3917.225-.7401.3639-1.0453,1.6933.0643,7.7529-.0296,10.9093-4.3611,2.9919-4.1066,2.475-8.3057,1.7229-11.3503-.1633-.666-1.08-.8254-1.584-.3471-1.5403,1.4721-3.1667,1.8939-4.8626,2.3349-2.0044.5207-4.1091,1.0684-6.3026,3.3956C-.2224,8.4677-.2469,11.1175.2777,13.1142c.7676-.9051,1.6444-1.53,2.4274-2.025.3549-.2229.6934-.4294,1.0157-.6197l.0051-.0026c1.1417-.6814,2.07-1.2407,3.0343-2.313.3171-.3426.8455-.3808,1.2086-.0874.36.2931.4011.81.0939,1.152l-.225.243c-.6036.627-1.2774,1.1822-2.0083,1.6547h0Z'/%3E%3C/svg%3E");
 						}
 				}
+				/* Gifting */
+				.profileBadgeGifting {
+						/* Patron */
+						&[icon="025035e4f4c124c44d29b369936c6843"] {
+								background-image: url(data:image/webp;base64,UklGRuYEAABXRUJQVlA4WAoAAAAQAAAAIAAAIAAAQUxQSDQBAAABkEPbtqk9+7dt+4/tVLZt2+ls27Zt22Zr2zZWcV9Gxo3qiJgASa3e43y/lSQ1vYPzs1pyLAx8Tsv2BGCANACgYtbXADkd1gOrpewvAMqVBhgljTQWGEFPgPqSKhvvXwEnJBX/AdzwlZQIUEqSlvHTrJKyfQV+xEsKfQlUMxK/OC2VpHzfgY9RkrQbmGhoucOzSKMLwBlXo9BneBlsJH82xkpS0gPgS1lJIfnyngC21G7ZtmPv18aRFZsP7bsN8KJH81Je9+EdVhdi/bK9c/bO2jtv7/Y2W4eqdLU1RANsTfL8B0zwsDbdx9qSEGtL7S35Txhma0NoL1vDfEJWXLx09fb9Z8/ffPz+C6+uHZ3Rs7abFJ4rf8ESFes1bNW114CRU2cvW73j4NmzJ5YNbl4kw0eSAFZQOCA2AwAA0BAAnQEqIQAhAAAAACUAXZmaHCfVfyA/VX+V34dxXwv4Ff4Z6i/9K/UB+s3+O9nv0MfjN6lfqwepn6AH6iekn+1XwneTJ/9LqTz5WnfH1TTf+0/kVqin+L1Jf+09O7PH9Af5n3Cv5R/Ov9115vQW/aMxIbu794ASbmSbzF/AuktYzLY2JDB659xDr5sOfAAA/v7hRhXfjgOW1CNi+Snuqb7P6F3V575R/+/lLv63NarW0dc3hcMYjj6iQufEuy+YB8THo8bBHzDXnC26fzrbN22XIkcynuqP8MkPJojM272mIP+xYigr//k8T6e7zZbG1Fv/arXav8/eUOBPxDrf6rJyZCNlucjbuf/5G1DvL4Eh55hcovrax9crofU5x6+oxNsyukLFh/xaSGurxfDPloYf/9qz/azMMpGSMg109COM/lVv5pHnb4GWwHZv/+kN/1n0RQCV+2hrLS//zSmCL+KFb71MRx+2AZt+XCaLIkP/xfP8zSc/nerwsa5E3p0/z8833/CgFzwc1U22hhXlpVWWnGLS9r/xVtgdWwOioWUHtulrff9zhBmZ9Jy4K6dc8jT4Umouesxj/vVcOrW4dOu6uXa+msf+Cja/+RIHfqykutxvkWGPYr0osIBDSX/7roFJzLX8k2RJu5nTD4VM5VnFRNN9cpNbfye3s3FeJI+2IUeUFo/9KjPslm50Nzdkgk6lhaZ31Tq/3lMcf8vfX8C3/hCDxy33jP//3hpKk/+O4EtegtzdR6bAxwWWl+dMroIr/ATOdMy1a0YxIhsm4tst/7SZS68IPs+sccnWm7BDGtffkPGUOO5mkArjB6SkO1W/QfAzebHwpL1/EI/9GVgHvr7BNVKYORMVS4/tmy0uO8+xm02Thhj+L//I3NIH+rJWvr5e1dUfySvO3+8q/1YiYk854DjtZ8V0QP5xdcrf5ArP0kOaazxgKWLI63t//ZBDf/4UIY2HxSNApHMJGp7oKy+FdgwMSU2Nu5USot1y19yJH6AAfiPwAZgXcWJR+WUYyFQxZ0EBoQksuteV8Fb8+O4YDwVvz5IZazfW3IAnyOYCSW11vae6f699gNZEEgkNAAAAUFNBSU4AAAA4QklNA+0AAAAAABAASAAAAAEAAQBIAAAAAQABOEJJTQQoAAAAAAAMAAAAAj/wAAAAAAAAOEJJTQRDAAAAAAAOUGJlVwEQAAYAZAAAAAA=);
+						}
+						/* Champion */
+						&[icon="e5a4b37244fe7da010086db4d4364dc7"] {
+								background-image: url(data:image/webp;base64,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);
+						}
+						/* Luminary */
+						&[icon="beddfe5a71fba596694521e96130fac6"] {
+								background-image: url(data:image/webp;base64,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);
+						}
+						/* Icon */
+						&[icon="03e2ba528c6f713e6a04ce9296a9147c"] {
+								background-image: url(data:image/webp;base64,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);
+						}
+						/* Hero */
+						&[icon="12199b534e062d67eb419543804a5889"] {
+								background-image: url(data:image/webp;base64,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);
+						}
+						&.richBadge {
+								background-image: url(data:image/webp;base64,UklGRq4CAABXRUJQVlA4TKICAAAvR8AREDVIjCRJkaTTX2k/6Mrq4+evioCDbduxxbZd/59t27bdt2Wbb7btd2uy22x9Y7btGh8GjiQp6cZlGRy+MB9SVhqNmg9qFInSg0cSnIIthHILLfOgFW4SsrrJhecKXt4BElY5Os16B0lFCU1gnZvVCKmErYOgc5QLULz7h6EXJeFBOAdBo3jKWuaB9zPX0JrY4OlxvjXe874gQXDwHC1yR2XIFRuNLYhFQmf/iBsb+AXzNdawPGMEUTqQq7Hu5tk0KyywX1qO56m+76GEgFjqaQJBVgjgvcyVVGJtwHtXBZg9ERmurngSpx6kqacTBkFaGaguzStE0QiS5sNCBUkJkRmNdU9ZpZsmHjOomzaDSEAZ+IaBAjqnnvvXA63OfmTwOK+TSysqZZJ0DSItchMSLhCJxz/Bsyvk/ERWfqx4b/o5KPJ6tTFfZ6A80PSzjbabmBla8WLs70frN6N4chWB+XJoazVHyOhNzzzYRUIXeSS/oj+D4r2sIikeN1a1stKRhp8ELcbLhtvSpUQLXrOW3e8BywZs+Ge4e1lr+hWq3h050KjWBe+aMD+uDBnUoUt3pwBWVW4CedJaSuR2iLzAVmOXzxdIOtB9oxJWN6I8wbiNZxBE7Fyh4QpaT0j7uYLSjxBi3h5Vt5CQKktBo41x5LxqVYsSBb0CLmBG7XgREqHQKgZKMmszUb68ag9J0t4PAi9oZuRKH9EzwofPcueoQddqUbfvQqsdt6fOHKxtxaKFjyA+y3FZM1sGtKm+OUldUKesX1Iw+q2NnCv2XZD3IwfK+1N/LbfF2quQ1HwAMqJGjggeDOkHGGVo7TJitctrFzHiTdmYKZhrKV+TL/UIYHmgeStxkRhyjCmg0NpltcuR1y5CECtqlFBe6n1cBw==);
+						}
+				}
+				/* Gifting Legend */
+				.profileBadgeGifting[icon="ec1f8b672db8b517a8c10c698112a923"] {
+						background-image: url(data:image/webp;base64,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);
+						&.richBadge {
+								background-image: url(data:image/webp;base64,UklGRnwDAABXRUJQVlA4TG8DAAAvR8AREGejoG0bxvxJd5fD/M+/grZt2NCS7qlt24aBt1TegcqPhhABaDRA0BACCNAAAwGCgK2jAQQQQgAQCAGCPpajAHPpBP0U6DVA7EIQBCIAhwUAIADBN+lIMAiCATiDRFubFKkZEtydxl0GCW4dT3AmLrg79Ps/wG53VTEhbn9F9J+B27Zx5BjZvfTYgH4hupMyC+83COlAMU/uaEIV9t4WS6nacKwSpkIjqStXRMel20+eYuXTpaP0kGLR6cmnBfs02XaETooFFF9eJzar0dz4xBF6nxvctaGXfl2oAhm5PCcalheheN8R2s/1rG7/KVEXGQsssdu3fvbKJSPJshGWhQa/DELFHPtuIWymH8wN6g4CN/tDLU/FRIE54TApIRO7y+DsaFDWJQG4p7hPPgMRwDf1BGEnIRzOxBGqorHh1R1RqAVHaYO4KGCUYoBmIWypoT4ass8sdwyIKSxNIgGWYCWgKro9Vlf4HeSehIcDD0UEo2Ji6hJJkUlAQSQbtHbuQSc+UxGZLplMF7ovvg0b4YniiD/9nn0FgCpyMvLf47ZkN5d+Sg89HdhnMT30XpI2VHXfCuoZu0UGii+DW0bJfjPhk59gIq+8I9ZRC+3QDewfnKtHA/ejLgbim4ut9fnnqpi20NUE+LCB03evl1fXfL26IqfNgAHQ2tNepWUlaKnyesefDhdJUOeVo3S4lhUXJxaYajKUYu9DVcf5tSPZW5PEZYZeQ9I0m50VG6GlsOEzYRjFHoHF8OHRYsClLL7lCCLDkAGbsni+BZK4nGrhaerLkHWa6KvTPiNRhozTRVdFLovwLllLm5dSJta+V4ykzzMpheNTc4x2cHQSanPp8RyvbgH1lTkRgIJSViOWUj1bU7mRqCryVFSNO0KHBTAzqcNAPzrR1vxyVZde4IvAau/M1/Ehdh8N96O3E83aWK811RWpQ2nVcpr6JUXt7zLGvjwtwSplP1VmRYyGq539FFnY7xDQa4lV08nTtFi4PJ9q4pmi0POncji7cxsLMoEXYjhnmG1hM4UfUhhnwSibQ0ZdEEJo+6CLzeHib4GNLRkr18RqbTa8pb62sqyqMIdaLzegZ0CHYoMO1VgffNwBAj5z1jcWwKCprSwpyM+J0tL9Qi2pKy2uUjUYfbqwkrx/+7C3w1QV34vurgAA) !important;
+						}
+				}
 		}
 
 		.settingsContainer > div {
 				padding-bottom: 10px;
+		}
+
+		/* editing modal */
+		.editingSectionDecoration {
+				display: flex;
+				flex-direction: row;
+				gap: var(--space-8);
+		}
+		.editingSectionContainer {
+				display: flex;
+				flex-direction: column;
+				gap: var(--space-24);
+				margin-top: var(--space-12);
+				margin-bottom: var(--space-24);
+		}
+		.editingSectionInnerContainer {
+				display: flex;
+				flex-direction: row;
+				gap: var(--space-8);
+		} 
+		.editingSectionUnsavedChangesBar {
+				min-width: 100%;
+				margin-bottom: 100px;
+				display: flex;
+				justify-content: center;
+				pointer-events: auto;
+				.unsavedContainer {
+						width: 680px;
+				}
+		}
+		.editingSectionDisplayNameContainer {
+				align-items: center;
+				display: flex;
+				flex-direction: row;
+				gap: var(--space-xs);
+		}
+		.editingSectionContainer > [role="bio"] > .labelContainer {
+				align-self: start;
+		}
+		.editingSectionContainer > [role="guild-tag"] > .control {
+				align-items: unset;
 		}
 
 		/* Timezones Plugin */
@@ -3254,6 +3721,18 @@ class NewOldProfiles {
 				}, []);
 				layoutContainer.children[0].props.children[0] = void 0;
 			});
+		});
+		betterdiscord.Patcher.after(LayerSurfaceModule, "LayerSurface", (that, [props], res) => {
+			const shouldShowNotice = useStateFromStores([UserProfileSettingsStore], () => UserProfileSettingsStore.showNotice());
+			const modals = ModalSystem$1.useModalsStore.getState();
+			const topModal = modals.default[modals.default.length - 1];
+			const isEditingModalOpen = topModal?.key?.startsWith("EDIT_USER_PROFILE_MODAL_KEY");
+			!shouldShowNotice && isEditingModalOpen ? props.onClick = void 0 : props.onClick = () => ModalSystem$1.closeModal(topModal.key);
+		});
+		betterdiscord.Patcher.after(await betterdiscord.Webpack.getBySource('"EDIT_PROFILE"', ".OVERLAY"), "A", (that, [props], res) => {
+			const shouldShowNotice = useStateFromStores([UserProfileSettingsStore], () => UserProfileSettingsStore.showNotice());
+			const currentUser = useStateFromStores([UserStore], () => UserStore.getCurrentUser());
+			res.props.onClick = () => ModalSystem$1.openModal((props2) => react.createElement(ProfileEditingModal, { ...props2 }), { modalKey: `EDIT_USER_PROFILE_MODAL_KEY:${currentUser.id}:`, dismissable: !shouldShowNotice });
 		});
 	}
 	stop() {
