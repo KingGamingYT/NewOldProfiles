@@ -63,6 +63,12 @@ export default class NewOldProfiles {
     async start() {
         const patcher = ReactUtils.createNodePatcher();
         addProfileCSS();
+        Patcher.after(await Webpack.waitForModule(Webpack.Filters.bySource('"EDIT_PROFILE"', '.OVERLAY')), "A", (that, [props], res) => {
+            const shouldShowNotice = useStateFromStores([UserProfileSettingsStore], () => UserProfileSettingsStore.showNotice());
+            const currentUser = useStateFromStores([UserStore], () => UserStore.getCurrentUser());
+            if (props.user.id !== currentUser.id) return;
+            res.props.onClick = () => ModalSystem.openModal((props) => createElement(ProfileEditingModal, {...props}), {modalKey: `EDIT_USER_PROFILE_MODAL_KEY:${currentUser.id}:`, dismissable: !shouldShowNotice});
+        });
         Patcher.after(entireProfileModal.A, "render", (that, [props], res) => {
             if (!props.themeType?.includes("MODAL")) return;
 
@@ -86,11 +92,6 @@ export default class NewOldProfiles {
             const topModal = modals.default[modals.default.length - 1];
             const isEditingModalOpen = topModal?.key?.startsWith("EDIT_USER_PROFILE_MODAL_KEY");
             !shouldShowNotice && isEditingModalOpen ? props.onClick = undefined : props.onClick = () => ModalSystem.closeModal(topModal.key);
-        });
-        Patcher.after(await Webpack.getBySource('"EDIT_PROFILE"', '.OVERLAY'), "A", (that, [props], res) => {
-            const shouldShowNotice = useStateFromStores([UserProfileSettingsStore], () => UserProfileSettingsStore.showNotice());
-            const currentUser = useStateFromStores([UserStore], () => UserStore.getCurrentUser());
-            res.props.onClick = () => ModalSystem.openModal((props) => createElement(ProfileEditingModal, {...props}), {modalKey: `EDIT_USER_PROFILE_MODAL_KEY:${currentUser.id}:`, dismissable: !shouldShowNotice});
         });
     }
     stop() {

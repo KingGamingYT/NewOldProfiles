@@ -11,7 +11,6 @@ let styles = Object.assign(
         clickableImage: Webpack.getByKeys('gameState', 'clickableImage').clickableImage,
         bannerButton: Webpack.getByKeys('bannerButton', 'disabled').bannerButton,
         small: Webpack.getByKeys('small', 'root').small,
-        unsavedContainer: Webpack.getByKeys('flexContainer', 'shrinkingContainer').container,
         labelContainer: Webpack.getByKeys('labelContainer', 'control').labelContainer,
         control: Webpack.getByKeys('labelContainer', 'control').control
     },
@@ -1248,7 +1247,7 @@ let CSS = webpackify(
         display: flex;
         justify-content: center;
         pointer-events: auto;
-        .unsavedContainer {
+        [data-emphasized] {
             width: 680px;
         }
     }

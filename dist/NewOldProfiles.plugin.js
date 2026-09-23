@@ -2,7 +2,7 @@
  * @name NewOldProfiles
  * @author KingGamingYT
  * @description A full, largely accurate restoration of Discord's profile layout used from 2018 to 2021. Features modern additions such as banners, theme colors, and guild tags.
- * @version 1.3.5
+ * @version 1.3.6
  * @runAt idle
  */
 
@@ -2364,7 +2364,6 @@ let styles = Object.assign(
 		clickableImage: betterdiscord.Webpack.getByKeys("gameState", "clickableImage").clickableImage,
 		bannerButton: betterdiscord.Webpack.getByKeys("bannerButton", "disabled").bannerButton,
 		small: betterdiscord.Webpack.getByKeys("small", "root").small,
-		unsavedContainer: betterdiscord.Webpack.getByKeys("flexContainer", "shrinkingContainer").container,
 		labelContainer: betterdiscord.Webpack.getByKeys("labelContainer", "control").labelContainer,
 		control: betterdiscord.Webpack.getByKeys("labelContainer", "control").control
 	},
@@ -3600,7 +3599,7 @@ let CSS = webpackify(
 				display: flex;
 				justify-content: center;
 				pointer-events: auto;
-				.unsavedContainer {
+				[data-emphasized] {
 						width: 680px;
 				}
 		}
@@ -3702,6 +3701,12 @@ class NewOldProfiles {
 	async start() {
 		const patcher = betterdiscord.ReactUtils.createNodePatcher();
 		addProfileCSS();
+		betterdiscord.Patcher.after(await betterdiscord.Webpack.waitForModule(betterdiscord.Webpack.Filters.bySource('"EDIT_PROFILE"', ".OVERLAY")), "A", (that, [props], res) => {
+			const shouldShowNotice = useStateFromStores([UserProfileSettingsStore], () => UserProfileSettingsStore.showNotice());
+			const currentUser = useStateFromStores([UserStore], () => UserStore.getCurrentUser());
+			if (props.user.id !== currentUser.id) return;
+			res.props.onClick = () => ModalSystem$1.openModal((props2) => react.createElement(ProfileEditingModal, { ...props2 }), { modalKey: `EDIT_USER_PROFILE_MODAL_KEY:${currentUser.id}:`, dismissable: !shouldShowNotice });
+		});
 		betterdiscord.Patcher.after(entireProfileModal.A, "render", (that, [props], res) => {
 			if (!props.themeType?.includes("MODAL")) return;
 			if (!betterdiscord.Utils.findInTree(props, (x) => x?.displayProfile, { walkable: ["props", "children"] })) return;
@@ -3728,11 +3733,6 @@ class NewOldProfiles {
 			const topModal = modals.default[modals.default.length - 1];
 			const isEditingModalOpen = topModal?.key?.startsWith("EDIT_USER_PROFILE_MODAL_KEY");
 			!shouldShowNotice && isEditingModalOpen ? props.onClick = void 0 : props.onClick = () => ModalSystem$1.closeModal(topModal.key);
-		});
-		betterdiscord.Patcher.after(await betterdiscord.Webpack.getBySource('"EDIT_PROFILE"', ".OVERLAY"), "A", (that, [props], res) => {
-			const shouldShowNotice = useStateFromStores([UserProfileSettingsStore], () => UserProfileSettingsStore.showNotice());
-			const currentUser = useStateFromStores([UserStore], () => UserStore.getCurrentUser());
-			res.props.onClick = () => ModalSystem$1.openModal((props2) => react.createElement(ProfileEditingModal, { ...props2 }), { modalKey: `EDIT_USER_PROFILE_MODAL_KEY:${currentUser.id}:`, dismissable: !shouldShowNotice });
 		});
 	}
 	stop() {
