@@ -4,7 +4,7 @@ import { lazy } from "react";
 export const [
     entireProfileModal,
     ModalAccessUtils,
-    ModalRoot, 
+    Modal, 
     intl,
     ButtonClasses,
     ActivityActions,
@@ -53,7 +53,7 @@ export const [
 ] = /* @__PURE__ */ Webpack.getBulk(
     { filter: /* @__PURE__ */ Webpack.Filters.bySource('forceShowPremium', 'pendingThemeColors', 'profileThemeClassName') },
     { filter: x => x.openUserProfileModal },
-    { filter: x=>x.Modal },
+    { filter: /* @__PURE__ */ Webpack.Filters.byStrings("leadingLayout:", "actions:", ".message"), searchExports: true },
     { filter: x => x.t && x.t.formatToMarkdownString },
     { filter: x=> x.button && x.hasText && !x.hasTrailing },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('display', 'getUserOutbox') },
@@ -181,12 +181,6 @@ export const UserProfileSettingsActionCreators2 = /* @__PURE__ */ Webpack.getMan
     shake: Webpack.Filters.byStrings('SHAKE_PROFILE_MODAL')
 });
 export const UserProfileSettingsActionCreators = Object.assign(UserProfileSettingsActionCreators1, UserProfileSettingsActionCreators2);
-export const EditableTileProfileButtons = Webpack.getMangled('"UserProfileModalV2EditableDisplayName"', {
-    ThemeButton: Webpack.Filters.byStrings('currentProfileThemeColors', 'disabled'),
-    BannerButton: Webpack.Filters.byStrings('pendingBanner', 'accessibleValue'),
-    EffectButton: Webpack.Filters.byStrings('pendingProfileEffect', 'variant'),
-    FrameButton: Webpack.Filters.byStrings('pendingProfileFrame', 'userValue')
-}, {mapDeclarations: true});
 export const NavigationUtils = /* @__PURE__ */ Webpack.getMangled("transitionTo - Transitioning to", {
     transitionTo: /* @__PURE__ */ Webpack.Filters.byStrings("transitionTo - Transitioning to "),
     replace: /* @__PURE__ */ Webpack.Filters.byStrings("Replacing route with"),

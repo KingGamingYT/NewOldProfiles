@@ -15,6 +15,7 @@ let RolePermissionCheck;
 let TagRenderer;
 let MutualFriends;
 let MutualServers;
+let TileButtons;
 
 function MessageButtonLargeComponent({ autoFocus, onClose, userId }) {
     MessageButtonLarge ??= Webpack.getByStrings("let{userId", ",{variant", '"primary",', { searchExports: true});
@@ -92,6 +93,17 @@ function MutualServerRenderer({key, user, guild, nick, onSelect}) {
     return <MutualServers key={key} user={user} status={status} guild={guild} nick={nick} onSelect={onSelect} />
 }
 
+function EditableTileProfileButtons() {
+    TileButtons ??= Webpack.getMangled('"UserProfileModalV2EditableDisplayName"', {
+        ThemeButton: Webpack.Filters.byStrings('currentProfileThemeColors', 'disabled'),
+        BannerButton: Webpack.Filters.byStrings('pendingBanner', 'accessibleValue'),
+        EffectButton: Webpack.Filters.byStrings('pendingProfileEffect', 'variant'),
+        FrameButton: Webpack.Filters.byStrings('pendingProfileFrame', 'userValue')
+    }, {mapDeclarations: true});
+
+    return TileButtons;
+}
+
 export {
     MessageButtonLargeComponent,
     MessageButtonSmallComponent,
@@ -107,4 +119,5 @@ export {
     WidgetTagRenderer,
     MutualFriendRenderer,
     MutualServerRenderer,
+    EditableTileProfileButtons,
 }

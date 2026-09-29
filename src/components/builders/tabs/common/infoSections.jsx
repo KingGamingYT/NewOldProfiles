@@ -1,6 +1,6 @@
 import { Data, Utils } from 'betterdiscord';
 import { useState } from 'react';
-import { IconUtils, ButtonClasses, ModalRoot, ModalSystem, RoleRenderer, RoleUpdater, Card, intl } from '@modules/common';
+import { IconUtils, ButtonClasses, Modal, ModalSystem, RoleRenderer, RoleUpdater, Card, intl } from '@modules/common';
 import { GuildMemberStore, GuildRoleStore, GuildStore, RelationshipStore } from '@modules/stores';
 import { ConnectionComponent, MarkdownComponent, NoteComponent, BoardEditRenderer, RolePermissionHook } from '@modules/lazy';
 import { locale } from '@common/locale';
@@ -49,9 +49,9 @@ function BoardButton({ user }) {
         <button
             className={`${ButtonClasses.button} ${ButtonClasses.sm} ${ButtonClasses.primary} ${ButtonClasses.hasText}`}
             onClick={() => ModalSystem.openModal((props) =>
-                <ModalRoot.Modal {...props} title={locale.Strings.PROFILE_WIDGETS()}>
+                <Modal {...props} title={locale.Strings.PROFILE_WIDGETS()}>
                     <BoardEditRenderer user={user} />
-                </ModalRoot.Modal>
+                </Modal>
             )}>
             <div className={`${ButtonClasses.buttonChildrenWrapper}`}>
                 <div className={`${ButtonClasses.buttonChildren}`} style={{ fontSize: "14px" }}>{locale.Strings.EDIT()}</div>

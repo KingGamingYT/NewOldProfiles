@@ -2,7 +2,7 @@
  * @name NewOldProfiles
  * @author KingGamingYT
  * @description A full, largely accurate restoration of Discord's profile layout used from 2018 to 2021. Features modern additions such as banners, theme colors, and guild tags.
- * @version 1.3.6
+ * @version 1.3.7-dev
  * @runAt idle
  */
 
@@ -39,7 +39,7 @@ const react = BdApi.React;
 const [
 	entireProfileModal,
 	ModalAccessUtils,
-	ModalRoot,
+	Modal,
 	intl,
 	ButtonClasses,
 	ActivityActions,
@@ -88,7 +88,7 @@ const [
 ] = betterdiscord.Webpack.getBulk(
 	{ filter: betterdiscord.Webpack.Filters.bySource("forceShowPremium", "pendingThemeColors", "profileThemeClassName") },
 	{ filter: (x) => x.openUserProfileModal },
-	{ filter: (x) => x.Modal },
+	{ filter: betterdiscord.Webpack.Filters.byStrings("leadingLayout:", "actions:", ".message"), searchExports: true },
 	{ filter: (x) => x.t && x.t.formatToMarkdownString },
 	{ filter: (x) => x.button && x.hasText && !x.hasTrailing },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("display", "getUserOutbox") },
@@ -216,12 +216,6 @@ const UserProfileSettingsActionCreators2 = betterdiscord.Webpack.getMangled('"US
 	shake: betterdiscord.Webpack.Filters.byStrings("SHAKE_PROFILE_MODAL")
 });
 const UserProfileSettingsActionCreators = Object.assign(UserProfileSettingsActionCreators1, UserProfileSettingsActionCreators2);
-const EditableTileProfileButtons = betterdiscord.Webpack.getMangled('"UserProfileModalV2EditableDisplayName"', {
-	ThemeButton: betterdiscord.Webpack.Filters.byStrings("currentProfileThemeColors", "disabled"),
-	BannerButton: betterdiscord.Webpack.Filters.byStrings("pendingBanner", "accessibleValue"),
-	EffectButton: betterdiscord.Webpack.Filters.byStrings("pendingProfileEffect", "variant"),
-	FrameButton: betterdiscord.Webpack.Filters.byStrings("pendingProfileFrame", "userValue")
-}, { mapDeclarations: true });
 const NavigationUtils = betterdiscord.Webpack.getMangled("transitionTo - Transitioning to", {
 	transitionTo: betterdiscord.Webpack.Filters.byStrings("transitionTo - Transitioning to "),
 	replace: betterdiscord.Webpack.Filters.byStrings("Replacing route with"),
@@ -297,6 +291,7 @@ let RolePermissionCheck;
 let TagRenderer;
 let MutualFriends;
 let MutualServers;
+let TileButtons;
 function MessageButtonLargeComponent({ autoFocus, onClose, userId }) {
 	MessageButtonLarge ??= betterdiscord.Webpack.getByStrings("let{userId", ",{variant", '"primary",', { searchExports: true });
 	return BdApi.React.createElement(MessageButtonLarge, { autoFocus, onClose: () => PopUtils.popAll(), userId });
@@ -356,6 +351,15 @@ function MutualFriendRenderer({ user, status: status2, guildId, onSelect }) {
 function MutualServerRenderer({ key, user, guild, nick, onSelect }) {
 	MutualServers ??= betterdiscord.Webpack.getByStrings("hasAvatarForGuild", "nick");
 	return BdApi.React.createElement(MutualServers, { key, user, status, guild, nick, onSelect });
+}
+function EditableTileProfileButtons() {
+	TileButtons ??= betterdiscord.Webpack.getMangled('"UserProfileModalV2EditableDisplayName"', {
+		ThemeButton: betterdiscord.Webpack.Filters.byStrings("currentProfileThemeColors", "disabled"),
+		BannerButton: betterdiscord.Webpack.Filters.byStrings("pendingBanner", "accessibleValue"),
+		EffectButton: betterdiscord.Webpack.Filters.byStrings("pendingProfileEffect", "variant"),
+		FrameButton: betterdiscord.Webpack.Filters.byStrings("pendingProfileFrame", "userValue")
+	}, { mapDeclarations: true });
+	return TileButtons;
 }
 
 // ./common/settings.js
@@ -709,6 +713,7 @@ function ServerTagSelect({ availablePrimaryGuilds, pendingPrimaryGuildId, onChan
 	);
 }
 function ProfileEditingPanel({ user }) {
+	const EditableTiles = EditableTileProfileButtons();
 	const userProfile = useStateFromStores([UserProfileStore], () => UserProfileStore.getUserProfile(user.id));
 	const {
 		pendingGlobalName,
@@ -729,7 +734,7 @@ function ProfileEditingPanel({ user }) {
 		};
 	});
 	const availablePrimaryGuilds = getAvailablePrimaryGuilds();
-	return BdApi.React.createElement(BdApi.React.Fragment, null, BdApi.React.createElement("div", { className: "editingSectionDecoration" }, BdApi.React.createElement("div", null, BdApi.React.createElement(EditingCategoryHeader, { variant: "text-md/medium" }, locale.Strings.AVATAR_AND_DECORATION()), BdApi.React.createElement("div", { className: "editingSectionContainer", style: { gap: "var(--space-8)" } }, BdApi.React.createElement("div", { className: "editingSectionInnerContainer" }, BdApi.React.createElement(AvatarButton, { user }), BdApi.React.createElement(AvatarDecorationButton, { user })), BdApi.React.createElement(NameplateButton, { user }))), BdApi.React.createElement("div", null, BdApi.React.createElement(EditingCategoryHeader, { variant: "text-md/medium" }, locale.Strings.THEME_AND_BANNER()), BdApi.React.createElement("div", { className: "editingSectionContainer" }, BdApi.React.createElement("div", { className: "editingSectionInnerContainer" }, BdApi.React.createElement(EditableTileProfileButtons.ThemeButton, { user }), BdApi.React.createElement(EditableTileProfileButtons.BannerButton, { userId: user.id })))), BdApi.React.createElement("div", null, BdApi.React.createElement(EditingCategoryHeader, { variant: "text-md/medium" }, locale.Strings.PROFILE_EFFECT_AND_FRAME()), BdApi.React.createElement("div", { className: "editingSectionContainer" }, BdApi.React.createElement("div", { className: "editingSectionInnerContainer" }, BdApi.React.createElement(EditableTileProfileButtons.EffectButton, { user, variant: "square" }), BdApi.React.createElement(EditableTileProfileButtons.FrameButton, { user }))))), BdApi.React.createElement(EditingCategoryHeader, null, locale.Strings.ABOUT_ME()), BdApi.React.createElement("div", { className: "editingSectionContainer" }, BdApi.React.createElement(LabeledField, { layout: "horizontal", label: locale.Strings.DISPLAY_NAME() }, BdApi.React.createElement("div", { className: "editingSectionDisplayNameContainer" }, BdApi.React.createElement(
+	return BdApi.React.createElement(BdApi.React.Fragment, null, BdApi.React.createElement("div", { className: "editingSectionDecoration" }, BdApi.React.createElement("div", null, BdApi.React.createElement(EditingCategoryHeader, { variant: "text-md/medium" }, locale.Strings.AVATAR_AND_DECORATION()), BdApi.React.createElement("div", { className: "editingSectionContainer", style: { gap: "var(--space-8)" } }, BdApi.React.createElement("div", { className: "editingSectionInnerContainer" }, BdApi.React.createElement(AvatarButton, { user }), BdApi.React.createElement(AvatarDecorationButton, { user })), BdApi.React.createElement(NameplateButton, { user }))), BdApi.React.createElement("div", null, BdApi.React.createElement(EditingCategoryHeader, { variant: "text-md/medium" }, locale.Strings.THEME_AND_BANNER()), BdApi.React.createElement("div", { className: "editingSectionContainer" }, BdApi.React.createElement("div", { className: "editingSectionInnerContainer" }, BdApi.React.createElement(EditableTiles.ThemeButton, { user }), BdApi.React.createElement(EditableTiles.BannerButton, { userId: user.id })))), BdApi.React.createElement("div", null, BdApi.React.createElement(EditingCategoryHeader, { variant: "text-md/medium" }, locale.Strings.PROFILE_EFFECT_AND_FRAME()), BdApi.React.createElement("div", { className: "editingSectionContainer" }, BdApi.React.createElement("div", { className: "editingSectionInnerContainer" }, BdApi.React.createElement(EditableTiles.EffectButton, { user, variant: "square" }), BdApi.React.createElement(EditableTiles.FrameButton, { user }))))), BdApi.React.createElement(EditingCategoryHeader, null, locale.Strings.ABOUT_ME()), BdApi.React.createElement("div", { className: "editingSectionContainer" }, BdApi.React.createElement(LabeledField, { layout: "horizontal", label: locale.Strings.DISPLAY_NAME() }, BdApi.React.createElement("div", { className: "editingSectionDisplayNameContainer" }, BdApi.React.createElement(
 		TextInput,
 		{
 			value: pendingGlobalName ?? user.globalName,
@@ -856,7 +861,7 @@ function ProfileEditingModal(props) {
 	const user = useStateFromStores([UserStore], () => UserStore.getCurrentUser());
 	const shouldShowNotice = useStateFromStores([UserProfileSettingsStore], () => UserProfileSettingsStore.showNotice());
 	isDismissable && shouldShowNotice ? props.dismissable = false : props.dismissable = true;
-	return BdApi.React.createElement(BdApi.React.Fragment, null, BdApi.React.createElement(ModalRoot.Modal, { ...props, title: locale.Strings.EDIT_PROFILE(), size: "lg" }, BdApi.React.createElement(ProfileEditingPanel, { user })), BdApi.React.createElement(UnsavedContentNotice, null));
+	return BdApi.React.createElement(BdApi.React.Fragment, null, BdApi.React.createElement(Modal, { ...props, title: locale.Strings.EDIT_PROFILE(), size: "lg" }, BdApi.React.createElement(ProfileEditingPanel, { user })), BdApi.React.createElement(UnsavedContentNotice, null));
 }
 
 // ./components/editing/editProfileButton.jsx
@@ -2151,7 +2156,7 @@ function BoardButton({ user }) {
 		{
 			className: `${ButtonClasses.button} ${ButtonClasses.sm} ${ButtonClasses.primary} ${ButtonClasses.hasText}`,
 			onClick: () => ModalSystem$1.openModal(
-				(props) => BdApi.React.createElement(ModalRoot.Modal, { ...props, title: locale.Strings.PROFILE_WIDGETS() }, BdApi.React.createElement(BoardEditRenderer, { user }))
+				(props) => BdApi.React.createElement(Modal, { ...props, title: locale.Strings.PROFILE_WIDGETS() }, BdApi.React.createElement(BoardEditRenderer, { user }))
 			)
 		},
 		BdApi.React.createElement("div", { className: `${ButtonClasses.buttonChildrenWrapper}` }, BdApi.React.createElement("div", { className: `${ButtonClasses.buttonChildren}`, style: { fontSize: "14px" } }, locale.Strings.EDIT()))
@@ -3677,7 +3682,7 @@ function Starter({ props, res }) {
 		data.onClose(react.useEffect(() => {
 			ModalSystem$1.openModal(
 				(props2) => react.createElement(
-					ModalRoot.Modal,
+					Modal,
 					{ ...props2, title: locale.Strings.PROFILE_WIDGETS() },
 					react.createElement(BoardEditRenderer, { user })
 				)

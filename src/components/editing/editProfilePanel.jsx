@@ -1,13 +1,12 @@
 import { useState, useRef, useMemo, useCallback } from "react";
-import { AvatarButton, AvatarDecorationButton, Text, TextInput, LabeledField, NameplateButton, EditableTileProfileButtons, SetPendingUserChanges, ManaButtons, PencilIcon, OpenDisplayNameStylesModal, RichTextArea, FieldSelect, SelectClasses, getAvailablePrimaryGuilds, GuildTag, ClanGuildIcon, GuildBadge } from "@modules/common";
+import { AvatarButton, AvatarDecorationButton, Text, TextInput, LabeledField, NameplateButton, SetPendingUserChanges, ManaButtons, PencilIcon, OpenDisplayNameStylesModal, RichTextArea, FieldSelect, SelectClasses, getAvailablePrimaryGuilds, GuildTag, ClanGuildIcon, GuildBadge } from "@modules/common";
 import { UserProfileStore, UserProfileSettingsStore, UserStore, useStateFromStores } from "@modules/stores";
+import { EditableTileProfileButtons } from "@modules/lazy";
 import { locale } from "@common/locale";
 
 function EditingCategoryHeader({ variant, children }) {
   return <Text tag="legend" variant={variant ?? "heading-xl/normal"}>{children}</Text>
 }
-
-function EditingField({title, Component}) {}
 
 function ServerTagSelect({availablePrimaryGuilds, pendingPrimaryGuildId, onChange}) {
   const guildDetails = useMemo(() => new Map(availablePrimaryGuilds.map(guild => [guild.id, guild])), [availablePrimaryGuilds]);
@@ -107,6 +106,7 @@ function ServerTagSelect({availablePrimaryGuilds, pendingPrimaryGuildId, onChang
 }
 
 export function ProfileEditingPanel({ user }) {
+  const EditableTiles = EditableTileProfileButtons();
   const userProfile = useStateFromStores([UserProfileStore], () => UserProfileStore.getUserProfile(user.id));
   const {pendingGlobalName, 
     pendingBanner, 
@@ -143,8 +143,8 @@ export function ProfileEditingPanel({ user }) {
           <EditingCategoryHeader variant="text-md/medium">{locale.Strings.THEME_AND_BANNER()}</EditingCategoryHeader>
           <div className="editingSectionContainer">
             <div className="editingSectionInnerContainer">
-              <EditableTileProfileButtons.ThemeButton user={user} />
-              <EditableTileProfileButtons.BannerButton userId={user.id} />
+              <EditableTiles.ThemeButton user={user} />
+              <EditableTiles.BannerButton userId={user.id} />
             </div>
           </div>
         </div>
@@ -152,8 +152,8 @@ export function ProfileEditingPanel({ user }) {
           <EditingCategoryHeader variant="text-md/medium">{locale.Strings.PROFILE_EFFECT_AND_FRAME()}</EditingCategoryHeader>
           <div className="editingSectionContainer">
             <div className="editingSectionInnerContainer">
-              <EditableTileProfileButtons.EffectButton user={user} variant="square" />
-              <EditableTileProfileButtons.FrameButton user={user} />
+              <EditableTiles.EffectButton user={user} variant="square" />
+              <EditableTiles.FrameButton user={user} />
             </div>
           </div>
         </div>

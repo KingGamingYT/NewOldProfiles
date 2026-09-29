@@ -1,6 +1,6 @@
 import { ReactUtils } from "betterdiscord";
 import { useState, useCallback, useMemo } from "react";
-import { ModalRoot, SliderAnimatedContainer, UnsavedNoticeContainer, SaveBar, UserProfileSettingsActionCreators, UserProfilePendingChangesActionCreators, InvalidUsernameToast, ToastMap, Toast, SetGuildIdentity, Settings } from "@modules/common";
+import { Modal, SliderAnimatedContainer, UnsavedNoticeContainer, SaveBar, UserProfileSettingsActionCreators, UserProfilePendingChangesActionCreators, InvalidUsernameToast, ToastMap, Toast, SetGuildIdentity, Settings } from "@modules/common";
 import { UserProfileSettingsStore, UserStore, useStateFromStores } from "@modules/stores";
 import { ProfileEditingPanel } from "./editProfilePanel";
 import { locale } from "@common/locale";
@@ -103,9 +103,9 @@ export function ProfileEditingModal(props) {
 
   return (
     <>
-        <ModalRoot.Modal {...props} title={locale.Strings.EDIT_PROFILE()} size="lg">
+        <Modal {...props} title={locale.Strings.EDIT_PROFILE()} size="lg">
             <ProfileEditingPanel user={user} />
-        </ModalRoot.Modal>
+        </Modal>
         <UnsavedContentNotice />
     </>
   )

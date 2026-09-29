@@ -1,5 +1,5 @@
 import { Data, Patcher, DOM, Utils, ReactUtils, Components, Webpack } from "betterdiscord";
-import { entireProfileModal, FormSwitch, ModalSystem, ModalRoot, ProfileFetch, LayerSurfaceModule } from "@modules/common";
+import { entireProfileModal, FormSwitch, ModalSystem, Modal, ProfileFetch, LayerSurfaceModule } from "@modules/common";
 import { UserProfileStore, UserProfileSettingsStore, UserStore, useStateFromStores } from '@modules/stores';
 import { BoardEditRenderer } from "@modules/lazy";
 import { settings } from "@common/settings";
@@ -41,7 +41,7 @@ function Starter({props, res}) {
     if (tab === 4 && user.id === currentUser.id) {
         data.onClose(useEffect(() => {
             ModalSystem.openModal((props) =>
-                createElement(ModalRoot.Modal, {...props, title: locale.Strings.PROFILE_WIDGETS()},
+                createElement(Modal, {...props, title: locale.Strings.PROFILE_WIDGETS()},
                     createElement(BoardEditRenderer, {user})
                 )
             )
