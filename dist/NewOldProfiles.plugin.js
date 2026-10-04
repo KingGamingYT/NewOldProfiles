@@ -2,7 +2,7 @@
  * @name NewOldProfiles
  * @author KingGamingYT
  * @description A full, largely accurate restoration of Discord's profile layout used from 2018 to 2021. Features modern additions such as banners, theme colors, and guild tags.
- * @version 1.3.7
+ * @version 1.3.8
  * @runAt idle
  */
 
@@ -1276,7 +1276,6 @@ function FlexInfo(props) {
 // ./components/activities/common/ActivityButtons.jsx
 const themeContext = betterdiscord.Webpack.getBySource("themePreferenceForSystemTheme", "createContext");
 const activityAuth = betterdiscord.Webpack.getByStrings("alpha2", "embeddedActivityConfig", { searchExports: true });
-const activityIdCheck = betterdiscord.Webpack.getBySource("{return!!(0", ")(e)}}", { searchExports: true });
 const getCTA = betterdiscord.Webpack.getByStrings("ctaConfig", "flatMap");
 const fetchAuthorization = betterdiscord.Webpack.getByStrings("parentId", "disableFetch", { searchExports: true });
 const CloudPlayButton = betterdiscord.Webpack.getByStrings('"PRESS_CLOUD_PLAY_BUTTON"');
@@ -1440,7 +1439,7 @@ function ActivityButtons({ user, activity, onAction, onClose, application, conta
 	const { themeType } = themeContext.E();
 	const isSelf = useStateFromStores([AuthenticationStore], () => AuthenticationStore.getId() === user.id);
 	const hasConfig = activityAuth(application);
-	const idCheck = activityIdCheck.o(activity?.application_id ?? application?.id);
+	const idCheck = !!LaunchableGameUtils.useLaunchableApplicationId(activity?.application_id ?? application?.id);
 	const ctaButtons = getCTA(activity?.application_id);
 	const { fetched, canStartAuthorization, hasAlreadyLinked, startAuthorization } = fetchAuthorization(application);
 	const isModal = themeType === "MODAL" || themeType === "MODAL_V2";

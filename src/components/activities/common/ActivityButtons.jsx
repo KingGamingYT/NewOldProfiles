@@ -5,7 +5,6 @@ import { locale } from '@common/locale';
 
 const themeContext = Webpack.getBySource('themePreferenceForSystemTheme', 'createContext');
 const activityAuth = Webpack.getByStrings('alpha2', 'embeddedActivityConfig', {searchExports: true});
-const activityIdCheck = Webpack.getBySource('{return!!(0', ')(e)}}', {searchExports: true});
 const getCTA = Webpack.getByStrings('ctaConfig', 'flatMap');
 const fetchAuthorization = Webpack.getByStrings('parentId', 'disableFetch', {searchExports: true});
 const CloudPlayButton = Webpack.getByStrings('"PRESS_CLOUD_PLAY_BUTTON"');
@@ -173,7 +172,7 @@ export function ActivityButtons({user, activity, onAction, onClose, application,
     const {themeType} = themeContext.E();
     const isSelf = useStateFromStores([AuthenticationStore], () => AuthenticationStore.getId() === user.id);
     const hasConfig = activityAuth(application);
-    const idCheck = activityIdCheck.o(activity?.application_id ?? application?.id);
+    const idCheck = !!LaunchableGameUtils.useLaunchableApplicationId(activity?.application_id ?? application?.id);
     const ctaButtons = getCTA(activity?.application_id);
     const {fetched, canStartAuthorization, hasAlreadyLinked, startAuthorization} = fetchAuthorization(application);
     const isModal = themeType === "MODAL" || themeType === "MODAL_V2";
