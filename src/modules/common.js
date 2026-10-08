@@ -93,7 +93,7 @@ export const [
     { filter: /* @__PURE__ */ Webpack.Filters.bySource('UserProfileModalV2', 'defaultWishlistId') },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('getMatchingInboxEntry', 'getMatchingOutboxEntry') },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('delay', 'lineClamp') },
-    { filter: x => x?.render && x?.render?.toString().includes('tabularNumbers'), searchExports: true },
+    { filter: /* @__PURE__ */ Webpack.Filters.byStrings('.style', '"data-text-variant"'), searchExports: true },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('warn', 'preview', 'messageType'), searchExports: true },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('instanceof', 'widget'), searchExports: true },
     { filter: x=> x.selectVoiceChannel, searchExports: true },

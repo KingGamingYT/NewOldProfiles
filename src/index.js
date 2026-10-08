@@ -69,7 +69,7 @@ export default class NewOldProfiles {
             if (props.user.id !== currentUser.id) return;
             res.props.onClick = () => ModalSystem.openModal((props) => createElement(ProfileEditingModal, {...props}), {modalKey: `EDIT_USER_PROFILE_MODAL_KEY:${currentUser.id}:`, dismissable: !shouldShowNotice});
         });
-        Patcher.after(entireProfileModal.A, "render", (that, [props], res) => {
+        Patcher.after(entireProfileModal, "A", (that, [props], res) => {
             if (!props.themeType?.includes("MODAL")) return;
 
             if (!Utils.findInTree(props, x => x?.displayProfile, { walkable: ['props', 'children'] })) return;

@@ -2,7 +2,7 @@
  * @name NewOldProfiles
  * @author KingGamingYT
  * @description A full, largely accurate restoration of Discord's profile layout used from 2018 to 2021. Features modern additions such as banners, theme colors, and guild tags.
- * @version 1.3.8
+ * @version 1.3.9
  * @runAt idle
  */
 
@@ -128,7 +128,7 @@ const [
 	{ filter: betterdiscord.Webpack.Filters.bySource("UserProfileModalV2", "defaultWishlistId") },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("getMatchingInboxEntry", "getMatchingOutboxEntry") },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("delay", "lineClamp") },
-	{ filter: (x) => x?.render && x?.render?.toString().includes("tabularNumbers"), searchExports: true },
+	{ filter: betterdiscord.Webpack.Filters.byStrings(".style", '"data-text-variant"'), searchExports: true },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("warn", "preview", "messageType"), searchExports: true },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("instanceof", "widget"), searchExports: true },
 	{ filter: (x) => x.selectVoiceChannel, searchExports: true },
@@ -333,8 +333,14 @@ function ConnectionComponent({ connectedAccount, userId }) {
 	return BdApi.React.createElement(ConnectionRenderer, { className: "connectedAccount", connectedAccount, userId, showMetadata: false });
 }
 function BoardEditRenderer({ user }) {
-	Board ??= betterdiscord.Webpack.getByStrings("data-scroller", "fade:!0,", { searchExports: true });
-	return BdApi.React.createElement(Board, { user });
+	Board ??= betterdiscord.Webpack.getBySource("COLLECTIBLES_RECOMMENDATIONS_FETCH_START", { declarationFilter: betterdiscord.Webpack.Filters.byStrings("Fragment", "ipCountryCode") });
+	let UserProfileModalV2EditingPanelNavigationProvider;
+	{
+		const baseModule = betterdiscord.Webpack.getBySource("UserProfileModalV2EditingPanelNavigationProvider", { raw: true });
+		const match = betterdiscord.Webpack.modules[baseModule.id].toString().match(/\((.{1,3})\);if\(null==.{1,3}\)throw Error\("useIsUserProfileModalV2PremiumTryItOut/);
+		UserProfileModalV2EditingPanelNavigationProvider = baseModule.declarations[match[1]];
+	}
+	return BdApi.React.createElement(UserProfileModalV2EditingPanelNavigationProvider.Provider, { value: false }, BdApi.React.createElement(Board, { user }));
 }
 function RolePermissionHook({ guildId }) {
 	RolePermissionCheck ??= betterdiscord.Webpack.getByStrings(".ADMINISTRATOR", ".MANAGE_MESSAGES");
@@ -3711,7 +3717,7 @@ class NewOldProfiles {
 			if (props.user.id !== currentUser.id) return;
 			res.props.onClick = () => ModalSystem$1.openModal((props2) => react.createElement(ProfileEditingModal, { ...props2 }), { modalKey: `EDIT_USER_PROFILE_MODAL_KEY:${currentUser.id}:`, dismissable: !shouldShowNotice });
 		});
-		betterdiscord.Patcher.after(entireProfileModal.A, "render", (that, [props], res) => {
+		betterdiscord.Patcher.after(entireProfileModal, "A", (that, [props], res) => {
 			if (!props.themeType?.includes("MODAL")) return;
 			if (!betterdiscord.Utils.findInTree(props, (x) => x?.displayProfile, { walkable: ["props", "children"] })) return;
 			if (!betterdiscord.Utils.findInTree(props, (tree) => {

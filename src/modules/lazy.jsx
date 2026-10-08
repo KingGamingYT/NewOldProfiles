@@ -67,9 +67,19 @@ function ConnectionComponent({ connectedAccount, userId }) {
     return <ConnectionRenderer className="connectedAccount" connectedAccount={connectedAccount} userId={userId} showMetadata={false} />
 }
 function BoardEditRenderer({ user }) {
-    Board ??= Webpack.getByStrings('data-scroller', 'fade:!0,', {searchExports: true});
+    Board ??= Webpack.getBySource("COLLECTIBLES_RECOMMENDATIONS_FETCH_START", {declarationFilter: Webpack.Filters.byStrings('Fragment', 'ipCountryCode')});
+    let UserProfileModalV2EditingPanelNavigationProvider;
+    {
+        const baseModule = Webpack.getBySource("UserProfileModalV2EditingPanelNavigationProvider", { raw: true });
 
-    return <Board user={user} />
+        const match = Webpack.modules[baseModule.id].toString().match(/\((.{1,3})\);if\(null==.{1,3}\)throw Error\("useIsUserProfileModalV2PremiumTryItOut/);
+
+        UserProfileModalV2EditingPanelNavigationProvider = baseModule.declarations[match[1]];
+    }
+
+    return <UserProfileModalV2EditingPanelNavigationProvider.Provider value={false}>
+        <Board user={user} />
+    </UserProfileModalV2EditingPanelNavigationProvider.Provider>
 }
 function RolePermissionHook({ guildId }) {
     RolePermissionCheck ??= Webpack.getByStrings('.ADMINISTRATOR', '.MANAGE_MESSAGES');
