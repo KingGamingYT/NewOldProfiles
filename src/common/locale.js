@@ -21,6 +21,7 @@ export const locale = {
         CONNECT_ACCOUNT: () => getIntlString('sbdnpw'),
         CREATED_ON: () => getIntlString('A//N4k'),
         CUSTOM_STATUS: () => getIntlString('xalUlT'),
+        CUSTOMIZE_YOUR_BADGES: () => getIntlString('9JoKQb'),
         DATA_ACCESS: () => getIntlString('QzDgMq'),
         DIRECT_MESSAGE: () => getIntlString('jN2DfZ'),
         DISPLAY_NAME: () => getIntlString('9AjdkD'),

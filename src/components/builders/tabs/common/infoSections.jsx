@@ -206,9 +206,7 @@ export function ConnectionCards({ user, connections }) {
 export function PrivateProfileNotice({ username }) {
     return (
         <div className="userInfoSection">
-            <Card messageType="info" key="info">
-                {locale.Strings.PRIVATE_PROFILE_WARNING({username})}
-            </Card>
+            <Card type="info" message={locale.Strings.PRIVATE_PROFILE_WARNING({username})} key="info" />
         </div>
     )
 }
@@ -216,9 +214,7 @@ export function PrivateProfileNotice({ username }) {
 export function FailedToLoadProfileNotice({}) {
     return (
         <div className="userInfoSection">
-            <Card messageType="warn" key="warn">
-                {locale.Strings.USER_PROFILE_LOAD_ERROR()}
-            </Card>
+            <Card type="warning" message={locale.Strings.USER_PROFILE_LOAD_ERROR()} key="warning" />
         </div>
     )
 }

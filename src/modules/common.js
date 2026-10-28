@@ -62,7 +62,7 @@ export const [
     { filter: /* @__PURE__ */ Webpack.Filters.byKeys("fetchApplication") },
     { filter: /* @__PURE__ */ Webpack.Filters.byKeys("getGuildIconURL") },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('imageClassName', 'A.AVATAR') },
-    { filter: /* @__PURE__ */ Webpack.Filters.byStrings('pendingAvatarDecoration', 'disabled') },
+    { filter: /* @__PURE__ */ Webpack.Filters.byStrings('pendingAvatarDecoration', 'accessibleLabel', 'disabled') },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('STREAMING', 'isVROnline') },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('currentProfileAvatarHash') },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('translateSurrogatesToInlineEmoji') },
@@ -94,7 +94,7 @@ export const [
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('getMatchingInboxEntry', 'getMatchingOutboxEntry') },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('delay', 'lineClamp') },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('.style', '"data-text-variant"'), searchExports: true },
-    { filter: /* @__PURE__ */ Webpack.Filters.byStrings('warn', 'preview', 'messageType'), searchExports: true },
+    { filter: /* @__PURE__ */ Webpack.Filters.byStrings('CircleInformationIcon', 'i18n'), searchExports: true },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('instanceof', 'widget'), searchExports: true },
     { filter: x=> x.selectVoiceChannel, searchExports: true },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('guildId', 'getWindowOpen', 'CHANNEL_CALL_POPOUT'), searchExports: true },
@@ -123,6 +123,7 @@ export const [
     GuildBadge,
     SelectClasses,
     ModalSystem,
+    UserProfileBadgeList,
 ] = /* @__PURE__ */ Webpack.getBulk(
     { filter: /* @__PURE__ */ Webpack.Filters.byPrototypeKeys('animateTo'), searchExports: true },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('submitting', 'message') },
@@ -144,7 +145,8 @@ export const [
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('Masks.CLAN_ICON', 'getGuildIconURL'), searchExports: true },
     { filter: x => String(x?.type).includes('"fw2p/x"'), searchExports: true },
     { filter: x => x.selectPopout },
-    { filter: x => x.useModalsStore }
+    { filter: x => x.useModalsStore },
+    { filter: /* @__PURE__ */ Webpack.Filters.bySource('"UserProfileBadgeList"'), declarationFilter: BdApi.Webpack.Filters.byStrings('"UserProfileBadgeList"') }
 )
 
 export const UserProfilePendingChangesActionCreators = /* @__PURE__ */ Webpack.getMangled('avatarOriginalMd5', {
@@ -181,6 +183,9 @@ export const UserProfileSettingsActionCreators2 = /* @__PURE__ */ Webpack.getMan
     shake: Webpack.Filters.byStrings('SHAKE_PROFILE_MODAL')
 });
 export const UserProfileSettingsActionCreators = Object.assign(UserProfileSettingsActionCreators1, UserProfileSettingsActionCreators2);
+export const BadgeDirectoryActionCreators = Webpack.getMangled("BADGE_DIRECTORY_FETCH_START", {
+    fetchBadgeCatalog: Webpack.Filters.byStrings("BADGE_DIRECTORY_FETCH_START")
+});
 export const NavigationUtils = /* @__PURE__ */ Webpack.getMangled("transitionTo - Transitioning to", {
     transitionTo: /* @__PURE__ */ Webpack.Filters.byStrings("transitionTo - Transitioning to "),
     replace: /* @__PURE__ */ Webpack.Filters.byStrings("Replacing route with"),

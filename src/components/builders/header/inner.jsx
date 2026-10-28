@@ -1,13 +1,48 @@
-import { Data, Plugins, Utils } from 'betterdiscord';
+import { Data, Plugins, Utils, ReactUtils } from 'betterdiscord';
 import { useState, useRef } from 'react';
-import { AccessibilityStore, ActivityStore, RelationshipStore, StreamStore, StreamerModeStore, VoiceStateStore, useStateFromStores } from '@modules/stores';
-import { AnchorClasses, Avatar, BotTagRenderer, DisplayNameStyleConfigurator, NavigationUtils, OpenUserSettings, Popout, PopUtils, TagGuildRenderer } from '@modules/common';
+import { AccessibilityStore, ActivityStore, RelationshipStore, StreamStore, StreamerModeStore, VoiceStateStore, BadgeDirectoryStore, useStateFromStores } from '@modules/stores';
+import { AnchorClasses, Avatar, BotTagRenderer, DisplayNameStyleConfigurator, NavigationUtils, ModalSystem, OpenUserSettings, PencilIcon, Popout, PopUtils, TagGuildRenderer, UserProfileBadgeList } from '@modules/common';
 import { FriendAddButtonComponent, FriendsButtonComponent, MessageButtonLargeComponent, MessageButtonSmallComponent, MoreOverflowButtonComponent, BotAddButtonComponent } from '@modules/lazy'
 import { TooltipBuilder } from '@components/common/TooltipBuilder';
+import { locale } from '@common/locale';
 import { AcceptButton, BlockedPopoutButton, IgnoreButton } from './customButtons';
 import { EditProfileButton } from '@components/editing/editProfileButton';
 
-function BadgeInner({ badge, index, id }) {
+function BadgeManagerButton({ badges, displayProfile }) {
+    const [showPopout, setShowPopout] = useState(false);
+    const refDOM = useRef(null);
+    const BadgePopout = ReactUtils.wrapInHooks(UserProfileBadgeList)({badges, displayProfile, popoutAnchorRef: {} })?.props.renderPopout;
+
+    return (
+        <Popout
+            targetElementRef={refDOM}
+            clickTrap={true}
+            onRequestClose={() => setShowPopout(false)}
+            renderPopout={BadgePopout}
+            position="bottom" 
+            shouldShow={showPopout}>
+            {(props) =>
+                <TooltipBuilder note={locale.Strings.CUSTOMIZE_YOUR_BADGES()}>
+                    <button {...props} className="editButton" type="button" ref={refDOM} onClick={(e) => {e.stopPropagation(); setShowPopout(true)}} style={{ opacity: showPopout ? 1 : null }}>
+                        <PencilIcon size="md" />
+                    </button>
+                </TooltipBuilder>
+            }
+        </Popout>
+    )
+}
+
+function RichBadgeTooltip({ badge }) {
+	return (
+		<div className="richBadgeTooltip">
+			<div className="title">{badge.name}</div>
+			<div className="description">{badge.info_label}</div>
+		</div>
+	)
+}
+
+function BadgeInner({ user, badge, index, id }) {
+    const directoryBadge = useStateFromStores([BadgeDirectoryStore], () => BadgeDirectoryStore.getBadges(user.id)).find(x => { return (x.name === badge.description || x.name.toLowerCase() === badge.id)});
     const activities = useStateFromStores([ActivityStore], () => ActivityStore.getActivities(id)).filter(activity => activity && !([4, 6].includes(activity?.type)));
     const voice = useStateFromStores([VoiceStateStore], () => VoiceStateStore.getVoiceStateForUser(id)?.channelId);
     const stream = useStateFromStores([StreamStore], () => StreamStore.getAnyStreamForUser(id));
@@ -15,6 +50,7 @@ function BadgeInner({ badge, index, id }) {
     const routes = ['quest_completed', 'orb_profile_badge'];
     const settings = ['early_supporter', 'premium', 'guild_booster'];
     const settingsMatch = settings.filter(x => badge.id.includes(x));
+    const badgeRegex = (id) => id.replaceAll(/(?:^|_)(\w)/g, (_, m) => m.toUpperCase());
     
     return (
             <a
@@ -31,7 +67,7 @@ function BadgeInner({ badge, index, id }) {
                         })())
                 }>
                 <div
-                    className={Utils.className(((activities.length !== 0 || voice || stream) && !Data.load('disableRichBadges')) && "richBadge", "profileBadge", `profileBadge${badge.id.replaceAll(/(?:^|_)(\w)/g, (_, m) => m.toUpperCase())}`)}
+                    className={Utils.className(((activities.length !== 0 || voice || stream) && !Data.load('disableRichBadges')) && "richBadge", "profileBadge", directoryBadge && directoryBadge.tiers ? `profileBadge${badgeRegex(badge.id)} profileBadge${badgeRegex(badge.id)+badgeRegex(directoryBadge?.current_tier)}` : `profileBadge${badgeRegex(badge.id)}`)}
                     style={{backgroundImage: (badge.iconSrc && `url(${badge.iconSrc})`) ?? undefined}}
                     icon={badge.icon && badge.icon}
                 />
@@ -39,25 +75,27 @@ function BadgeInner({ badge, index, id }) {
     )
 }
 
-function BadgeBuilder({ badge, index, id }) {
+function BadgeBuilder({ user, badge, index, id }) {
+    const directoryBadge = useStateFromStores([BadgeDirectoryStore], () => BadgeDirectoryStore.getBadges(user.id)).find(x => { return (x.name === badge.description || x.name.toLowerCase() === badge.id)});
     const refDOM = useRef(null);
 
     return (
         <div className="profileBadgeWrapper" ref={refDOM}>
-            <TooltipBuilder note={badge.description}><div><BadgeInner badge={badge} index={index} id={id}></BadgeInner></div></TooltipBuilder>
+            <TooltipBuilder note={directoryBadge && directoryBadge.tiers ? <RichBadgeTooltip badge={directoryBadge} /> : badge.description}>
+                <div><BadgeInner user={user} badge={badge} index={index} id={id} /></div>
+            </TooltipBuilder>
         </div>
     )
 }
 
 
-function BadgesBuilder({ badges, style, id }) {
+function BadgesBuilder({ user, currentUser, displayProfile, badges, style, id }) {
     if (!badges) return;
 
     return (
         <div className="profileBadges" style={style}>
-            {
-                badges.map((badge, index) => <BadgeBuilder badge={badge} index={index} id={id} />)
-            }
+            {badges.map((badge, index) => <BadgeBuilder user={user} badge={badge} index={index} id={id} />)}
+            {user.id === currentUser.id && <BadgeManagerButton badges={badges} displayProfile={displayProfile} />}
         </div>
     )
 }
@@ -202,11 +240,11 @@ export function HeaderInnerBuilder({ user, currentUser, displayProfile, tagName,
                         {badges && badges.length !== 0 && 
                             <>
                                 <div className="divider" style={{ margin: "0 5px 0 5px" }} />
-                                <BadgesBuilder badges={displayProfile._userProfile.badges} style={{ display: "contents" }} id={user.id} />
+                                <BadgesBuilder user={user} currentUser={currentUser} displayProfile={displayProfile} badges={displayProfile._userProfile.badges} style={{ display: "contents" }} id={user.id} />
                             </>
                         }
                     </div>
-                    : <BadgesBuilder badges={displayProfile._userProfile.badges} style={{ display: "flex", flexWrap: "wrap" }} id={user.id} />
+                    : <BadgesBuilder user={user} currentUser={currentUser} displayProfile={displayProfile} badges={displayProfile._userProfile.badges} style={{ display: "flex", flexWrap: "wrap" }} id={user.id} />
                 }
             </div>
             <div className="profileButtons">

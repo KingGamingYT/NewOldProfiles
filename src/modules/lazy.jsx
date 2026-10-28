@@ -106,7 +106,7 @@ function MutualServerRenderer({key, user, guild, nick, onSelect}) {
 function EditableTileProfileButtons() {
     TileButtons ??= Webpack.getMangled('"UserProfileModalV2EditableDisplayName"', {
         ThemeButton: Webpack.Filters.byStrings('currentProfileThemeColors', 'disabled'),
-        BannerButton: Webpack.Filters.byStrings('pendingBanner', 'accessibleValue'),
+        BannerButton: Webpack.Filters.byStrings('pendingBanner', 'isUsingGuildMemberBanner'),
         EffectButton: Webpack.Filters.byStrings('pendingProfileEffect', 'variant'),
         FrameButton: Webpack.Filters.byStrings('pendingProfileFrame', 'userValue')
     }, {mapDeclarations: true});

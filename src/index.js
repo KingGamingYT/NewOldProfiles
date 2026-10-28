@@ -1,6 +1,6 @@
 import { Data, Patcher, DOM, Utils, ReactUtils, Components, Webpack } from "betterdiscord";
-import { entireProfileModal, FormSwitch, ModalSystem, Modal, ProfileFetch, LayerSurfaceModule } from "@modules/common";
-import { UserProfileStore, UserProfileSettingsStore, UserStore, useStateFromStores } from '@modules/stores';
+import { entireProfileModal, FormSwitch, ModalSystem, Modal, ProfileFetch, LayerSurfaceModule, BadgeDirectoryActionCreators } from "@modules/common";
+import { BadgeDirectoryStore, UserProfileStore, UserProfileSettingsStore, UserStore, useStateFromStores } from '@modules/stores';
 import { BoardEditRenderer } from "@modules/lazy";
 import { settings } from "@common/settings";
 import { createElement, useState, useRef, useEffect } from "react";
@@ -34,6 +34,9 @@ function Starter({props, res}) {
         (async () => {
             if (!UserProfileStore.getMutualFriends(user.id)) { 
                 await ProfileFetch(user.id, { withMutualFriends: true })
+            }
+            if (BadgeDirectoryStore.getBadges(user.id)?.length === 0) {
+                await BadgeDirectoryActionCreators.fetchBadgeCatalog(user.id)
             }
         })()
     }, [user.id])
