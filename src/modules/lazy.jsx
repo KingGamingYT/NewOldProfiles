@@ -15,7 +15,12 @@ let RolePermissionCheck;
 let TagRenderer;
 let MutualFriends;
 let MutualServers;
+let AvatarButton;
+let AvatarDecorationButton;
+let NameplateButton;
 let TileButtons;
+let TextArea;
+let loadAvailablePrimaryGuilds;
 
 function MessageButtonLargeComponent({ autoFocus, onClose, userId }) {
     MessageButtonLarge ??= Webpack.getByStrings("let{userId", ",{variant", '"primary",', { searchExports: true});
@@ -103,6 +108,24 @@ function MutualServerRenderer({key, user, guild, nick, onSelect}) {
     return <MutualServers key={key} user={user} status={status} guild={guild} nick={nick} onSelect={onSelect} />
 }
 
+function AvatarTileButton({user}) {
+    AvatarButton ??= Webpack.getByStrings('currentProfileAvatarHash');
+
+    return <AvatarButton user={user} />
+}
+
+function AvatarDecorationTileButton({user}) {
+    AvatarDecorationButton ??= Webpack.getByStrings('pendingAvatarDecoration', 'accessibleLabel', 'disabled');
+
+    return <AvatarDecorationButton user={user} />
+}
+
+function NameplateTileButton({user}) {
+    NameplateButton ??= Webpack.Filters.byStrings('pendingNameplate');
+
+    return <NameplateButton user={user} />
+}
+
 function EditableTileProfileButtons() {
     TileButtons ??= Webpack.getMangled('"UserProfileModalV2EditableDisplayName"', {
         ThemeButton: Webpack.Filters.byStrings('currentProfileThemeColors', 'disabled'),
@@ -112,6 +135,19 @@ function EditableTileProfileButtons() {
     }, {mapDeclarations: true});
 
     return TileButtons;
+}
+
+function RichTextArea(props) {
+    let {value, placeholder, minLength, maxLength, autoFocus = false, error, emojiPickerIntention = "CHAT", editorRef, onChange, onKeyDown, onFocus, onBlur, ...rest} = props;
+    TextArea ??= Webpack.getByStrings('GENERIC_RICH_TEXTAREA', 'EmojiIntention.CHAT', {searchExports: true});
+
+    return <TextArea value={value} placeholder={placeholder} minLength={minLength} maxLength={maxLength} autoFocus={autoFocus} error={error} emojiPickerIntention={emojiPickerIntention} editorRef={editorRef} onChange={onChange} onKeydown={onKeyDown} onFocus={onFocus} onBlur={onBlur} {...rest} />
+} 
+
+function getAvailablePrimaryGuilds() {
+    loadAvailablePrimaryGuilds ??= Webpack.getByStrings('getSelfMember', 'getGuildsArray', {searchExports: true});
+
+    return loadAvailablePrimaryGuilds();
 }
 
 export {
@@ -129,5 +165,10 @@ export {
     WidgetTagRenderer,
     MutualFriendRenderer,
     MutualServerRenderer,
+    AvatarTileButton,
+    AvatarDecorationTileButton,
+    NameplateTileButton,
     EditableTileProfileButtons,
+    RichTextArea,
+    getAvailablePrimaryGuilds,
 }

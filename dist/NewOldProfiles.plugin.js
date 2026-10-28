@@ -48,9 +48,7 @@ const [
 	FetchApplications,
 	IconUtils,
 	Avatar,
-	AvatarDecorationButton,
 	AvatarFetch,
-	AvatarButton,
 	EmojiRenderer,
 	ActivityTimer,
 	MediaProgressBar,
@@ -83,8 +81,7 @@ const [
 	Card,
 	CustomWidgetCard,
 	SelectedChannelActionCreators,
-	OpenStream,
-	NameplateButton
+	OpenStream
 ] = betterdiscord.Webpack.getBulk(
 	{ filter: betterdiscord.Webpack.Filters.bySource("forceShowPremium", "pendingThemeColors", "profileThemeClassName") },
 	{ filter: (x) => x.openUserProfileModal },
@@ -97,9 +94,7 @@ const [
 	{ filter: betterdiscord.Webpack.Filters.byKeys("fetchApplication") },
 	{ filter: betterdiscord.Webpack.Filters.byKeys("getGuildIconURL") },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("imageClassName", "A.AVATAR") },
-	{ filter: betterdiscord.Webpack.Filters.byStrings("pendingAvatarDecoration", "accessibleLabel", "disabled") },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("STREAMING", "isVROnline") },
-	{ filter: betterdiscord.Webpack.Filters.byStrings("currentProfileAvatarHash") },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("translateSurrogatesToInlineEmoji") },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("timestamps", ".TEXT_FEEDBACK_POSITIVE"), searchExports: true },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("start", "end", "duration", "percentage") },
@@ -132,8 +127,7 @@ const [
 	{ filter: betterdiscord.Webpack.Filters.byStrings("CircleInformationIcon", "i18n"), searchExports: true },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("instanceof", "widget"), searchExports: true },
 	{ filter: (x) => x.selectVoiceChannel, searchExports: true },
-	{ filter: betterdiscord.Webpack.Filters.byStrings("guildId", "getWindowOpen", "CHANNEL_CALL_POPOUT"), searchExports: true },
-	{ filter: betterdiscord.Webpack.Filters.byStrings("pendingNameplate") }
+	{ filter: betterdiscord.Webpack.Filters.byStrings("guildId", "getWindowOpen", "CHANNEL_CALL_POPOUT"), searchExports: true }
 );
 const [
 	UnsavedNoticeContainer,
@@ -148,10 +142,8 @@ const [
 	OpenDisplayNameStylesModal,
 	LabeledField,
 	TextInput,
-	RichTextArea,
 	Stack,
 	FieldSelect,
-	getAvailablePrimaryGuilds,
 	GuildTag,
 	ClanGuildIcon,
 	GuildBadge,
@@ -171,12 +163,8 @@ const [
 	{ filter: betterdiscord.Webpack.Filters.byStrings("DISPLAY_NAME_STYLES_CLOSED"), searchExports: true },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("labelId", "helperText"), searchExports: true },
 	{ filter: betterdiscord.Webpack.Filters.byStrings('"boolean"', "defaultDirty"), searchExports: true },
-	{ filter: betterdiscord.Webpack.Filters.byStrings("GENERIC_RICH_TEXTAREA", "EmojiIntention.CHAT"), searchExports: true },
 	{ filter: (x) => String(x?.render).includes('"data-full-width"'), searchExports: true },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("?.value??", "maxOptionsVisible"), searchExports: true },
-	{ filter: (
-		betterdiscord.Webpack.Filters.byStrings("getSelfMember", "getGuildsArray")
-	), searchExports: true },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("guildBadge", "__unsupportedReactNodeAsText"), searchExports: true },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("Masks.CLAN_ICON", "getGuildIconURL"), searchExports: true },
 	{ filter: (x) => String(x?.type).includes('"fw2p/x"'), searchExports: true },
@@ -297,7 +285,12 @@ let RolePermissionCheck;
 let TagRenderer;
 let MutualFriends;
 let MutualServers;
+let AvatarButton;
+let AvatarDecorationButton;
+let NameplateButton;
 let TileButtons;
+let TextArea;
+let loadAvailablePrimaryGuilds;
 function MessageButtonLargeComponent({ autoFocus, onClose, userId }) {
 	MessageButtonLarge ??= betterdiscord.Webpack.getByStrings("let{userId", ",{variant", '"primary",', { searchExports: true });
 	return BdApi.React.createElement(MessageButtonLarge, { autoFocus, onClose: () => PopUtils.popAll(), userId });
@@ -364,6 +357,18 @@ function MutualServerRenderer({ key, user, guild, nick, onSelect }) {
 	MutualServers ??= betterdiscord.Webpack.getByStrings("hasAvatarForGuild", "nick");
 	return BdApi.React.createElement(MutualServers, { key, user, status, guild, nick, onSelect });
 }
+function AvatarTileButton({ user }) {
+	AvatarButton ??= betterdiscord.Webpack.getByStrings("currentProfileAvatarHash");
+	return BdApi.React.createElement(AvatarButton, { user });
+}
+function AvatarDecorationTileButton({ user }) {
+	AvatarDecorationButton ??= betterdiscord.Webpack.getByStrings("pendingAvatarDecoration", "accessibleLabel", "disabled");
+	return BdApi.React.createElement(AvatarDecorationButton, { user });
+}
+function NameplateTileButton({ user }) {
+	NameplateButton ??= betterdiscord.Webpack.Filters.byStrings("pendingNameplate");
+	return BdApi.React.createElement(NameplateButton, { user });
+}
 function EditableTileProfileButtons() {
 	TileButtons ??= betterdiscord.Webpack.getMangled('"UserProfileModalV2EditableDisplayName"', {
 		ThemeButton: betterdiscord.Webpack.Filters.byStrings("currentProfileThemeColors", "disabled"),
@@ -372,6 +377,15 @@ function EditableTileProfileButtons() {
 		FrameButton: betterdiscord.Webpack.Filters.byStrings("pendingProfileFrame", "userValue")
 	}, { mapDeclarations: true });
 	return TileButtons;
+}
+function RichTextArea(props) {
+	let { value, placeholder, minLength, maxLength, autoFocus = false, error, emojiPickerIntention = "CHAT", editorRef, onChange, onKeyDown, onFocus, onBlur, ...rest } = props;
+	TextArea ??= betterdiscord.Webpack.getByStrings("GENERIC_RICH_TEXTAREA", "EmojiIntention.CHAT", { searchExports: true });
+	return BdApi.React.createElement(TextArea, { value, placeholder, minLength, maxLength, autoFocus, error, emojiPickerIntention, editorRef, onChange, onKeydown: onKeyDown, onFocus, onBlur, ...rest });
+}
+function getAvailablePrimaryGuilds() {
+	loadAvailablePrimaryGuilds ??= betterdiscord.Webpack.getByStrings("getSelfMember", "getGuildsArray", { searchExports: true });
+	return loadAvailablePrimaryGuilds();
 }
 
 // ./common/settings.js
@@ -747,7 +761,7 @@ function ProfileEditingPanel({ user }) {
 		};
 	});
 	const availablePrimaryGuilds = getAvailablePrimaryGuilds();
-	return BdApi.React.createElement(BdApi.React.Fragment, null, BdApi.React.createElement("div", { className: "editingSectionDecoration" }, BdApi.React.createElement("div", null, BdApi.React.createElement(EditingCategoryHeader, { variant: "text-md/medium" }, locale.Strings.AVATAR_AND_DECORATION()), BdApi.React.createElement("div", { className: "editingSectionContainer", style: { gap: "var(--space-8)" } }, BdApi.React.createElement("div", { className: "editingSectionInnerContainer" }, BdApi.React.createElement(AvatarButton, { user }), BdApi.React.createElement(AvatarDecorationButton, { user })), BdApi.React.createElement(NameplateButton, { user }))), BdApi.React.createElement("div", null, BdApi.React.createElement(EditingCategoryHeader, { variant: "text-md/medium" }, locale.Strings.THEME_AND_BANNER()), BdApi.React.createElement("div", { className: "editingSectionContainer" }, BdApi.React.createElement("div", { className: "editingSectionInnerContainer" }, BdApi.React.createElement(EditableTiles.ThemeButton, { user }), BdApi.React.createElement(EditableTiles.BannerButton, { userId: user.id })))), BdApi.React.createElement("div", null, BdApi.React.createElement(EditingCategoryHeader, { variant: "text-md/medium" }, locale.Strings.PROFILE_EFFECT_AND_FRAME()), BdApi.React.createElement("div", { className: "editingSectionContainer" }, BdApi.React.createElement("div", { className: "editingSectionInnerContainer" }, BdApi.React.createElement(EditableTiles.EffectButton, { user, variant: "square" }), BdApi.React.createElement(EditableTiles.FrameButton, { user }))))), BdApi.React.createElement(EditingCategoryHeader, null, locale.Strings.ABOUT_ME()), BdApi.React.createElement("div", { className: "editingSectionContainer" }, BdApi.React.createElement(LabeledField, { layout: "horizontal", label: locale.Strings.DISPLAY_NAME() }, BdApi.React.createElement("div", { className: "editingSectionDisplayNameContainer" }, BdApi.React.createElement(
+	return BdApi.React.createElement(BdApi.React.Fragment, null, BdApi.React.createElement("div", { className: "editingSectionDecoration" }, BdApi.React.createElement("div", null, BdApi.React.createElement(EditingCategoryHeader, { variant: "text-md/medium" }, locale.Strings.AVATAR_AND_DECORATION()), BdApi.React.createElement("div", { className: "editingSectionContainer", style: { gap: "var(--space-8)" } }, BdApi.React.createElement("div", { className: "editingSectionInnerContainer" }, BdApi.React.createElement(AvatarTileButton, { user }), BdApi.React.createElement(AvatarDecorationTileButton, { user })), BdApi.React.createElement(NameplateTileButton, { user }))), BdApi.React.createElement("div", null, BdApi.React.createElement(EditingCategoryHeader, { variant: "text-md/medium" }, locale.Strings.THEME_AND_BANNER()), BdApi.React.createElement("div", { className: "editingSectionContainer" }, BdApi.React.createElement("div", { className: "editingSectionInnerContainer" }, BdApi.React.createElement(EditableTiles.ThemeButton, { user }), BdApi.React.createElement(EditableTiles.BannerButton, { userId: user.id })))), BdApi.React.createElement("div", null, BdApi.React.createElement(EditingCategoryHeader, { variant: "text-md/medium" }, locale.Strings.PROFILE_EFFECT_AND_FRAME()), BdApi.React.createElement("div", { className: "editingSectionContainer" }, BdApi.React.createElement("div", { className: "editingSectionInnerContainer" }, BdApi.React.createElement(EditableTiles.EffectButton, { user, variant: "square" }), BdApi.React.createElement(EditableTiles.FrameButton, { user }))))), BdApi.React.createElement(EditingCategoryHeader, null, locale.Strings.ABOUT_ME()), BdApi.React.createElement("div", { className: "editingSectionContainer" }, BdApi.React.createElement(LabeledField, { layout: "horizontal", label: locale.Strings.DISPLAY_NAME() }, BdApi.React.createElement("div", { className: "editingSectionDisplayNameContainer" }, BdApi.React.createElement(
 		TextInput,
 		{
 			value: pendingGlobalName ?? user.globalName,

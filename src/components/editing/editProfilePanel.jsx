@@ -1,7 +1,7 @@
 import { useState, useRef, useMemo, useCallback } from "react";
-import { AvatarButton, AvatarDecorationButton, Text, TextInput, LabeledField, NameplateButton, SetPendingUserChanges, ManaButtons, PencilIcon, OpenDisplayNameStylesModal, RichTextArea, FieldSelect, SelectClasses, getAvailablePrimaryGuilds, GuildTag, ClanGuildIcon, GuildBadge } from "@modules/common";
+import { Text, TextInput, LabeledField, SetPendingUserChanges, ManaButtons, PencilIcon, OpenDisplayNameStylesModal, FieldSelect, SelectClasses, GuildTag, ClanGuildIcon, GuildBadge } from "@modules/common";
 import { UserProfileStore, UserProfileSettingsStore, UserStore, useStateFromStores } from "@modules/stores";
-import { EditableTileProfileButtons } from "@modules/lazy";
+import { AvatarTileButton, AvatarDecorationTileButton, NameplateTileButton, EditableTileProfileButtons, RichTextArea, getAvailablePrimaryGuilds } from "@modules/lazy";
 import { locale } from "@common/locale";
 
 function EditingCategoryHeader({ variant, children }) {
@@ -133,10 +133,10 @@ export function ProfileEditingPanel({ user }) {
           <EditingCategoryHeader variant="text-md/medium">{locale.Strings.AVATAR_AND_DECORATION()}</EditingCategoryHeader>
           <div className="editingSectionContainer" style={{gap: "var(--space-8)"}}>
             <div className="editingSectionInnerContainer">
-              <AvatarButton user={user} />
-              <AvatarDecorationButton user={user} />
+              <AvatarTileButton user={user} />
+              <AvatarDecorationTileButton user={user} />
             </div>
-            <NameplateButton user={user} />
+            <NameplateTileButton user={user} />
           </div>
         </div>
         <div>
