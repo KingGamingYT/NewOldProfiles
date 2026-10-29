@@ -20,7 +20,6 @@ let AvatarDecorationButton;
 let NameplateButton;
 let TileButtons;
 let TextArea;
-let FormSelectClasses;
 let loadAvailablePrimaryGuilds;
 
 function MessageButtonLargeComponent({ autoFocus, onClose, userId }) {
@@ -145,12 +144,6 @@ function RichTextArea(props) {
     return <TextArea value={value} placeholder={placeholder} minLength={minLength} maxLength={maxLength} autoFocus={autoFocus} error={error} emojiPickerIntention={emojiPickerIntention} editorRef={editorRef} onChange={onChange} onKeydown={onKeyDown} onFocus={onFocus} onBlur={onBlur} {...rest} />
 }
 
-function SelectClasses() {
-    FormSelectClasses ??= BdApi.Webpack.getModule(x => x.selectPopout);
-
-    return FormSelectClasses;
-}
-
 function getAvailablePrimaryGuilds() {
     loadAvailablePrimaryGuilds ??= Webpack.getByStrings('getSelfMember', 'getGuildsArray', {searchExports: true});
 
@@ -177,6 +170,5 @@ export {
     NameplateTileButton,
     EditableTileProfileButtons,
     RichTextArea,
-    SelectClasses,
     getAvailablePrimaryGuilds,
 }

@@ -1489,6 +1489,9 @@ let CSS = webpackify(
     .editingSectionContainer > [role="guild-tag"] > .control {
         align-items: unset;
     }
+    .tagSelect.tagSelectPopout {
+        gap: 8px;
+    }
 
     /* Timezones Plugin */
     .inner .tz-banner {

@@ -288,7 +288,6 @@ let AvatarDecorationButton;
 let NameplateButton;
 let TileButtons;
 let TextArea;
-let FormSelectClasses;
 let loadAvailablePrimaryGuilds;
 function MessageButtonLargeComponent({ autoFocus, onClose, userId }) {
 	MessageButtonLarge ??= betterdiscord.Webpack.getByStrings("let{userId", ",{variant", '"primary",', { searchExports: true });
@@ -381,10 +380,6 @@ function RichTextArea(props) {
 	let { value, placeholder, minLength, maxLength, autoFocus = false, error, emojiPickerIntention = "CHAT", editorRef, onChange, onKeyDown, onFocus, onBlur, ...rest } = props;
 	TextArea ??= betterdiscord.Webpack.getByStrings("GENERIC_RICH_TEXTAREA", "EmojiIntention.CHAT", { searchExports: true });
 	return BdApi.React.createElement(TextArea, { value, placeholder, minLength, maxLength, autoFocus, error, emojiPickerIntention, editorRef, onChange, onKeydown: onKeyDown, onFocus, onBlur, ...rest });
-}
-function SelectClasses() {
-	FormSelectClasses ??= BdApi.Webpack.getModule((x) => x.selectPopout);
-	return FormSelectClasses;
 }
 function getAvailablePrimaryGuilds() {
 	loadAvailablePrimaryGuilds ??= betterdiscord.Webpack.getByStrings("getSelfMember", "getGuildsArray", { searchExports: true });
@@ -655,7 +650,6 @@ function EditingCategoryHeader({ variant, children }) {
 	return BdApi.React.createElement(Text, { tag: "legend", variant: variant ?? "heading-xl/normal" }, children);
 }
 function ServerTagSelect({ availablePrimaryGuilds, pendingPrimaryGuildId, onChange }) {
-	const classes = SelectClasses();
 	const guildDetails = react.useMemo(() => new Map(availablePrimaryGuilds.map((guild) => [guild.id, guild])), [availablePrimaryGuilds]);
 	const currentPrimaryGuildId = useStateFromStores([UserStore], () => UserStore.getCurrentUser()?.primaryGuild)?.guildId;
 	let pendingGuildId = pendingPrimaryGuildId ? pendingPrimaryGuildId : currentPrimaryGuildId;
@@ -727,8 +721,8 @@ function ServerTagSelect({ availablePrimaryGuilds, pendingPrimaryGuildId, onChan
 	return BdApi.React.createElement(
 		FieldSelect,
 		{
-			className: classes.select,
-			optionClassName: classes.selectPopout,
+			className: "tagSelect",
+			optionClassName: "tagSelectPopout",
 			isSelected,
 			options: guildTags,
 			select: handleSelect,
@@ -3905,6 +3899,9 @@ let CSS = webpackify(
 		}
 		.editingSectionContainer > [role="guild-tag"] > .control {
 				align-items: unset;
+		}
+		.tagSelect.tagSelectPopout {
+				gap: 8px;
 		}
 
 		/* Timezones Plugin */
