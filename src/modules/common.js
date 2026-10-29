@@ -113,7 +113,6 @@ export const [
     GuildTag,
     ClanGuildIcon,
     GuildBadge,
-    SelectClasses,
     ModalSystem,
     UserProfileBadgeList,
 ] = /* @__PURE__ */ Webpack.getBulk(
@@ -134,7 +133,6 @@ export const [
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('guildBadge', '__unsupportedReactNodeAsText'), searchExports: true },
     { filter: /* @__PURE__ */ Webpack.Filters.byStrings('Masks.CLAN_ICON', 'getGuildIconURL'), searchExports: true },
     { filter: x => String(x?.type).includes('"fw2p/x"'), searchExports: true },
-    { filter: x => x.selectPopout },
     { filter: x => x.useModalsStore },
     { filter: /* @__PURE__ */ Webpack.Filters.bySource('"UserProfileBadgeList"'), declarationFilter: BdApi.Webpack.Filters.byStrings('"UserProfileBadgeList"') }
 )

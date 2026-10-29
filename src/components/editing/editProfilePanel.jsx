@@ -1,7 +1,7 @@
 import { useState, useRef, useMemo, useCallback } from "react";
-import { Text, TextInput, LabeledField, SetPendingUserChanges, ManaButtons, PencilIcon, OpenDisplayNameStylesModal, FieldSelect, SelectClasses, GuildTag, ClanGuildIcon, GuildBadge } from "@modules/common";
+import { Text, TextInput, LabeledField, SetPendingUserChanges, ManaButtons, PencilIcon, OpenDisplayNameStylesModal, FieldSelect, GuildTag, ClanGuildIcon, GuildBadge } from "@modules/common";
 import { UserProfileStore, UserProfileSettingsStore, UserStore, useStateFromStores } from "@modules/stores";
-import { AvatarTileButton, AvatarDecorationTileButton, NameplateTileButton, EditableTileProfileButtons, RichTextArea, getAvailablePrimaryGuilds } from "@modules/lazy";
+import { AvatarTileButton, AvatarDecorationTileButton, NameplateTileButton, EditableTileProfileButtons, RichTextArea, SelectClasses, getAvailablePrimaryGuilds } from "@modules/lazy";
 import { locale } from "@common/locale";
 
 function EditingCategoryHeader({ variant, children }) {
@@ -9,6 +9,7 @@ function EditingCategoryHeader({ variant, children }) {
 }
 
 function ServerTagSelect({availablePrimaryGuilds, pendingPrimaryGuildId, onChange}) {
+  const classes = SelectClasses();
   const guildDetails = useMemo(() => new Map(availablePrimaryGuilds.map(guild => [guild.id, guild])), [availablePrimaryGuilds]);
   const currentPrimaryGuildId = useStateFromStores([UserStore], () => UserStore.getCurrentUser()?.primaryGuild)?.guildId;
   let pendingGuildId = pendingPrimaryGuildId ? pendingPrimaryGuildId : currentPrimaryGuildId;
@@ -89,8 +90,8 @@ function ServerTagSelect({availablePrimaryGuilds, pendingPrimaryGuildId, onChang
 
   const refDOM = useRef(null);
   return <FieldSelect 
-    className={SelectClasses.select}
-    optionClassName={SelectClasses.selectPopout}
+    className={classes.select}
+    optionClassName={classes.selectPopout}
     isSelected={isSelected}
     options={guildTags}
     select={handleSelect}

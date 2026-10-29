@@ -147,7 +147,6 @@ const [
 	GuildTag,
 	ClanGuildIcon,
 	GuildBadge,
-	SelectClasses,
 	ModalSystem,
 	UserProfileBadgeList
 ] = betterdiscord.Webpack.getBulk(
@@ -168,7 +167,6 @@ const [
 	{ filter: betterdiscord.Webpack.Filters.byStrings("guildBadge", "__unsupportedReactNodeAsText"), searchExports: true },
 	{ filter: betterdiscord.Webpack.Filters.byStrings("Masks.CLAN_ICON", "getGuildIconURL"), searchExports: true },
 	{ filter: (x) => String(x?.type).includes('"fw2p/x"'), searchExports: true },
-	{ filter: (x) => x.selectPopout },
 	{ filter: (x) => x.useModalsStore },
 	{ filter: betterdiscord.Webpack.Filters.bySource('"UserProfileBadgeList"'), declarationFilter: BdApi.Webpack.Filters.byStrings('"UserProfileBadgeList"') }
 );
@@ -290,6 +288,7 @@ let AvatarDecorationButton;
 let NameplateButton;
 let TileButtons;
 let TextArea;
+let FormSelectClasses;
 let loadAvailablePrimaryGuilds;
 function MessageButtonLargeComponent({ autoFocus, onClose, userId }) {
 	MessageButtonLarge ??= betterdiscord.Webpack.getByStrings("let{userId", ",{variant", '"primary",', { searchExports: true });
@@ -382,6 +381,10 @@ function RichTextArea(props) {
 	let { value, placeholder, minLength, maxLength, autoFocus = false, error, emojiPickerIntention = "CHAT", editorRef, onChange, onKeyDown, onFocus, onBlur, ...rest } = props;
 	TextArea ??= betterdiscord.Webpack.getByStrings("GENERIC_RICH_TEXTAREA", "EmojiIntention.CHAT", { searchExports: true });
 	return BdApi.React.createElement(TextArea, { value, placeholder, minLength, maxLength, autoFocus, error, emojiPickerIntention, editorRef, onChange, onKeydown: onKeyDown, onFocus, onBlur, ...rest });
+}
+function SelectClasses() {
+	FormSelectClasses ??= BdApi.Webpack.getModule((x) => x.selectPopout);
+	return FormSelectClasses;
 }
 function getAvailablePrimaryGuilds() {
 	loadAvailablePrimaryGuilds ??= betterdiscord.Webpack.getByStrings("getSelfMember", "getGuildsArray", { searchExports: true });
@@ -652,6 +655,7 @@ function EditingCategoryHeader({ variant, children }) {
 	return BdApi.React.createElement(Text, { tag: "legend", variant: variant ?? "heading-xl/normal" }, children);
 }
 function ServerTagSelect({ availablePrimaryGuilds, pendingPrimaryGuildId, onChange }) {
+	const classes = SelectClasses();
 	const guildDetails = react.useMemo(() => new Map(availablePrimaryGuilds.map((guild) => [guild.id, guild])), [availablePrimaryGuilds]);
 	const currentPrimaryGuildId = useStateFromStores([UserStore], () => UserStore.getCurrentUser()?.primaryGuild)?.guildId;
 	let pendingGuildId = pendingPrimaryGuildId ? pendingPrimaryGuildId : currentPrimaryGuildId;
@@ -723,8 +727,8 @@ function ServerTagSelect({ availablePrimaryGuilds, pendingPrimaryGuildId, onChan
 	return BdApi.React.createElement(
 		FieldSelect,
 		{
-			className: SelectClasses.select,
-			optionClassName: SelectClasses.selectPopout,
+			className: classes.select,
+			optionClassName: classes.selectPopout,
 			isSelected,
 			options: guildTags,
 			select: handleSelect,
